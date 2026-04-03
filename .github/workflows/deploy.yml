@@ -18,6 +18,9 @@ jobs:
         uses: actions/checkout@v5
       - name: Install, build, and upload
         uses: withastro/action@v5
+        env:
+          # Umami website ID (override via repo variable `UMAMI_WEBSITE_ID` if you prefer)
+          PUBLIC_UMAMI_WEBSITE_ID: ${{ vars.UMAMI_WEBSITE_ID || '719d3658-24b7-470e-93ab-cf0a1375357c' }}
         # with:
         #   path: .
         #   node-version: 22
