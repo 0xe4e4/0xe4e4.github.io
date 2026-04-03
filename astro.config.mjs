@@ -4,9 +4,15 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import { defineConfig } from 'astro/config';
 
-// Replace with your GitHub Pages URL, e.g. https://your-username.github.io
-// (user site repo: your-username.github.io — no `base` needed)
+const site = 'https://0xe4e4.github.io';
+const repoName = process.env.GITHUB_REPOSITORY?.split('/')[1];
+const isUserSiteRepo = repoName === '0xe4e4.github.io';
+
+// GitHub Actions:
+// - user site repo (0xe4e4.github.io): base "/"
+// - project repo (other name): base "/<repo>"
 export default defineConfig({
-	site: 'https://example.com',
+	site,
+	base: isUserSiteRepo ? '/' : repoName ? `/${repoName}` : '/',
 	integrations: [mdx(), sitemap()],
 });
