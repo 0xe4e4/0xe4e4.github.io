@@ -1,11 +1,12 @@
 ---
 # title / date は必須（Astro の blog コレクション）
-# date: 日付だけ YYYY-MM-DD でも可。時刻まで出したい・同日の並び順を付けたいときは ISO 日時（例: 2026-04-03T21:30:00 または 2026-04-03T21:30:00+09:00）
+# 挿入時に日時を入れる: Obsidian「テンプレート」の {{date}} / {{time}}（下記 .obsidian/templates.json の形式に従う）
+# 日付だけにしたいときは date の行を手で YYYY-MM-DD に直すか、T以降を削除
 title: "{{title}}"
 description: この記事の要約（分析の結論など）を1行で
-date: {{date}}
-# updatedDate: 任意。追記したら更新。形式は date と同じ
-updatedDate: {{date}}
+date: "{{date}}T{{time}}"
+# updatedDate: 任意。追記したら更新。初回は date と同じで挿入される
+updatedDate: "{{date}}T{{time}}"
 # heroImage: 任意。src/assets からの相対パス（例）
 heroImage: ../../assets/blog-placeholder-about.jpg
 tags:

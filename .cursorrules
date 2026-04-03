@@ -20,6 +20,11 @@
 - `heroImage`（任意）: 画像パス（例: `../../assets/blog-placeholder-1.jpg`）
 - `tags`（任意）: 文字列の配列
 
+### Obsidian テンプレート（`src/content/blog/templates/`）
+
+- Core「テンプレート」で `{{date}}` / `{{time}}` を使う場合、`new-post.md.md` は `date: "{{date}}T{{time}}"` のように書くと挿入時に日時が入る。
+- 日付・時刻の書式は `src/content/blog/.obsidian/templates.json` の `dateFormat` / `timeFormat` に合わせる。
+
 ### 雛形
 
 ```yaml
