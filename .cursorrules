@@ -14,9 +14,9 @@
 新規 Markdown の**先頭**に次を置く。Obsidian のプロパティと同じキー構造でよい。
 
 - `title`（必須）: 記事タイトル
-- `date`（必須）: ISO 日付 `YYYY-MM-DD`（例: `2026-04-03`）
+- `date`（必須）: ISO `YYYY-MM-DD`、または時刻付き `YYYY-MM-DDTHH:mm:ss` / `...+09:00`（一覧・本文で日時表示・同日の並びに使える）
 - `description`（任意）: 一行の概要。無くてもビルドは通る
-- `updatedDate`（任意）: 追記した日（同じく日付）
+- `updatedDate`（任意）: 追記日。形式は `date` と同じ
 - `heroImage`（任意）: 画像パス（例: `../../assets/blog-placeholder-1.jpg`）
 - `tags`（任意）: 文字列の配列
 
@@ -26,6 +26,7 @@
 ---
 title: ''
 date: YYYY-MM-DD
+# または: 2026-04-03T21:30:00+09:00
 description: ''
 ---
 

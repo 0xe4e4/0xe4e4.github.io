@@ -1,17 +1,36 @@
 ---
 interface Props {
 	date: Date;
+	/**
+	 * `true`: 常に日付＋時刻を表示。
+	 * `false` / 未指定: frontmatter が日付だけ（UTC 0:00）のときは日付のみ、時刻付きなら日時を表示。
+	 */
+	showTime?: boolean;
 }
 
-const { date } = Astro.props;
----
+const { date, showTime } = Astro.props;
 
-<time datetime={date.toISOString()}>
-	{
-		date.toLocaleDateString('ja-JP', {
+/** `date: YYYY-MM-DD` のみだとパース結果が UTC 深夜になることが多い → 従来どおり「日付だけ」とみなす */
+const isDateOnly =
+	showTime !== true &&
+	date.getUTCHours() === 0 &&
+	date.getUTCMinutes() === 0 &&
+	date.getUTCSeconds() === 0 &&
+	date.getUTCMilliseconds() === 0;
+
+const label = isDateOnly
+	? date.toLocaleDateString('ja-JP', {
 			year: 'numeric',
 			month: 'long',
 			day: 'numeric',
 		})
-	}
-</time>
+	: date.toLocaleString('ja-JP', {
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric',
+			hour: '2-digit',
+			minute: '2-digit',
+		});
+---
+
+<time datetime={date.toISOString()}>{label}</time>
