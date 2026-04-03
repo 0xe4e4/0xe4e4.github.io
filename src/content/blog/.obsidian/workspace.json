@@ -41,12 +41,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "無題のファイル.md",
+                "file": "合宿でnote.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "無題のファイル"
+              "title": "合宿でnote"
             }
           }
         ],
@@ -123,7 +123,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "無題のファイル.md",
+                "file": "合宿でnote.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -133,7 +133,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "無題のファイルへのバックリンク"
+              "title": "合宿でnoteへのバックリンク"
             }
           },
           {
@@ -142,12 +142,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "無題のファイル.md",
+                "file": "合宿でnote.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "無題のファイルからのアウトゴーイングリンク"
+              "title": "合宿でnoteからのアウトゴーイングリンク"
             }
           },
           {
@@ -185,13 +185,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "無題のファイル.md",
+                "file": "合宿でnote.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "無題のファイルのアウトライン"
+              "title": "合宿でnoteのアウトライン"
             }
           },
           {
@@ -226,7 +226,7 @@
   "active": "fe9a58a342319ad0",
   "lastOpenFiles": [
     "templates/new-post.md.md",
-    "無題のファイル.md",
+    "合宿でnote.md",
     "test.md",
     "templates",
     "third-post.md",

@@ -1,5 +1,5 @@
 ---
-title: "無題のファイル"
+title: 合宿でnote
 description: この記事の要約（分析の結論など）を1行で
 date: 2026-04-03
 updatedDate: 2026-04-03
