@@ -1,0 +1,45 @@
+# 日記サイト（Astro）— 新規記事追加時のルール
+
+## 保存場所
+
+- 本文は必ず `src/content/blog/` に置く（Obsidian の保管庫としてこのフォルダを開いてもよい）。
+
+## ファイル名
+
+- 推奨: `YYYY-MM-DD-短いスラッグ.md`（例: `2026-04-03-rust-notes.md`）
+- スラッグは英小文字・ハイフン。日付は frontmatter の `date` と揃える。
+
+## Frontmatter（YAML）
+
+新規 Markdown の**先頭**に次を置く。Obsidian のプロパティと同じキー構造でよい。
+
+- `title`（必須）: 記事タイトル
+- `date`（必須）: ISO 日付 `YYYY-MM-DD`（例: `2026-04-03`）
+- `description`（任意）: 一行の概要。無くてもビルドは通る
+- `updatedDate`（任意）: 追記した日（同じく日付）
+- `heroImage`（任意）: 画像パス（例: `../../assets/blog-placeholder-1.jpg`）
+- `tags`（任意）: 文字列の配列
+
+### 雛形
+
+```yaml
+---
+title: ''
+date: YYYY-MM-DD
+description: ''
+---
+
+本文はここから。
+```
+
+## 自動生成タスク
+
+ユーザーが「今日の日記を追加して」と依頼した場合:
+
+1. 今日の日付（ユーザーのタイムゾーンが分からなければ UTC または会話文脈に従う）で `date` を埋める。
+2. `title` はユーザーが指定していなければ、その日の日付を含む短い仮タイトルにする。
+3. 上記の雛形で空の本文またはユーザーが述べた要点を書く。
+
+## ビルド
+
+- フロントマターは Astro の `src/content.config.ts` の Zod スキーマに合わせる。必須は `title` と `date` のみ。

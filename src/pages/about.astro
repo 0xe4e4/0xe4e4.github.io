@@ -1,0 +1,15 @@
+---
+import AboutHeroImage from '../assets/blog-placeholder-about.jpg';
+import Layout from '../layouts/BlogPost.astro';
+---
+
+<Layout
+	title="About"
+	description="このサイトについて"
+	date={new Date('2021-08-08')}
+	heroImage={AboutHeroImage}
+>
+	<p>
+		ローカルの Obsidian で書いた Markdown を GitHub に push するだけで公開される、個人用の日記サイトです。コメント・いいね・通知はありません。
+	</p>
+</Layout>
