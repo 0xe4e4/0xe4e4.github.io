@@ -31,17 +31,70 @@ const allPosts = sortBlogPostsNewestFirst(await getCollection('blog'));
 		}
 		.home-intro {
 			max-width: 68ch;
+			margin-bottom: 2.75rem;
+		}
+		.home-intro__header {
+			margin: 0 0 1.35rem 0;
+			padding-bottom: 1rem;
+			border-bottom: 1px solid rgba(148, 163, 184, 0.28);
+		}
+		.home-intro__header h1 {
+			margin: 0 0 0.35rem 0;
+			font-size: clamp(1.9rem, 4.2vw, 2.4rem);
+			letter-spacing: -0.03em;
+			line-height: 1.2;
+		}
+		.home-intro__tag {
+			display: block;
+			margin: 0 0 0.5rem 0;
+			font-size: 0.75rem;
+			font-weight: 600;
+			letter-spacing: 0.08em;
+			color: rgb(var(--gray));
+		}
+		.home-intro__lead {
+			margin: 0 0 1.75rem 0;
+			font-size: clamp(1.12rem, 2.2vw, 1.22rem);
+			line-height: 1.72;
+			color: rgb(var(--gray-dark));
+			letter-spacing: 0.01em;
+		}
+		.home-intro__note {
+			margin: 0;
+			padding: 1rem 1.1rem 1.05rem 1.15rem;
+			border-left: 3px solid var(--accent);
+			border-radius: 0 8px 8px 0;
+			background: rgba(148, 163, 184, 0.08);
+			font-size: 0.94rem;
+			line-height: 1.68;
+			color: rgb(var(--gray-dark));
+		}
+		.home-intro__note p {
+			margin: 0 0 0.65rem 0;
+		}
+		.home-intro__note p:last-child {
+			margin-bottom: 0;
+		}
+		.blog-list-section {
+			max-width: 68ch;
+		}
+		.blog-list-section > h2 {
+			margin-top: 0;
+			margin-bottom: 0.35rem;
 		}
 	</style>
 
 	<div class="spa-view" data-spa-view="main">
 		<div class="home-intro">
-			<h1>{SITE_TITLE}</h1>
-			<p>{SITE_DESCRIPTION}</p>
-			<p>
-				右のリストは直近の記事です。下はすべての記事です。RSS
-				はページ上部のリンクから購読できます。
-			</p>
+			<header class="home-intro__header">
+				<span class="home-intro__tag">このサイト</span>
+				<h1>{SITE_TITLE}</h1>
+			</header>
+			<p class="home-intro__lead">{SITE_DESCRIPTION}</p>
+			<aside class="home-intro__note" aria-label="このページについて">
+				<p>右のリストは直近の記事です。下はすべての記事です。</p>
+				<p>RSS はページ上部のリンクから購読できます。</p>
+			</aside>
 		</div>
 
 		<section id="blog" class="blog-list-section" aria-labelledby="blog-heading">
