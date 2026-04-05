@@ -1,0 +1,58 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { ImageMetadata } from 'astro';
+import BaseHead from './BaseHead.astro';
+import Footer from './Footer.astro';
+import Header from './Header.astro';
+import SiteSidebar from './SiteSidebar.astro';
+
+interface Props {
+	title: string;
+	description?: string;
+	image?: ImageMetadata;
+	posts: CollectionEntry<'blog'>[];
+}
+
+const { title, description = '', image, posts } = Astro.props;
+---
+
+<!doctype html>
+<html lang="ja" data-base={import.meta.env.BASE_URL}>
+	<head>
+		<BaseHead title={title} description={description} image={image} />
+		<slot name="head" />
+		<style is:global>
+			main.site-main-grid {
+				width: min(1040px, calc(100% - 2em));
+				margin: 0 auto;
+				padding: 2.5em 1em 4em;
+				display: grid;
+				grid-template-columns: minmax(0, 1fr) minmax(220px, 280px);
+				gap: 2.25rem 2.5rem;
+				align-items: start;
+				box-sizing: border-box;
+			}
+			.site-main-column {
+				min-width: 0;
+			}
+			@media (max-width: 820px) {
+				main.site-main-grid {
+					grid-template-columns: 1fr;
+				}
+				.site-aside {
+					position: static;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main class="site-main-grid">
+			<div class="site-main-column">
+				<slot />
+			</div>
+			<SiteSidebar posts={posts} />
+		</main>
+		<Footer />
+	</body>
+</html>

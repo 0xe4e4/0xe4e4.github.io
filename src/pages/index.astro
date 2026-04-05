@@ -1,215 +1,154 @@
 ---
+import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
+import AboutHeroImage from '../assets/blog-placeholder-about.jpg';
+import FormattedDate from '../components/FormattedDate.astro';
+import SiteShell from '../components/SiteShell.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import { sortBlogPostsNewestFirst } from '../utils/sortBlogPosts';
 
 const allPosts = sortBlogPostsNewestFirst(await getCollection('blog'));
-const recentPosts = allPosts.slice(0, 10);
-const hasMorePosts = allPosts.length > 10;
 
-const tagSet = new Map<string, number>();
-for (const post of allPosts) {
-	for (const tag of post.data.tags ?? []) {
-		tagSet.set(tag, (tagSet.get(tag) ?? 0) + 1);
-	}
-}
-const tagsSorted = [...tagSet.keys()].sort((a, b) => a.localeCompare(b, 'ja'));
-
-function showUpdatedLine(post: (typeof allPosts)[number]): boolean {
-	const u = post.data.updatedDate;
-	if (!u) return false;
-	return u.valueOf() > post.data.date.valueOf();
-}
-
-function compactDate(d: Date): string {
-	return d.toLocaleDateString('ja-JP', {
-		year: 'numeric',
-		month: '2-digit',
-		day: '2-digit',
-	});
-}
+const base = import.meta.env.BASE_URL;
+const root = base.endsWith('/') ? base : `${base}/`;
+const blogHashUrl = `${root}#blog`;
 ---
 
-<!doctype html>
-<html lang="ja">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-		<style>
-			main.home-layout {
-				width: min(1040px, calc(100% - 2em));
-				margin: 0 auto;
-				padding: 2.5em 1em 4em;
-				display: grid;
-				grid-template-columns: minmax(0, 1fr) minmax(220px, 280px);
-				gap: 2.25rem 2.5rem;
-				align-items: start;
+<SiteShell title={SITE_TITLE} description={SITE_DESCRIPTION} posts={allPosts}>
+	<style is:global slot="head">
+		.spa-view[hidden] {
+			display: none !important;
+		}
+		.post-list {
+			list-style: none;
+			margin: 2em 0 0;
+			padding: 0;
+			display: flex;
+			flex-direction: column;
+			gap: 1.75rem;
+		}
+		.post-list li a {
+			display: block;
+			text-decoration: none;
+			color: inherit;
+			padding: 0.25em 0;
+			border-bottom: 1px solid rgba(var(--gray), 0.2);
+		}
+		.post-list li a:hover .post-title {
+			color: var(--accent);
+		}
+		.post-row {
+			display: flex;
+			flex-direction: column;
+			gap: 0.35rem;
+		}
+		@media (min-width: 600px) {
+			.post-row {
+				flex-direction: row;
+				align-items: baseline;
+				justify-content: space-between;
+				gap: 1.5rem;
 			}
-			.home-intro {
-				min-width: 0;
+		}
+		.post-title {
+			margin: 0;
+			font-size: 1.2rem;
+			font-weight: 600;
+			line-height: 1.35;
+			transition: color 0.15s ease;
+		}
+		.post-date {
+			margin: 0;
+			color: rgb(var(--gray));
+			font-size: 0.95rem;
+			flex-shrink: 0;
+		}
+		.thumb {
+			margin: 0 0 0.75rem 0;
+			border-radius: 8px;
+			overflow: hidden;
+		}
+		.thumb img {
+			display: block;
+			width: 100%;
+			height: auto;
+		}
+		.about-hero {
+			width: 100%;
+			max-width: 68ch;
+			margin: 0 0 1.25rem 0;
+		}
+		.about-hero img {
+			display: block;
+			margin: 0 auto;
+			border-radius: 8px;
+			box-shadow: var(--box-shadow);
+		}
+		.about-prose {
+			max-width: 68ch;
+		}
+	</style>
+
+	<div class="spa-view" data-spa-view="home">
+		<h1>{SITE_TITLE}</h1>
+		<p>{SITE_DESCRIPTION}</p>
+		<p>
+			右のリストは直近の記事です。すべての記事は
+			<a href={blogHashUrl}>記事一覧</a>
+			から。RSS はページ上部のリンクから購読できます。
+		</p>
+	</div>
+
+	<div class="spa-view" data-spa-view="blog" hidden>
+		<h1>記事一覧</h1>
+		<ul class="post-list">
+			{
+				allPosts.map((post) => (
+					<li>
+						<a href={`/blog/${post.id}/`}>
+							{post.data.heroImage && (
+								<div class="thumb">
+									<Image width={720} height={360} src={post.data.heroImage} alt="" />
+								</div>
+							)}
+							<div class="post-row">
+								<h2 class="post-title">{post.data.title}</h2>
+								<p class="post-date">
+									<FormattedDate date={post.data.date} />
+								</p>
+							</div>
+						</a>
+					</li>
+				))
 			}
-			.home-aside {
-				position: sticky;
-				top: 1rem;
-				padding: 1.1rem 1.15rem 1.25rem;
-				border-radius: 10px;
-				background: rgba(15, 23, 42, 0.65);
-				border: 1px solid rgba(148, 163, 184, 0.12);
-				font-size: 0.95rem;
-				line-height: 1.55;
+		</ul>
+	</div>
+
+	<div class="spa-view" data-spa-view="about" hidden>
+		<div class="about-hero">
+			<Image width={1020} height={510} src={AboutHeroImage} alt="" />
+		</div>
+		<div class="about-prose">
+			<h1>About</h1>
+			<p>
+				ローカルの Obsidian で書いた Markdown を GitHub に push するだけで公開される、個人用の日記サイトです。コメント・いいね・通知はありません。
+			</p>
+		</div>
+	</div>
+
+	<script is:inline>
+		(function () {
+			function applyView() {
+				var h = (location.hash || '').replace(/^#\/?/, '');
+				var v = h === 'blog' ? 'blog' : h === 'about' ? 'about' : 'home';
+				document.querySelectorAll('[data-spa-view]').forEach(function (el) {
+					var on = el.getAttribute('data-spa-view') === v;
+					if (on) el.removeAttribute('hidden');
+					else el.setAttribute('hidden', '');
+				});
 			}
-			.home-aside h2 {
-				font-size: 0.82rem;
-				font-weight: 700;
-				text-transform: uppercase;
-				letter-spacing: 0.06em;
-				color: rgb(var(--gray));
-				margin: 0 0 0.65rem 0;
-			}
-			.home-aside h2:not(:first-child) {
-				margin-top: 1.35rem;
-			}
-			.recent-list {
-				list-style: none;
-				margin: 0;
-				padding: 0;
-				display: flex;
-				flex-direction: column;
-				gap: 0.65rem;
-			}
-			.recent-list a {
-				color: inherit;
-				text-decoration: none;
-			}
-			.recent-list a:hover .recent-title {
-				color: var(--accent);
-			}
-			.recent-title {
-				display: block;
-				font-weight: 600;
-				font-size: 0.98rem;
-				line-height: 1.35;
-				transition: color 0.15s ease;
-			}
-			.recent-meta {
-				display: block;
-				margin-top: 0.2rem;
-				font-size: 0.8rem;
-				color: rgb(var(--gray));
-			}
-			.recent-updated {
-				display: block;
-				font-size: 0.72rem;
-				color: rgb(var(--gray));
-				opacity: 0.9;
-				margin-top: 0.1rem;
-			}
-			.aside-more {
-				margin: 1rem 0 0;
-				padding-top: 0.85rem;
-				border-top: 1px solid rgba(148, 163, 184, 0.12);
-			}
-			.aside-more a {
-				font-size: 0.88rem;
-				font-weight: 600;
-				color: var(--accent);
-				text-decoration: none;
-			}
-			.aside-more a:hover {
-				text-decoration: underline;
-			}
-			.tag-list {
-				list-style: none;
-				margin: 0;
-				padding: 0;
-				display: flex;
-				flex-wrap: wrap;
-				gap: 0.35rem 0.5rem;
-			}
-			.tag-list li {
-				margin: 0;
-			}
-			.tag-pill {
-				display: inline-block;
-				padding: 0.15rem 0.45rem;
-				border-radius: 6px;
-				font-size: 0.78rem;
-				background: rgba(148, 163, 184, 0.12);
-				color: rgb(var(--gray-dark));
-			}
-			@media (max-width: 820px) {
-				main.home-layout {
-					grid-template-columns: 1fr;
-				}
-				.home-aside {
-					position: static;
-				}
-			}
-		</style>
-	</head>
-	<body>
-		<Header />
-		<main class="home-layout">
-			<div class="home-intro">
-				<h1>{SITE_TITLE}</h1>
-				<p>{SITE_DESCRIPTION}</p>
-				<p>
-					右のリストは直近の記事です。すべての記事は
-					<a href="/blog/">記事一覧</a>
-					から。RSS はページ上部のリンクから購読できます。
-				</p>
-			</div>
-			<aside class="home-aside" aria-label="サイドバー">
-				<h2>直近の記事</h2>
-				<ul class="recent-list">
-					{
-						recentPosts.map((post) => (
-							<li>
-								<a href={`/blog/${post.id}/`}>
-									<span class="recent-title">{post.data.title}</span>
-									<span class="recent-meta">
-										<time datetime={post.data.date.toISOString()}>
-											{compactDate(post.data.date)}
-										</time>
-									</span>
-									{showUpdatedLine(post) && post.data.updatedDate && (
-										<span class="recent-updated">
-											更新{' '}
-											<time datetime={post.data.updatedDate.toISOString()}>
-												{compactDate(post.data.updatedDate)}
-											</time>
-										</span>
-									)}
-								</a>
-							</li>
-						))
-					}
-				</ul>
-				{
-					tagsSorted.length > 0 && (
-						<>
-							<h2>タグ</h2>
-							<ul class="tag-list">
-								{tagsSorted.map((tag) => (
-									<li>
-										<span class="tag-pill">{tag}</span>
-									</li>
-								))}
-							</ul>
-						</>
-					)
-				}
-				{
-					hasMorePosts && (
-						<p class="aside-more">
-							<a href="/blog/">すべての記事を見る</a>
-						</p>
-					)
-				}
-			</aside>
-		</main>
-		<Footer />
-	</body>
-</html>
+			document.addEventListener('DOMContentLoaded', applyView);
+			window.addEventListener('hashchange', applyView);
+		})();
+	</script>
+</SiteShell>

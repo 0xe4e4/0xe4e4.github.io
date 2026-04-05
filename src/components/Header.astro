@@ -1,18 +1,58 @@
 ---
 import { SITE_TITLE } from '../consts';
 import HeaderLink from './HeaderLink.astro';
+
+const base = import.meta.env.BASE_URL;
+const root = base.endsWith('/') ? base : `${base}/`;
+const homeHref = root;
+const blogHref = `${root}#blog`;
+const aboutHref = `${root}#about`;
 ---
 
 <header>
 	<nav>
-		<h2><a href="/">{SITE_TITLE}</a></h2>
+		<h2><a href={homeHref}>{SITE_TITLE}</a></h2>
 		<div class="internal-links">
-			<HeaderLink href="/">Home</HeaderLink>
-			<HeaderLink href="/blog">記事一覧</HeaderLink>
-			<HeaderLink href="/about">About</HeaderLink>
+			<HeaderLink href={homeHref} route="home">Home</HeaderLink>
+			<HeaderLink href={blogHref} route="blog">記事一覧</HeaderLink>
+			<HeaderLink href={aboutHref} route="about">About</HeaderLink>
 		</div>
 	</nav>
 </header>
+<script is:inline>
+	(function () {
+		function stripBasePath(pathname) {
+			var raw = document.documentElement.getAttribute('data-base') || '/';
+			var b = raw.replace(/\/$/, '') || '';
+			if (!b || b === '/') return pathname;
+			if (pathname.startsWith(b)) {
+				var rest = pathname.slice(b.length);
+				return rest.startsWith('/') ? rest : '/' + rest;
+			}
+			return pathname;
+		}
+
+		function syncNav() {
+			var path = stripBasePath(location.pathname);
+			if (!path.startsWith('/')) path = '/' + path;
+			var hash = (location.hash || '').replace(/^#\/?/, '');
+			var parts = path.replace(/^\/+|\/+$/g, '').split('/').filter(Boolean);
+			var isBlogPost = parts[0] === 'blog' && parts.length >= 2;
+
+			document.querySelectorAll('header nav a[data-route]').forEach(function (a) {
+				var route = a.getAttribute('data-route');
+				var active = false;
+				if (route === 'home') active = (path === '/' || path === '') && !hash;
+				else if (route === 'blog') active = hash === 'blog' || isBlogPost;
+				else if (route === 'about') active = hash === 'about';
+				a.classList.toggle('active', active);
+			});
+		}
+
+		document.addEventListener('DOMContentLoaded', syncNav);
+		window.addEventListener('hashchange', syncNav);
+	})();
+</script>
 <style>
 	header {
 		margin: 0;

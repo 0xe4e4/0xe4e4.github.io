@@ -1,15 +1,19 @@
 ---
-import AboutHeroImage from '../assets/blog-placeholder-about.jpg';
-import Layout from '../layouts/BlogPost.astro';
+const base = import.meta.env.BASE_URL;
+const target = `${base.replace(/\/?$/, '/')}#about`;
 ---
 
-<Layout
-	title="About"
-	description="このサイトについて"
-	date={new Date('2021-08-08')}
-	heroImage={AboutHeroImage}
->
-	<p>
-		ローカルの Obsidian で書いた Markdown を GitHub に push するだけで公開される、個人用の日記サイトです。コメント・いいね・通知はありません。
-	</p>
-</Layout>
+<!doctype html>
+<html lang="ja">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>リダイレクト</title>
+		<script is:inline define:vars={{ target }}>
+			location.replace(target);
+		</script>
+	</head>
+	<body>
+		<p><a href={target}>About へ移動</a></p>
+	</body>
+</html>

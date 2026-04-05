@@ -1,0 +1,175 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+	posts: CollectionEntry<'blog'>[];
+}
+
+const { posts } = Astro.props;
+const recentPosts = posts.slice(0, 10);
+const hasMorePosts = posts.length > 10;
+
+const tagSet = new Map<string, number>();
+for (const post of posts) {
+	for (const tag of post.data.tags ?? []) {
+		tagSet.set(tag, (tagSet.get(tag) ?? 0) + 1);
+	}
+}
+const tagsSorted = [...tagSet.keys()].sort((a, b) => a.localeCompare(b, 'ja'));
+
+const base = import.meta.env.BASE_URL;
+const listHashUrl = `${base.replace(/\/?$/, '/')}#blog`;
+
+function showUpdatedLine(post: CollectionEntry<'blog'>): boolean {
+	const u = post.data.updatedDate;
+	if (!u) return false;
+	return u.valueOf() > post.data.date.valueOf();
+}
+
+function compactDate(d: Date): string {
+	return d.toLocaleDateString('ja-JP', {
+		year: 'numeric',
+		month: '2-digit',
+		day: '2-digit',
+	});
+}
+---
+
+<aside class="site-aside" aria-label="サイドバー">
+	<h2>直近の記事</h2>
+	<ul class="recent-list">
+		{
+			recentPosts.map((post) => (
+				<li>
+					<a href={`/blog/${post.id}/`}>
+						<span class="recent-title">{post.data.title}</span>
+						<span class="recent-meta">
+							<time datetime={post.data.date.toISOString()}>{compactDate(post.data.date)}</time>
+						</span>
+						{showUpdatedLine(post) && post.data.updatedDate && (
+							<span class="recent-updated">
+								更新{' '}
+								<time datetime={post.data.updatedDate.toISOString()}>
+									{compactDate(post.data.updatedDate)}
+								</time>
+							</span>
+						)}
+					</a>
+				</li>
+			))
+		}
+	</ul>
+	{
+		tagsSorted.length > 0 && (
+			<>
+				<h2>タグ</h2>
+				<ul class="tag-list">
+					{tagsSorted.map((tag) => (
+						<li>
+							<span class="tag-pill">{tag}</span>
+						</li>
+					))}
+				</ul>
+			</>
+		)
+	}
+	{
+		hasMorePosts && (
+			<p class="aside-more">
+				<a href={listHashUrl}>すべての記事を見る</a>
+			</p>
+		)
+	}
+</aside>
+
+<style is:global>
+	.site-aside {
+		position: sticky;
+		top: 1rem;
+		padding: 1.1rem 1.15rem 1.25rem;
+		border-radius: 10px;
+		background: rgba(15, 23, 42, 0.65);
+		border: 1px solid rgba(148, 163, 184, 0.12);
+		font-size: 0.95rem;
+		line-height: 1.55;
+	}
+	.site-aside h2 {
+		font-size: 0.82rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		color: rgb(var(--gray));
+		margin: 0 0 0.65rem 0;
+	}
+	.site-aside h2:not(:first-child) {
+		margin-top: 1.35rem;
+	}
+	.recent-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.65rem;
+	}
+	.recent-list a {
+		color: inherit;
+		text-decoration: none;
+	}
+	.recent-list a:hover .recent-title {
+		color: var(--accent);
+	}
+	.recent-title {
+		display: block;
+		font-weight: 600;
+		font-size: 0.98rem;
+		line-height: 1.35;
+		transition: color 0.15s ease;
+	}
+	.recent-meta {
+		display: block;
+		margin-top: 0.2rem;
+		font-size: 0.8rem;
+		color: rgb(var(--gray));
+	}
+	.recent-updated {
+		display: block;
+		font-size: 0.72rem;
+		color: rgb(var(--gray));
+		opacity: 0.9;
+		margin-top: 0.1rem;
+	}
+	.aside-more {
+		margin: 1rem 0 0;
+		padding-top: 0.85rem;
+		border-top: 1px solid rgba(148, 163, 184, 0.12);
+	}
+	.aside-more a {
+		font-size: 0.88rem;
+		font-weight: 600;
+		color: var(--accent);
+		text-decoration: none;
+	}
+	.aside-more a:hover {
+		text-decoration: underline;
+	}
+	.tag-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.35rem 0.5rem;
+	}
+	.tag-list li {
+		margin: 0;
+	}
+	.tag-pill {
+		display: inline-block;
+		padding: 0.15rem 0.45rem;
+		border-radius: 6px;
+		font-size: 0.78rem;
+		background: rgba(148, 163, 184, 0.12);
+		color: rgb(var(--gray-dark));
+	}
+</style>
