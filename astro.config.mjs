@@ -3,6 +3,7 @@
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import { defineConfig } from 'astro/config';
+import rehypeSlug from 'rehype-slug';
 
 const site = 'https://0xe4e4.github.io';
 const repoName = process.env.GITHUB_REPOSITORY?.split('/')[1];
@@ -14,5 +15,8 @@ const isUserSiteRepo = repoName === '0xe4e4.github.io';
 export default defineConfig({
 	site,
 	base: isUserSiteRepo ? '/' : repoName ? `/${repoName}` : '/',
+	markdown: {
+		rehypePlugins: [rehypeSlug],
+	},
 	integrations: [mdx(), sitemap()],
 });

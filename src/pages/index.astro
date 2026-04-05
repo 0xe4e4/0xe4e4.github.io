@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import AboutHeroImage from '../assets/blog-placeholder-about.jpg';
-import FormattedDate from '../components/FormattedDate.astro';
+import PostList from '../components/PostList.astro';
 import SiteShell from '../components/SiteShell.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import { sortBlogPostsNewestFirst } from '../utils/sortBlogPosts';
@@ -14,60 +14,6 @@ const allPosts = sortBlogPostsNewestFirst(await getCollection('blog'));
 	<style is:global slot="head">
 		.spa-view[hidden] {
 			display: none !important;
-		}
-		.post-list {
-			list-style: none;
-			margin: 2em 0 0;
-			padding: 0;
-			display: flex;
-			flex-direction: column;
-			gap: 1.75rem;
-		}
-		.post-list li a {
-			display: block;
-			text-decoration: none;
-			color: inherit;
-			padding: 0.25em 0;
-			border-bottom: 1px solid rgba(var(--gray), 0.2);
-		}
-		.post-list li a:hover .post-title {
-			color: var(--accent);
-		}
-		.post-row {
-			display: flex;
-			flex-direction: column;
-			gap: 0.35rem;
-		}
-		@media (min-width: 600px) {
-			.post-row {
-				flex-direction: row;
-				align-items: baseline;
-				justify-content: space-between;
-				gap: 1.5rem;
-			}
-		}
-		.post-title {
-			margin: 0;
-			font-size: 1.2rem;
-			font-weight: 600;
-			line-height: 1.35;
-			transition: color 0.15s ease;
-		}
-		.post-date {
-			margin: 0;
-			color: rgb(var(--gray));
-			font-size: 0.95rem;
-			flex-shrink: 0;
-		}
-		.thumb {
-			margin: 0 0 0.75rem 0;
-			border-radius: 8px;
-			overflow: hidden;
-		}
-		.thumb img {
-			display: block;
-			width: 100%;
-			height: auto;
 		}
 		.about-hero {
 			width: 100%;
@@ -100,32 +46,7 @@ const allPosts = sortBlogPostsNewestFirst(await getCollection('blog'));
 
 		<section id="blog" class="blog-list-section" aria-labelledby="blog-heading">
 			<h2 id="blog-heading">記事一覧</h2>
-			<ul class="post-list">
-				{
-					allPosts.map((post) => (
-						<li>
-							<a href={`/blog/${post.id}/`}>
-								{post.data.heroImage && (
-									<div class="thumb">
-										<Image
-											width={720}
-											height={360}
-											src={post.data.heroImage}
-											alt=""
-										/>
-									</div>
-								)}
-								<div class="post-row">
-									<h3 class="post-title">{post.data.title}</h3>
-									<p class="post-date">
-										<FormattedDate date={post.data.date} />
-									</p>
-								</div>
-							</a>
-						</li>
-					))
-				}
-			</ul>
+			<PostList posts={allPosts} />
 		</section>
 	</div>
 

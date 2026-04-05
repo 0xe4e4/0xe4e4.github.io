@@ -1,5 +1,8 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { SITE_DESCRIPTION } from '../consts';
+import { getMonthsForYear, getRecentYearsWithPosts } from '../utils/archive';
+import { tagListPath } from '../utils/tag';
 
 interface Props {
 	posts: CollectionEntry<'blog'>[];
@@ -19,6 +22,9 @@ const tagsSorted = [...tagSet.keys()].sort((a, b) => a.localeCompare(b, 'ja'));
 
 const base = import.meta.env.BASE_URL;
 const listHashUrl = `${base.replace(/\/?$/, '/')}#blog`;
+const rssHref = base.endsWith('/') ? `${base}rss.xml` : `${base}/rss.xml`;
+
+const archiveYears = getRecentYearsWithPosts(posts, 3);
 
 function showUpdatedLine(post: CollectionEntry<'blog'>): boolean {
 	const u = post.data.updatedDate;
@@ -33,9 +39,22 @@ function compactDate(d: Date): string {
 		day: '2-digit',
 	});
 }
+
+function monthLabel(m: number): string {
+	return `${m}月`;
+}
 ---
 
 <aside class="site-aside" aria-label="サイドバー">
+	<h2>検索</h2>
+	<div id="pagefind-search" class="pagefind-search-host"></div>
+
+	<h2>このサイト</h2>
+	<p class="aside-site-line">{SITE_DESCRIPTION}</p>
+	<p class="aside-rss">
+		<a href={rssHref}>RSS で購読</a>
+	</p>
+
 	<h2>直近の記事</h2>
 	<ul class="recent-list">
 		{
@@ -62,27 +81,94 @@ function compactDate(d: Date): string {
 		}
 	</ul>
 	{
-		tagsSorted.length > 0 && (
-			<>
-				<h2>タグ</h2>
-				<ul class="tag-list">
-					{tagsSorted.map((tag) => (
-						<li>
-							<span class="tag-pill">{tag}</span>
-						</li>
-					))}
-				</ul>
-			</>
-		)
-	}
-	{
 		hasMorePosts && (
 			<p class="aside-more">
 				<a href={listHashUrl}>すべての記事を見る</a>
 			</p>
 		)
 	}
+
+	{
+		tagsSorted.length > 0 && (
+			<>
+				<h2>タグ</h2>
+				<ul class="tag-list">
+					{tagsSorted.map((tag) => (
+						<li>
+							<a class="tag-pill" href={tagListPath(tag)}>
+								{tag}
+								<span class="tag-count">({tagSet.get(tag)})</span>
+							</a>
+						</li>
+					))}
+				</ul>
+			</>
+		)
+	}
+
+	{
+		archiveYears.length > 0 && (
+			<>
+				<h2>アーカイブ</h2>
+				<ul class="archive-list">
+					{archiveYears.map((year) => (
+						<li class="archive-year-block">
+							<a class="archive-year-link" href={`/blog/archive/${year}/`}>
+								{year}年
+							</a>
+							<ul class="archive-months">
+								{getMonthsForYear(posts, year).map((m) => (
+									<li>
+										<a
+											href={`/blog/archive/${year}/${String(m).padStart(2, '0')}/`}
+										>
+											{monthLabel(m)}
+										</a>
+									</li>
+								))}
+							</ul>
+						</li>
+					))}
+				</ul>
+			</>
+		)
+	}
 </aside>
+
+<script is:inline>
+	(function () {
+		var el = document.getElementById('pagefind-search');
+		if (!el) return;
+		var raw = document.documentElement.getAttribute('data-base') || '/';
+		var prefix = raw.endsWith('/') ? raw.slice(0, -1) : raw;
+		var bundlePath = (prefix === '' ? '' : prefix) + '/pagefind/';
+		function loadCss(href) {
+			var l = document.createElement('link');
+			l.rel = 'stylesheet';
+			l.href = href;
+			document.head.appendChild(l);
+		}
+		var cssUrl = new URL(bundlePath + 'pagefind-ui.css', window.location.origin)
+			.href;
+		var jsUrl = new URL(bundlePath + 'pagefind-ui.js', window.location.origin)
+			.href;
+		loadCss(cssUrl);
+		import(jsUrl)
+			.then(function (m) {
+				var PagefindUI = m.PagefindUI || (m.default && m.default.PagefindUI);
+				if (!PagefindUI) return;
+				new PagefindUI({
+					element: '#pagefind-search',
+					bundlePath: bundlePath,
+					showImages: false,
+				});
+			})
+			.catch(function () {
+				el.innerHTML =
+					'<p class="pagefind-fallback">検索は <code>npm run build && npm run preview</code> 後に利用できます。</p>';
+			});
+	})();
+</script>
 
 <style is:global>
 	.site-aside {
@@ -105,6 +191,37 @@ function compactDate(d: Date): string {
 	}
 	.site-aside h2:not(:first-child) {
 		margin-top: 1.35rem;
+	}
+	.pagefind-search-host {
+		min-height: 2.5rem;
+	}
+	.pagefind-search-host .pagefind-ui__search-input {
+		width: 100%;
+		box-sizing: border-box;
+	}
+	.pagefind-fallback {
+		margin: 0;
+		font-size: 0.78rem;
+		color: rgb(var(--gray));
+		line-height: 1.4;
+	}
+	.aside-site-line {
+		margin: 0 0 0.5rem 0;
+		font-size: 0.88rem;
+		color: rgb(var(--gray-dark));
+		line-height: 1.45;
+	}
+	.aside-rss {
+		margin: 0;
+		font-size: 0.88rem;
+	}
+	.aside-rss a {
+		font-weight: 600;
+		color: var(--accent);
+		text-decoration: none;
+	}
+	.aside-rss a:hover {
+		text-decoration: underline;
 	}
 	.recent-list {
 		list-style: none;
@@ -173,5 +290,46 @@ function compactDate(d: Date): string {
 		font-size: 0.78rem;
 		background: rgba(148, 163, 184, 0.12);
 		color: rgb(var(--gray-dark));
+		text-decoration: none;
+	}
+	.tag-pill:hover {
+		color: var(--accent);
+	}
+	.tag-count {
+		opacity: 0.85;
+		font-size: 0.72rem;
+	}
+	.archive-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	.archive-year-block {
+		margin: 0 0 0.75rem 0;
+	}
+	.archive-year-link {
+		font-weight: 600;
+		font-size: 0.92rem;
+		color: var(--accent);
+		text-decoration: none;
+	}
+	.archive-year-link:hover {
+		text-decoration: underline;
+	}
+	.archive-months {
+		list-style: none;
+		margin: 0.35rem 0 0 0;
+		padding: 0 0 0 0.85rem;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25rem 0.65rem;
+		font-size: 0.82rem;
+	}
+	.archive-months a {
+		color: rgb(var(--gray-dark));
+		text-decoration: none;
+	}
+	.archive-months a:hover {
+		color: var(--accent);
 	}
 </style>

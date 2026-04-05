@@ -1,0 +1,53 @@
+---
+import SiteShell from '../../components/SiteShell.astro';
+import PostList from '../../components/PostList.astro';
+import { SITE_TITLE } from '../../consts';
+import { sortBlogPostsNewestFirst } from '../../utils/sortBlogPosts';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog');
+	const tagSet = new Set<string>();
+	for (const p of posts) {
+		for (const t of p.data.tags ?? []) {
+			tagSet.add(t);
+		}
+	}
+	return [...tagSet].map((tag) => ({
+		params: { tag },
+	}));
+}
+
+let tag = Astro.params.tag ?? '';
+try {
+	tag = decodeURIComponent(tag);
+} catch {
+	/* keep raw */
+}
+const allPosts = sortBlogPostsNewestFirst(await getCollection('blog'));
+const filtered = allPosts.filter((p) => p.data.tags?.includes(tag));
+const title = `「${tag}」の記事 — ${SITE_TITLE}`;
+---
+
+<SiteShell
+	title={title}
+	description={`タグ「${tag}」の記事一覧`}
+	posts={allPosts}
+>
+	<section class="tag-page" aria-labelledby="tag-heading">
+		<h1 id="tag-heading">タグ: {tag}</h1>
+		<p class="tag-page__meta">{filtered.length} 件</p>
+		<PostList posts={filtered} />
+	</section>
+</SiteShell>
+
+<style>
+	.tag-page {
+		max-width: 68ch;
+	}
+	.tag-page__meta {
+		margin: -0.5rem 0 0 0;
+		color: rgb(var(--gray));
+		font-size: 0.95rem;
+	}
+</style>

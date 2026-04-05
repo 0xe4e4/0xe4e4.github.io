@@ -1,0 +1,53 @@
+---
+import SiteShell from '../../../../components/SiteShell.astro';
+import PostList from '../../../../components/PostList.astro';
+import { SITE_TITLE } from '../../../../consts';
+import { getYearMonthKeys } from '../../../../utils/archive';
+import { sortBlogPostsNewestFirst } from '../../../../utils/sortBlogPosts';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog');
+	const keys = getYearMonthKeys(posts);
+	return keys.map(({ year, month }) => ({
+		params: { year: String(year), month },
+	}));
+}
+
+const yearParam = Astro.params.year;
+const monthParam = Astro.params.month;
+const year = yearParam ? parseInt(yearParam, 10) : NaN;
+const monthNum = monthParam ? parseInt(monthParam, 10) : NaN;
+
+const allPosts = sortBlogPostsNewestFirst(await getCollection('blog'));
+const filtered = allPosts.filter((p) => {
+	const d = p.data.date;
+	return d.getFullYear() === year && d.getMonth() + 1 === monthNum;
+});
+
+const label = `${year}年${monthNum}月`;
+const title = `${label}の記事 — ${SITE_TITLE}`;
+---
+
+<SiteShell
+	title={title}
+	description={`${label}に投稿した記事`}
+	posts={allPosts}
+>
+	<section class="archive-page" aria-labelledby="archive-heading">
+		<h1 id="archive-heading">{label}</h1>
+		<p class="archive-page__meta">{filtered.length} 件</p>
+		<PostList posts={filtered} />
+	</section>
+</SiteShell>
+
+<style>
+	.archive-page {
+		max-width: 68ch;
+	}
+	.archive-page__meta {
+		margin: -0.5rem 0 0 0;
+		color: rgb(var(--gray));
+		font-size: 0.95rem;
+	}
+</style>
