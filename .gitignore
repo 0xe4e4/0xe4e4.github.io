@@ -22,3 +22,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Obsidian: keep vault settings in repo but not bundled plugin binaries (install locally)
+src/content/blog/.obsidian/plugins/

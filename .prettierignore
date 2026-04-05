@@ -1,0 +1,9 @@
+dist
+node_modules
+.astro
+package-lock.json
+
+# User content & editor — avoid churn in CI format check
+src/content/blog
+.vscode
+tsconfig.json

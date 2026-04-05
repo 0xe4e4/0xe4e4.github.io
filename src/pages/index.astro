@@ -8,10 +8,6 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import { sortBlogPostsNewestFirst } from '../utils/sortBlogPosts';
 
 const allPosts = sortBlogPostsNewestFirst(await getCollection('blog'));
-
-const base = import.meta.env.BASE_URL;
-const root = base.endsWith('/') ? base : `${base}/`;
-const blogHashUrl = `${root}#blog`;
 ---
 
 <SiteShell title={SITE_TITLE} description={SITE_DESCRIPTION} posts={allPosts}>
@@ -87,41 +83,50 @@ const blogHashUrl = `${root}#blog`;
 		.about-prose {
 			max-width: 68ch;
 		}
+		.home-intro {
+			max-width: 68ch;
+		}
 	</style>
 
-	<div class="spa-view" data-spa-view="home">
-		<h1>{SITE_TITLE}</h1>
-		<p>{SITE_DESCRIPTION}</p>
-		<p>
-			右のリストは直近の記事です。すべての記事は
-			<a href={blogHashUrl}>記事一覧</a>
-			から。RSS はページ上部のリンクから購読できます。
-		</p>
-	</div>
+	<div class="spa-view" data-spa-view="main">
+		<div class="home-intro">
+			<h1>{SITE_TITLE}</h1>
+			<p>{SITE_DESCRIPTION}</p>
+			<p>
+				右のリストは直近の記事です。下はすべての記事です。RSS
+				はページ上部のリンクから購読できます。
+			</p>
+		</div>
 
-	<div class="spa-view" data-spa-view="blog" hidden>
-		<h1>記事一覧</h1>
-		<ul class="post-list">
-			{
-				allPosts.map((post) => (
-					<li>
-						<a href={`/blog/${post.id}/`}>
-							{post.data.heroImage && (
-								<div class="thumb">
-									<Image width={720} height={360} src={post.data.heroImage} alt="" />
+		<section id="blog" class="blog-list-section" aria-labelledby="blog-heading">
+			<h2 id="blog-heading">記事一覧</h2>
+			<ul class="post-list">
+				{
+					allPosts.map((post) => (
+						<li>
+							<a href={`/blog/${post.id}/`}>
+								{post.data.heroImage && (
+									<div class="thumb">
+										<Image
+											width={720}
+											height={360}
+											src={post.data.heroImage}
+											alt=""
+										/>
+									</div>
+								)}
+								<div class="post-row">
+									<h3 class="post-title">{post.data.title}</h3>
+									<p class="post-date">
+										<FormattedDate date={post.data.date} />
+									</p>
 								</div>
-							)}
-							<div class="post-row">
-								<h2 class="post-title">{post.data.title}</h2>
-								<p class="post-date">
-									<FormattedDate date={post.data.date} />
-								</p>
-							</div>
-						</a>
-					</li>
-				))
-			}
-		</ul>
+							</a>
+						</li>
+					))
+				}
+			</ul>
+		</section>
 	</div>
 
 	<div class="spa-view" data-spa-view="about" hidden>
@@ -131,7 +136,8 @@ const blogHashUrl = `${root}#blog`;
 		<div class="about-prose">
 			<h1>About</h1>
 			<p>
-				ローカルの Obsidian で書いた Markdown を GitHub に push するだけで公開される、個人用の日記サイトです。コメント・いいね・通知はありません。
+				ローカルの Obsidian で書いた Markdown を GitHub に push
+				するだけで公開される、個人用の日記サイトです。コメント・いいね・通知はありません。
 			</p>
 		</div>
 	</div>
@@ -140,15 +146,30 @@ const blogHashUrl = `${root}#blog`;
 		(function () {
 			function applyView() {
 				var h = (location.hash || '').replace(/^#\/?/, '');
-				var v = h === 'blog' ? 'blog' : h === 'about' ? 'about' : 'home';
+				var v = h === 'about' ? 'about' : 'main';
 				document.querySelectorAll('[data-spa-view]').forEach(function (el) {
 					var on = el.getAttribute('data-spa-view') === v;
 					if (on) el.removeAttribute('hidden');
 					else el.setAttribute('hidden', '');
 				});
 			}
-			document.addEventListener('DOMContentLoaded', applyView);
-			window.addEventListener('hashchange', applyView);
+
+			function scrollToBlogIfNeeded() {
+				var h = (location.hash || '').replace(/^#\/?/, '');
+				if (h !== 'blog') return;
+				var el = document.getElementById('blog');
+				if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+			}
+
+			function onRoute() {
+				applyView();
+				requestAnimationFrame(function () {
+					scrollToBlogIfNeeded();
+				});
+			}
+
+			document.addEventListener('DOMContentLoaded', onRoute);
+			window.addEventListener('hashchange', onRoute);
 		})();
 	</script>
 </SiteShell>

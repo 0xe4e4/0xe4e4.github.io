@@ -3,6 +3,10 @@
   https://github.com/HermanMartinus/bearblog/
  */
 
+@import '@fontsource/zen-kaku-gothic-new/400.css';
+@import '@fontsource/zen-kaku-gothic-new/500.css';
+@import '@fontsource/zen-kaku-gothic-new/700.css';
+
 :root {
 	--accent: #9aa9ff;
 	--accent-dark: #c3cdff;
@@ -36,7 +40,8 @@ html {
 }
 
 body {
-	font-family: 'Atkinson', 'Zen Kaku Gothic New', 'Hiragino Kaku Gothic ProN', 'Yu Gothic',
+	font-family:
+		'Atkinson', 'Zen Kaku Gothic New', 'Hiragino Kaku Gothic ProN', 'Yu Gothic',
 		'Meiryo', system-ui, sans-serif;
 	margin: 0;
 	padding: 0;
@@ -66,7 +71,8 @@ h3,
 h4,
 h5,
 h6 {
-	font-family: 'Zen Kaku Gothic New', 'Atkinson', 'Hiragino Kaku Gothic ProN', 'Yu Gothic',
+	font-family:
+		'Zen Kaku Gothic New', 'Atkinson', 'Hiragino Kaku Gothic ProN', 'Yu Gothic',
 		'Meiryo', system-ui, sans-serif;
 	margin: 0 0 0.5rem 0;
 	color: rgb(var(--black));

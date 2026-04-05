@@ -11,15 +11,33 @@ interface Props {
 	description?: string;
 	image?: ImageMetadata;
 	posts: CollectionEntry<'blog'>[];
+	ogType?: 'website' | 'article';
+	publishedTime?: Date;
+	modifiedTime?: Date;
 }
 
-const { title, description = '', image, posts } = Astro.props;
+const {
+	title,
+	description = '',
+	image,
+	posts,
+	ogType = 'website',
+	publishedTime,
+	modifiedTime,
+} = Astro.props;
 ---
 
 <!doctype html>
 <html lang="ja" data-base={import.meta.env.BASE_URL}>
 	<head>
-		<BaseHead title={title} description={description} image={image} />
+		<BaseHead
+			title={title}
+			description={description}
+			image={image}
+			ogType={ogType}
+			publishedTime={publishedTime}
+			modifiedTime={modifiedTime}
+		/>
 		<slot name="head" />
 		<style is:global>
 			main.site-main-grid {

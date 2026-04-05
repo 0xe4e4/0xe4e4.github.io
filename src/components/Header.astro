@@ -36,17 +36,22 @@ const aboutHref = `${root}#about`;
 			var path = stripBasePath(location.pathname);
 			if (!path.startsWith('/')) path = '/' + path;
 			var hash = (location.hash || '').replace(/^#\/?/, '');
-			var parts = path.replace(/^\/+|\/+$/g, '').split('/').filter(Boolean);
+			var parts = path
+				.replace(/^\/+|\/+$/g, '')
+				.split('/')
+				.filter(Boolean);
 			var isBlogPost = parts[0] === 'blog' && parts.length >= 2;
 
-			document.querySelectorAll('header nav a[data-route]').forEach(function (a) {
-				var route = a.getAttribute('data-route');
-				var active = false;
-				if (route === 'home') active = (path === '/' || path === '') && !hash;
-				else if (route === 'blog') active = hash === 'blog' || isBlogPost;
-				else if (route === 'about') active = hash === 'about';
-				a.classList.toggle('active', active);
-			});
+			document
+				.querySelectorAll('header nav a[data-route]')
+				.forEach(function (a) {
+					var route = a.getAttribute('data-route');
+					var active = false;
+					if (route === 'home') active = (path === '/' || path === '') && !hash;
+					else if (route === 'blog') active = hash === 'blog' || isBlogPost;
+					else if (route === 'about') active = hash === 'about';
+					a.classList.toggle('active', active);
+				});
 		}
 
 		document.addEventListener('DOMContentLoaded', syncNav);

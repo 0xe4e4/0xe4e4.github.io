@@ -6,7 +6,12 @@ type Props = HTMLAttributes<'a'> & { route?: 'home' | 'blog' | 'about' };
 const { href, class: className, route, ...props } = Astro.props;
 ---
 
-<a href={href} class:list={[className]} data-route={route ?? undefined} {...props}>
+<a
+	href={href}
+	class:list={[className]}
+	data-route={route ?? undefined}
+	{...props}
+>
 	<slot />
 </a>
 <style>
