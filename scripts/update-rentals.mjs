@@ -157,13 +157,67 @@ function cityFromAddress(address, fallback) {
 	return fallback;
 }
 
+const STRUCTURE_GROUP_BY_LABEL = {
+	鉄筋コンクリート: '鉄筋系',
+	鉄骨鉄筋コンクリート: '鉄筋系',
+	プレキャストコンクリート: '鉄筋系',
+	鉄筋ブロック: '鉄筋系',
+	'SRC・RC': '鉄筋系',
+	鉄筋系: '鉄筋系',
+	鉄骨プレキャストコンクリート: '鉄骨系',
+	鉄骨: '鉄骨系',
+	重量鉄骨: '鉄骨系',
+	軽量鉄骨: '鉄骨系',
+	ALC: '鉄骨系',
+	鉄骨系: '鉄骨系',
+	木造: '木造',
+	その他: 'その他',
+};
+
+const YAHOO_STRUCTURE = {
+	1: '鉄筋コンクリート',
+	2: '鉄骨鉄筋コンクリート',
+	3: 'プレキャストコンクリート',
+	4: '鉄筋ブロック',
+	5: '鉄骨プレキャストコンクリート',
+	6: '鉄骨',
+	7: '重量鉄骨',
+	8: '軽量鉄骨',
+	9: 'ALC',
+	10: 'SRC・RC',
+	11: '木造',
+	99: 'その他',
+};
+
+const SUUMO_STRUCTURE_BY_KZ = {
+	1: { structure: '鉄筋系', structureGroup: '鉄筋系' },
+	2: { structure: '鉄骨系', structureGroup: '鉄骨系' },
+	3: { structure: '木造', structureGroup: '木造' },
+	4: { structure: 'その他', structureGroup: 'その他' },
+};
+
+function normalizeStructure(structure, structureGroup) {
+	const label = String(structure || '').trim();
+	const group =
+		structureGroup ||
+		STRUCTURE_GROUP_BY_LABEL[label] ||
+		(label ? 'その他' : '');
+	return { structure: label || group || '', structureGroup: group || '' };
+}
+
 function baseListingFields(partial) {
 	const builtYear = partial.builtYear ?? null;
 	const buildingAgeLabel = partial.buildingAgeLabel || '';
+	const { structure, structureGroup } = normalizeStructure(
+		partial.structure,
+		partial.structureGroup,
+	);
 	return {
 		...partial,
 		builtYear,
 		buildingAgeLabel,
+		structure,
+		structureGroup,
 		stationName: normalizeStationName(partial.station || ''),
 		rentYen: parseRentYen(partial.rentLabel),
 		ageYears: parseAgeYears(buildingAgeLabel, builtYear),
@@ -192,7 +246,7 @@ function passesFilters(listing) {
 
 /** ---- SUUMO ---- */
 
-function buildSuumoUrl(cityCode, page) {
+function buildSuumoUrl(cityCode, page, kz) {
 	const params = new URLSearchParams();
 	params.set('ar', '030');
 	params.set('bs', '040');
@@ -204,11 +258,12 @@ function buildSuumoUrl(cityCode, page) {
 	for (const md of ['02', '03', '04', '05', '06']) params.append('md', md);
 	params.append('tc', '0400901');
 	params.append('tc', '0400502');
+	if (kz) params.append('kz', String(kz));
 	if (page > 1) params.set('page', String(page));
 	return `https://suumo.jp/jj/chintai/ichiran/FR301FC001/?${params.toString()}`;
 }
 
-function parseSuumo(html, city) {
+function parseSuumo(html, city, structureInfo) {
 	const listings = [];
 	if (/エラー｜SUUMO/.test(html)) {
 		console.warn(`  SUUMO error page for ${city.name}`);
@@ -293,6 +348,8 @@ function parseSuumo(html, city) {
 				city: cityFromAddress(address, city.name),
 				parking: true,
 				independentWashbasin: true,
+				structure: structureInfo?.structure || '',
+				structureGroup: structureInfo?.structureGroup || '',
 			});
 			if (passesFilters(listing)) listings.push(listing);
 		}
@@ -303,27 +360,29 @@ function parseSuumo(html, city) {
 async function fetchSuumo() {
 	const out = [];
 	for (const city of CITIES) {
-		console.log(`SUUMO ${city.name}…`);
-		for (let page = 1; page <= maxPages; page++) {
-			const url = buildSuumoUrl(city.code, page);
-			try {
-				const html = await fetchText(
-					url,
-					`https://suumo.jp/chintai/chiba/${city.suumoSlug}/`,
-				);
-				const items = parseSuumo(html, city);
-				console.log(`  page ${page}: ${items.length} matching rooms`);
-				out.push(...items);
-				if (!/cassetteitem/.test(html)) break;
-				const next =
-					html.includes(`page=${page + 1}`) ||
-					html.includes(`page=${page + 1}&`);
-				if (!next && page > 1) break;
-			} catch (err) {
-				console.warn(`  failed page ${page}:`, err.message);
-				break;
+		for (const [kz, structureInfo] of Object.entries(SUUMO_STRUCTURE_BY_KZ)) {
+			console.log(`SUUMO ${city.name} ${structureInfo.structure}…`);
+			for (let page = 1; page <= maxPages; page++) {
+				const url = buildSuumoUrl(city.code, page, kz);
+				try {
+					const html = await fetchText(
+						url,
+						`https://suumo.jp/chintai/chiba/${city.suumoSlug}/`,
+					);
+					const items = parseSuumo(html, city, structureInfo);
+					console.log(`  page ${page}: ${items.length} matching rooms`);
+					out.push(...items);
+					if (!/cassetteitem/.test(html)) break;
+					const next =
+						html.includes(`page=${page + 1}`) ||
+						html.includes(`page=${page + 1}&`);
+					if (!next && page > 1) break;
+				} catch (err) {
+					console.warn(`  failed page ${page}:`, err.message);
+					break;
+				}
+				await sleep(delayMs);
 			}
-			await sleep(delayMs);
 		}
 	}
 	return out;
@@ -390,6 +449,9 @@ function parseYahoo(html, city) {
 		const ageLabel =
 			building.YearsOld != null ? `築${building.YearsOld}年` : builtOn || '';
 		const { lat, lon } = parseYahooCoords(building.CoordinatesWgs);
+		const yahooStructure =
+			YAHOO_STRUCTURE[building.StructureDiv] ||
+			(building.StructureDiv != null ? String(building.StructureDiv) : '');
 
 		for (const room of building.GroupProperties || []) {
 			const layout =
@@ -420,6 +482,7 @@ function parseYahoo(html, city) {
 				city: cityFromAddress(address, city.name),
 				parking: true,
 				independentWashbasin: true,
+				structure: yahooStructure,
 				lat,
 				lon,
 			});
@@ -605,6 +668,8 @@ function normalizeExistingListing(item) {
 		lat: item.lat ?? null,
 		lon: item.lon ?? null,
 		carMinutes: item.carMinutes ?? null,
+		structure: item.structure || '',
+		structureGroup: item.structureGroup || '',
 	});
 }
 
@@ -648,9 +713,9 @@ function buildSnapshot(listings) {
 		},
 		listings,
 		notes: [
-			'この JSON は npm run update:rentals で手動更新する。ビルドや CI では取得しない。',
-			'SUUMO: 駐車場あり + 洗面所独立 で検索。',
-			'Yahoo!不動産: 駐車場(近隣含む) + 洗面台 で検索（洗面所独立の同等条件が無いため近似）。',
+			'この JSON は GitHub Actions（1日3回: 9時・14時・20時 JST）または npm run update:rentals で更新する。ビルド時には取得しない。',
+			'SUUMO: 駐車場あり + 洗面所独立。構造は鉄筋系/鉄骨系/木造/その他の系統のみ。',
+			'Yahoo!不動産: 駐車場(近隣含む) + 洗面台（洗面所独立の近似）。構造は詳細種別。',
 			'車通勤時間は国土地理院ジオコード + OSRM の概算。最新の空室・条件は必ず元ページで確認すること。',
 		],
 	};

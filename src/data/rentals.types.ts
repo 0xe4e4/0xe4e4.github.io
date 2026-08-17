@@ -28,6 +28,10 @@ export interface RentalListing {
 	city: string;
 	parking: boolean;
 	independentWashbasin: boolean;
+	/** Display label, e.g. 鉄筋コンクリート / 軽量鉄骨 / 鉄筋系 */
+	structure: string;
+	/** 鉄筋系 | 鉄骨系 | 木造 | その他 */
+	structureGroup: string;
 	lat: number | null;
 	lon: number | null;
 }
