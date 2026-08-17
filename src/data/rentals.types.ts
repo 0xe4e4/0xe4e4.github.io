@@ -1,6 +1,6 @@
 /** Snapshot of rental listings for the /rentals page (updated manually). */
 
-export type RentalSource = 'suumo' | 'yahoo';
+export type RentalSource = 'suumo' | 'yahoo' | 'athome';
 
 export interface RentalListing {
 	id: string;
@@ -46,6 +46,7 @@ export interface RentalsCriteria {
 	destinationLon: number;
 	maxCarMinutes: number;
 	maxWalkMinutes: number;
+	maxRentYen?: number;
 	layouts: string[];
 	minBuiltYear: number;
 	requireParking: boolean;
