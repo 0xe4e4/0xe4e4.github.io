@@ -3,7 +3,7 @@ import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
 import { SITE_TITLE } from '../../consts';
-import type { RentalsSnapshot } from '../../data/rentals.types';
+import type { RentalListing, RentalsSnapshot } from '../../data/rentals.types';
 import rentalsJson from '../../data/rentals.json';
 
 const data = rentalsJson as RentalsSnapshot;
@@ -26,6 +26,55 @@ const listings = [...data.listings].sort((a, b) => {
 	if (ca !== cb) return ca - cb;
 	return (a.rentYen ?? 0) - (b.rentYen ?? 0);
 });
+
+interface ListingGroup {
+	id: string;
+	title: string;
+	address: string;
+	items: RentalListing[];
+}
+
+const listingGroups: ListingGroup[] = [];
+const groupMap = new Map<string, ListingGroup>();
+for (const item of listings) {
+	const key = `${item.title}\t${item.address}`;
+	let group = groupMap.get(key);
+	if (!group) {
+		group = {
+			id: `g${listingGroups.length}`,
+			title: item.title,
+			address: item.address,
+			items: [],
+		};
+		groupMap.set(key, group);
+		listingGroups.push(group);
+	}
+	group.items.push(item);
+}
+
+function formatManYen(yen: number) {
+	const man = yen / 10000;
+	return `${Number.isInteger(man) ? String(man) : man.toFixed(1)}万円`;
+}
+
+function rentRangeLabel(items: RentalListing[]) {
+	const yens = items
+		.map((item) => item.rentYen)
+		.filter((n): n is number => n != null);
+	if (yens.length === 0) return items[0]?.rentLabel || '—';
+	const min = Math.min(...yens);
+	const max = Math.max(...yens);
+	return min === max
+		? formatManYen(min)
+		: `${formatManYen(min)}〜${formatManYen(max)}`;
+}
+
+function uniqueLabels(
+	items: RentalListing[],
+	pick: (item: RentalListing) => string,
+) {
+	return [...new Set(items.map(pick).filter(Boolean))];
+}
 
 const stationOptions = [
 	...new Set(listings.map((l) => l.stationName).filter(Boolean)),
@@ -298,6 +347,44 @@ const UPDATE_WORKFLOW_URL =
 			.rentals-table tr[hidden] {
 				display: none;
 			}
+			.rentals-group td {
+				background: rgba(148, 163, 184, 0.07);
+				border-bottom-color: rgba(148, 163, 184, 0.28);
+			}
+			.rentals-group:hover td {
+				background: rgba(148, 163, 184, 0.12);
+			}
+			.rentals-toggle {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.4rem;
+				margin: 0;
+				padding: 0;
+				border: 0;
+				background: transparent;
+				color: inherit;
+				font: inherit;
+				font-weight: 600;
+				text-align: left;
+				cursor: pointer;
+			}
+			.rentals-toggle__chevron {
+				display: inline-block;
+				width: 0.65em;
+				flex: 0 0 auto;
+				transition: transform 0.15s ease;
+			}
+			.rentals-toggle[aria-expanded='true'] .rentals-toggle__chevron {
+				transform: rotate(90deg);
+			}
+			.rentals-toggle__count {
+				font-weight: 600;
+				color: var(--accent-dark);
+				font-size: 0.86em;
+			}
+			.rentals-group .rentals-source + .rentals-source {
+				margin-left: 0.25rem;
+			}
 		</style>
 	</head>
 	<body>
@@ -501,8 +588,9 @@ const UPDATE_WORKFLOW_URL =
 							</label>
 						</form>
 						<p class="rentals-count">
-							表示 <span id="rentals-shown">{listings.length}</span> /{' '}
-							{listings.length} 件
+							表示 <span id="rentals-shown">{listings.length}</span> 件 /
+							<span id="rentals-shown-groups">{listingGroups.length}</span> 物件
+							（全 {listings.length} 件 / {listingGroups.length} 物件）
 						</p>
 						<div class="rentals-table-wrap">
 							<table class="rentals-table" id="rentals-table">
@@ -519,87 +607,188 @@ const UPDATE_WORKFLOW_URL =
 									</tr>
 								</thead>
 								<tbody>
-									{listings.map((item) => (
-										<tr
-											data-city={item.city}
-											data-layout={item.layout}
-											data-source={item.source}
-											data-station={item.stationName || ''}
-											data-structure={item.structure || ''}
-											data-structure-group={item.structureGroup || ''}
-											data-walk={item.walkMinutes ?? ''}
-											data-car={item.carMinutes ?? ''}
-											data-age={item.ageYears ?? ''}
-											data-rent={item.rentYen ?? ''}
-											data-area={item.areaSqm ?? ''}
-											data-text={`${item.title} ${item.address} ${item.station} ${item.layout} ${item.stationName} ${item.structure} ${item.structureGroup}`}
-										>
-											<td>
-												<div class="rentals-title">
-													<a
-														href={item.url}
-														target="_blank"
-														rel="noopener noreferrer"
-													>
-														{item.title}
-													</a>
-													<span class="rentals-sub">
-														{item.address}
-														{item.floorLabel ? ` / ${item.floorLabel}` : ''}
-														{item.areaSqm != null ? ` / ${item.areaSqm}㎡` : ''}
-													</span>
-												</div>
-											</td>
-											<td>
-												<span class="rentals-rent">{item.rentLabel}</span>
-												{item.managementFeeLabel && (
-													<span class="rentals-fee">
-														{item.managementFeeLabel}
-													</span>
-												)}
-											</td>
-											<td>{item.layout}</td>
-											<td>
-												{item.structure || '—'}
-												{item.structureGroup &&
-													item.structureGroup !== item.structure && (
+									{listingGroups.map((group) => {
+										const first = group.items[0];
+										const multi = group.items.length > 1;
+										const layouts = uniqueLabels(
+											group.items,
+											(item) => item.layout,
+										);
+										const structures = uniqueLabels(
+											group.items,
+											(item) => item.structure,
+										);
+										const sources = uniqueLabels(
+											group.items,
+											(item) => item.source,
+										);
+										const roomRows = group.items.map((item) => (
+											<tr
+												class={multi ? 'rentals-room' : undefined}
+												data-group={group.id}
+												data-city={item.city}
+												data-layout={item.layout}
+												data-source={item.source}
+												data-station={item.stationName || ''}
+												data-structure={item.structure || ''}
+												data-structure-group={item.structureGroup || ''}
+												data-walk={item.walkMinutes ?? ''}
+												data-car={item.carMinutes ?? ''}
+												data-age={item.ageYears ?? ''}
+												data-rent={item.rentYen ?? ''}
+												data-area={item.areaSqm ?? ''}
+												data-text={`${item.title} ${item.address} ${item.station} ${item.layout} ${item.stationName} ${item.structure} ${item.structureGroup}`}
+												hidden={multi}
+											>
+												<td>
+													<div class="rentals-title">
+														<a
+															href={item.url}
+															target="_blank"
+															rel="noopener noreferrer"
+														>
+															{multi
+																? item.floorLabel || item.layout
+																: item.title}
+														</a>
 														<span class="rentals-sub">
-															{item.structureGroup}
+															{multi
+																? `${item.layout}${item.areaSqm != null ? ` / ${item.areaSqm}㎡` : ''}`
+																: `${item.address}${item.floorLabel ? ` / ${item.floorLabel}` : ''}${item.areaSqm != null ? ` / ${item.areaSqm}㎡` : ''}`}
+														</span>
+													</div>
+												</td>
+												<td>
+													<span class="rentals-rent">{item.rentLabel}</span>
+													{item.managementFeeLabel && (
+														<span class="rentals-fee">
+															{item.managementFeeLabel}
 														</span>
 													)}
-											</td>
-											<td class="rentals-num">
-												{item.walkMinutes != null
-													? `${item.walkMinutes}分`
-													: '—'}
-												{item.stationName && (
-													<span class="rentals-sub">{item.stationName}</span>
-												)}
-											</td>
-											<td class="rentals-num">
-												{item.carMinutes != null
-													? `約${item.carMinutes}分`
-													: '—'}
-												<span class="rentals-sub">西浦1-1-1</span>
-											</td>
-											<td>
-												{item.buildingAgeLabel}
-												{item.builtYear != null && (
-													<span class="rentals-sub">{item.builtYear}年頃</span>
-												)}
-											</td>
-											<td>
-												<span
-													class:list={[
-														'rentals-source',
-														item.source === 'yahoo' && 'rentals-source--yahoo',
-													]}
-												>
-													{item.source === 'suumo' ? 'SUUMO' : 'Yahoo'}
-												</span>
-											</td>
-										</tr>
-									))}
+												</td>
+												<td>{item.layout}</td>
+												<td>
+													{item.structure || '—'}
+													{item.structureGroup &&
+														item.structureGroup !== item.structure && (
+															<span class="rentals-sub">
+																{item.structureGroup}
+															</span>
+														)}
+												</td>
+												<td class="rentals-num">
+													{item.walkMinutes != null
+														? `${item.walkMinutes}分`
+														: '—'}
+													{item.stationName && (
+														<span class="rentals-sub">{item.stationName}</span>
+													)}
+												</td>
+												<td class="rentals-num">
+													{item.carMinutes != null
+														? `約${item.carMinutes}分`
+														: '—'}
+													<span class="rentals-sub">西浦1-1-1</span>
+												</td>
+												<td>
+													{item.buildingAgeLabel}
+													{item.builtYear != null && (
+														<span class="rentals-sub">
+															{item.builtYear}年頃
+														</span>
+													)}
+												</td>
+												<td>
+													<span
+														class:list={[
+															'rentals-source',
+															item.source === 'yahoo' &&
+																'rentals-source--yahoo',
+														]}
+													>
+														{item.source === 'suumo' ? 'SUUMO' : 'Yahoo'}
+													</span>
+												</td>
+											</tr>
+										));
+
+										if (!multi) return roomRows;
+
+										return (
+											<>
+												<tr class="rentals-group" data-group={group.id}>
+													<td>
+														<button
+															type="button"
+															class="rentals-toggle"
+															aria-expanded="false"
+															data-group={group.id}
+														>
+															<span
+																class="rentals-toggle__chevron"
+																aria-hidden="true"
+															>
+																▶
+															</span>
+															<span>{group.title}</span>
+															<span class="rentals-toggle__count">
+																（
+																<span data-group-count>
+																	{group.items.length}
+																</span>
+																件）
+															</span>
+														</button>
+														<span class="rentals-sub">{group.address}</span>
+													</td>
+													<td>
+														<span class="rentals-rent">
+															{rentRangeLabel(group.items)}
+														</span>
+													</td>
+													<td>{layouts.join(' / ')}</td>
+													<td>{structures.join(' / ') || '—'}</td>
+													<td class="rentals-num">
+														{first.walkMinutes != null
+															? `${first.walkMinutes}分`
+															: '—'}
+														{first.stationName && (
+															<span class="rentals-sub">
+																{first.stationName}
+															</span>
+														)}
+													</td>
+													<td class="rentals-num">
+														{first.carMinutes != null
+															? `約${first.carMinutes}分`
+															: '—'}
+														<span class="rentals-sub">西浦1-1-1</span>
+													</td>
+													<td>
+														{first.buildingAgeLabel}
+														{first.builtYear != null && (
+															<span class="rentals-sub">
+																{first.builtYear}年頃
+															</span>
+														)}
+													</td>
+													<td>
+														{sources.map((source) => (
+															<span
+																class:list={[
+																	'rentals-source',
+																	source === 'yahoo' && 'rentals-source--yahoo',
+																]}
+															>
+																{source === 'suumo' ? 'SUUMO' : 'Yahoo'}
+															</span>
+														))}
+													</td>
+												</tr>
+												{roomRows}
+											</>
+										);
+									})}
 								</tbody>
 							</table>
 						</div>
@@ -643,6 +832,7 @@ const UPDATE_WORKFLOW_URL =
 				var form = document.getElementById('rentals-filters');
 				var table = document.getElementById('rentals-table');
 				var shown = document.getElementById('rentals-shown');
+				var shownGroups = document.getElementById('rentals-shown-groups');
 				if (!form || !table) return;
 
 				function num(id) {
@@ -657,6 +847,17 @@ const UPDATE_WORKFLOW_URL =
 					if (raw === null || raw === '') return null;
 					var n = Number(raw);
 					return Number.isFinite(n) ? n : null;
+				}
+
+				function isGroupRow(row) {
+					return row.classList.contains('rentals-group');
+				}
+
+				function isExpanded(groupId) {
+					var btn = table.querySelector(
+						'.rentals-toggle[data-group="' + groupId + '"]',
+					);
+					return !!(btn && btn.getAttribute('aria-expanded') === 'true');
 				}
 
 				function apply() {
@@ -679,9 +880,12 @@ const UPDATE_WORKFLOW_URL =
 						.trim()
 						.toLowerCase();
 					var rows = table.tBodies[0].rows;
-					var n = 0;
+					var matchByGroup = {};
+					var roomCount = 0;
+
 					for (var i = 0; i < rows.length; i++) {
 						var row = rows[i];
+						if (isGroupRow(row)) continue;
 						var walk = attrNum(row, 'data-walk');
 						var car = attrNum(row, 'data-car');
 						var age = attrNum(row, 'data-age');
@@ -707,11 +911,61 @@ const UPDATE_WORKFLOW_URL =
 								(row.getAttribute('data-text') || '')
 									.toLowerCase()
 									.indexOf(q) !== -1);
-						row.hidden = !ok;
-						if (ok) n++;
+						row.setAttribute('data-match', ok ? '1' : '0');
+						var groupId = row.getAttribute('data-group') || '';
+						if (!matchByGroup[groupId]) matchByGroup[groupId] = 0;
+						if (ok) {
+							matchByGroup[groupId] += 1;
+							roomCount += 1;
+						}
+						var multi = row.classList.contains('rentals-room');
+						if (multi) {
+							row.hidden = !ok || !isExpanded(groupId);
+						} else {
+							row.hidden = !ok;
+						}
 					}
-					if (shown) shown.textContent = String(n);
+
+					var groupCount = 0;
+					for (var j = 0; j < rows.length; j++) {
+						var header = rows[j];
+						if (!isGroupRow(header)) continue;
+						var gid = header.getAttribute('data-group') || '';
+						var n = matchByGroup[gid] || 0;
+						var countEl = header.querySelector('[data-group-count]');
+						if (countEl) countEl.textContent = String(n);
+						header.hidden = n === 0;
+					}
+					for (var key in matchByGroup) {
+						if (
+							Object.prototype.hasOwnProperty.call(matchByGroup, key) &&
+							matchByGroup[key] > 0
+						) {
+							groupCount += 1;
+						}
+					}
+
+					if (shown) shown.textContent = String(roomCount);
+					if (shownGroups) shownGroups.textContent = String(groupCount);
 				}
+
+				table.addEventListener('click', function (event) {
+					var t = event.target;
+					if (t && t.nodeType === 3) t = t.parentElement;
+					var btn = t && t.closest ? t.closest('.rentals-toggle') : null;
+					if (!btn || !table.contains(btn)) return;
+					var groupId = btn.getAttribute('data-group');
+					var open = btn.getAttribute('aria-expanded') !== 'true';
+					btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+					var rooms = table.querySelectorAll(
+						'tr.rentals-room[data-group="' + groupId + '"]',
+					);
+					for (var i = 0; i < rooms.length; i++) {
+						var room = rooms[i];
+						var match = room.getAttribute('data-match') !== '0';
+						room.hidden = !open || !match;
+					}
+				});
 
 				form.addEventListener('input', apply);
 				form.addEventListener('change', apply);
