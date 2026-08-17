@@ -245,7 +245,9 @@ const listings = [...data.listings].sort(
 				<span class="rentals-hero__tag">個人用メモ</span>
 				<h1>通勤圏の賃貸空室</h1>
 				<p class="rentals-hero__lead">
-					{data.criteria.destination} まで車でおおよそ{data.criteria.maxCarMinutes}分以内のエリアから、条件に合う掲載をまとめたスナップショットです。ナビには載せていません。
+					{data.criteria.destination} まで車でおおよそ{
+						data.criteria.maxCarMinutes
+					}分以内のエリアから、条件に合う掲載をまとめたスナップショットです。ナビには載せていません。
 				</p>
 				<ul class="rentals-meta">
 					<li>最終更新: {updatedLabel}</li>
@@ -318,7 +320,8 @@ const listings = [...data.listings].sort(
 							</label>
 						</form>
 						<p class="rentals-count">
-							表示 <span id="rentals-shown">{listings.length}</span> / {listings.length} 件
+							表示 <span id="rentals-shown">{listings.length}</span> /{' '}
+							{listings.length} 件
 						</p>
 						<div class="rentals-table-wrap">
 							<table class="rentals-table" id="rentals-table">
@@ -342,7 +345,11 @@ const listings = [...data.listings].sort(
 										>
 											<td>
 												<div class="rentals-title">
-													<a href={item.url} target="_blank" rel="noopener noreferrer">
+													<a
+														href={item.url}
+														target="_blank"
+														rel="noopener noreferrer"
+													>
 														{item.title}
 													</a>
 													<span class="rentals-sub">
@@ -355,14 +362,18 @@ const listings = [...data.listings].sort(
 											<td>
 												<span class="rentals-rent">{item.rentLabel}</span>
 												{item.managementFeeLabel && (
-													<span class="rentals-fee">{item.managementFeeLabel}</span>
+													<span class="rentals-fee">
+														{item.managementFeeLabel}
+													</span>
 												)}
 											</td>
 											<td>{item.layout}</td>
 											<td>
 												{item.station}
 												{item.walkMinutes != null && (
-													<span class="rentals-sub">徒歩{item.walkMinutes}分</span>
+													<span class="rentals-sub">
+														徒歩{item.walkMinutes}分
+													</span>
 												)}
 											</td>
 											<td>
@@ -386,40 +397,6 @@ const listings = [...data.listings].sort(
 								</tbody>
 							</table>
 						</div>
-						<script is:inline>
-							(function () {
-								var form = document.getElementById('rentals-filters');
-								var table = document.getElementById('rentals-table');
-								var shown = document.getElementById('rentals-shown');
-								if (!form || !table) return;
-								function apply() {
-									var city = document.getElementById('filter-city').value;
-									var layout = document.getElementById('filter-layout').value;
-									var source = document.getElementById('filter-source').value;
-									var q = (document.getElementById('filter-q').value || '')
-										.trim()
-										.toLowerCase();
-									var rows = table.tBodies[0].rows;
-									var n = 0;
-									for (var i = 0; i < rows.length; i++) {
-										var row = rows[i];
-										var ok =
-											(!city || row.getAttribute('data-city') === city) &&
-											(!layout || row.getAttribute('data-layout') === layout) &&
-											(!source || row.getAttribute('data-source') === source) &&
-											(!q ||
-												(row.getAttribute('data-text') || '')
-													.toLowerCase()
-													.indexOf(q) !== -1);
-										row.hidden = !ok;
-										if (ok) n++;
-									}
-									if (shown) shown.textContent = String(n);
-								}
-								form.addEventListener('input', apply);
-								form.addEventListener('change', apply);
-							})();
-						</script>
 					</section>
 				)
 			}
@@ -427,11 +404,13 @@ const listings = [...data.listings].sort(
 			<section class="rentals-howto" aria-labelledby="howto-heading">
 				<h2 id="howto-heading">手動更新</h2>
 				<p>
-					サイト表示は静的 JSON（<code>src/data/rentals.json</code>）のみを読みます。最新化したいときだけローカルで:
+					サイト表示は静的 JSON（<code>src/data/rentals.json</code
+					>）のみを読みます。最新化したいときだけローカルで:
 				</p>
 				<p><code>npm run update:rentals</code></p>
 				<p>
-					取得間隔やページ数は <code>--delay=1800</code> / <code>--pages=2</code> /
+					取得間隔やページ数は <code>--delay=1800</code> / <code>--pages=2</code
+					> /
 					<code>--sources=suumo,yahoo</code> で調整できます。CI やビルドでは走りません。
 				</p>
 			</section>
@@ -449,6 +428,40 @@ const listings = [...data.listings].sort(
 				)
 			}
 		</main>
+		<script is:inline>
+			(function () {
+				var form = document.getElementById('rentals-filters');
+				var table = document.getElementById('rentals-table');
+				var shown = document.getElementById('rentals-shown');
+				if (!form || !table) return;
+				function apply() {
+					var city = document.getElementById('filter-city').value;
+					var layout = document.getElementById('filter-layout').value;
+					var source = document.getElementById('filter-source').value;
+					var q = (document.getElementById('filter-q').value || '')
+						.trim()
+						.toLowerCase();
+					var rows = table.tBodies[0].rows;
+					var n = 0;
+					for (var i = 0; i < rows.length; i++) {
+						var row = rows[i];
+						var ok =
+							(!city || row.getAttribute('data-city') === city) &&
+							(!layout || row.getAttribute('data-layout') === layout) &&
+							(!source || row.getAttribute('data-source') === source) &&
+							(!q ||
+								(row.getAttribute('data-text') || '')
+									.toLowerCase()
+									.indexOf(q) !== -1);
+						row.hidden = !ok;
+						if (ok) n++;
+					}
+					if (shown) shown.textContent = String(n);
+				}
+				form.addEventListener('input', apply);
+				form.addEventListener('change', apply);
+			})();
+		</script>
 		<Footer />
 	</body>
 </html>

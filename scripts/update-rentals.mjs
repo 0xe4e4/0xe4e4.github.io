@@ -34,9 +34,14 @@ const MAX_WALK = 15;
 
 /** Default: few pages per city × source. Override with --pages=N */
 const args = process.argv.slice(2);
-const maxPages = Number(args.find((a) => a.startsWith('--pages='))?.split('=')[1] ?? 2);
-const delayMs = Number(args.find((a) => a.startsWith('--delay='))?.split('=')[1] ?? 1800);
-const sourcesArg = args.find((a) => a.startsWith('--sources='))?.split('=')[1] ?? 'suumo,yahoo';
+const maxPages = Number(
+	args.find((a) => a.startsWith('--pages='))?.split('=')[1] ?? 2,
+);
+const delayMs = Number(
+	args.find((a) => a.startsWith('--delay='))?.split('=')[1] ?? 1800,
+);
+const sourcesArg =
+	args.find((a) => a.startsWith('--sources='))?.split('=')[1] ?? 'suumo,yahoo';
 const enabledSources = new Set(sourcesArg.split(',').map((s) => s.trim()));
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -93,7 +98,9 @@ function normalizeLayout(raw) {
 }
 
 function parseArea(raw) {
-	const m = String(raw).replace(/,/g, '').match(/([\d.]+)\s*m/i);
+	const m = String(raw)
+		.replace(/,/g, '')
+		.match(/([\d.]+)\s*m/i);
 	return m ? Number(m[1]) : null;
 }
 
@@ -106,12 +113,18 @@ function cityFromAddress(address, fallback) {
 
 function passesFilters(listing) {
 	if (!ALLOWED_LAYOUTS.has(listing.layout)) return false;
-	if (listing.walkMinutes != null && listing.walkMinutes > MAX_WALK) return false;
-	if (listing.builtYear != null && listing.builtYear < MIN_BUILT_YEAR) return false;
+	if (listing.walkMinutes != null && listing.walkMinutes > MAX_WALK)
+		return false;
+	if (listing.builtYear != null && listing.builtYear < MIN_BUILT_YEAR)
+		return false;
 	if (!listing.parking) return false;
 	if (!listing.independentWashbasin) return false;
 	const cityNames = CITIES.map((c) => c.name);
-	if (listing.address && !cityNames.some((name) => listing.address.includes(name))) return false;
+	if (
+		listing.address &&
+		!cityNames.some((name) => listing.address.includes(name))
+	)
+		return false;
 	return true;
 }
 
@@ -145,39 +158,53 @@ function parseSuumo(html, city) {
 	const blocks = html.split(/<div class="cassetteitem">/).slice(1);
 	for (const block of blocks) {
 		const title = stripTags(
-			(block.match(/cassetteitem_content-title[^>]*>([\s\S]*?)<\//) || [])[1] || '',
+			(block.match(/cassetteitem_content-title[^>]*>([\s\S]*?)<\//) || [])[1] ||
+				'',
 		);
 		const address = stripTags(
-			(block.match(/cassetteitem_detail-col1[^>]*>([\s\S]*?)<\//) || [])[1] || '',
+			(block.match(/cassetteitem_detail-col1[^>]*>([\s\S]*?)<\//) || [])[1] ||
+				'',
 		);
 		const stationRaw = stripTags(
-			(block.match(/cassetteitem_detail-col2[\s\S]*?cassetteitem_detail-text[^>]*>([\s\S]*?)<\//) ||
-				[])[1] || '',
+			(block.match(
+				/cassetteitem_detail-col2[\s\S]*?cassetteitem_detail-text[^>]*>([\s\S]*?)<\//,
+			) || [])[1] || '',
 		);
 		const ageRaw = stripTags(
-			(block.match(/cassetteitem_detail-col3[\s\S]*?<div>([\s\S]*?)<\/div>/) || [])[1] || '',
+			(block.match(/cassetteitem_detail-col3[\s\S]*?<div>([\s\S]*?)<\/div>/) ||
+				[])[1] || '',
 		);
 		const walkMinutes = parseWalkMinutes(stationRaw);
 		const builtYear = parseBuiltYear(ageRaw);
 
 		const rows = block.match(/<tbody>([\s\S]*?)<\/tbody>/g) || [];
 		for (const row of rows) {
-			const tds = [...row.matchAll(/<td[\s\S]*?>([\s\S]*?)<\/td>/g)].map((m) => m[1]);
+			const tds = [...row.matchAll(/<td[\s\S]*?>([\s\S]*?)<\/td>/g)].map(
+				(m) => m[1],
+			);
 			if (tds.length < 9) continue;
 
 			const floorLabel = stripTags(tds[2] || '');
 			const rentLabel = stripTags(
-				(tds[3].match(/cassetteitem_price--rent[^>]*>([\s\S]*?)<\//) || [])[1] || tds[3],
+				(tds[3].match(/cassetteitem_price--rent[^>]*>([\s\S]*?)<\//) ||
+					[])[1] || tds[3],
 			);
 			const managementFeeLabel = stripTags(
-				(tds[3].match(/cassetteitem_price--administration[^>]*>([\s\S]*?)<\//) || [])[1] ||
-					'',
+				(tds[3].match(
+					/cassetteitem_price--administration[^>]*>([\s\S]*?)<\//,
+				) || [])[1] || '',
 			);
 			const layout = normalizeLayout(
-				stripTags((tds[5].match(/cassetteitem_madori[^>]*>([\s\S]*?)<\//) || [])[1] || tds[5]),
+				stripTags(
+					(tds[5].match(/cassetteitem_madori[^>]*>([\s\S]*?)<\//) || [])[1] ||
+						tds[5],
+				),
 			);
 			const areaSqm = parseArea(
-				stripTags((tds[5].match(/cassetteitem_menseki[^>]*>([\s\S]*?)<\//) || [])[1] || ''),
+				stripTags(
+					(tds[5].match(/cassetteitem_menseki[^>]*>([\s\S]*?)<\//) || [])[1] ||
+						'',
+				),
 			);
 			const href =
 				(row.match(/href="(\/chintai\/jnc_[^"]+)"/) ||
@@ -228,7 +255,9 @@ async function fetchSuumo() {
 				console.log(`  page ${page}: ${items.length} matching rooms`);
 				out.push(...items);
 				if (!/cassetteitem/.test(html)) break;
-				const next = html.includes(`page=${page + 1}`) || html.includes(`page=${page + 1}&`);
+				const next =
+					html.includes(`page=${page + 1}`) ||
+					html.includes(`page=${page + 1}&`);
 				if (!next && page > 1) break;
 			} catch (err) {
 				console.warn(`  failed page ${page}:`, err.message);
@@ -254,7 +283,9 @@ function buildYahooUrl(cityCode, page) {
 }
 
 function extractYahooContext(html) {
-	const m = html.match(/window\.__SERVER_SIDE_CONTEXT__\s*=\s*(\{[\s\S]*?\});\s*\/\*\]\]>/);
+	const m = html.match(
+		/window\.__SERVER_SIDE_CONTEXT__\s*=\s*(\{[\s\S]*?\});\s*\/\*\]\]>/,
+	);
 	if (!m) return null;
 	// Trusted snapshot from Yahoo's own page; eval is required because keys are unquoted JS.
 	return Function(`"use strict"; return (${m[1]});`)();
@@ -284,17 +315,23 @@ function parseYahoo(html, city) {
 			.filter((t) => t.MinutesFromStation != null)
 			.sort((a, b) => a.MinutesFromStation - b.MinutesFromStation)[0];
 		const station = nearest?.Label || transports[0]?.Label || '';
-		const walkMinutes = nearest?.MinutesFromStation ?? parseWalkMinutes(station);
+		const walkMinutes =
+			nearest?.MinutesFromStation ?? parseWalkMinutes(station);
 		const builtOn = building.BuiltOn || '';
 		const builtYear = builtOn ? Number(String(builtOn).slice(0, 4)) : null;
 		const ageLabel =
 			building.YearsOld != null ? `築${building.YearsOld}年` : builtOn || '';
 
 		for (const room of building.GroupProperties || []) {
-			const layout = YAHOO_LAYOUT[room.DetailRoomLayout] || String(room.DetailRoomLayout || '');
+			const layout =
+				YAHOO_LAYOUT[room.DetailRoomLayout] ||
+				String(room.DetailRoomLayout || '');
 			const id = `yahoo:${room.PropertyId}`;
 			const url = `https://realestate.yahoo.co.jp/rent/detail/${room.PropertyId}/`;
-			const floorNum = room.FloorNum != null && room.FloorNum !== '' ? `${room.FloorNum}階` : '';
+			const floorNum =
+				room.FloorNum != null && room.FloorNum !== ''
+					? `${room.FloorNum}階`
+					: '';
 
 			const listing = {
 				id,
@@ -330,10 +367,15 @@ async function fetchYahoo() {
 		for (let page = 1; page <= Math.min(maxPages, lastPage); page++) {
 			const url = buildYahooUrl(city.code, page);
 			try {
-				const html = await fetchText(url, 'https://realestate.yahoo.co.jp/rent/');
+				const html = await fetchText(
+					url,
+					'https://realestate.yahoo.co.jp/rent/',
+				);
 				const { listings, lastPage: lp } = parseYahoo(html, city);
 				lastPage = lp;
-				console.log(`  page ${page}/${lastPage}: ${listings.length} matching rooms`);
+				console.log(
+					`  page ${page}/${lastPage}: ${listings.length} matching rooms`,
+				);
 				out.push(...listings);
 			} catch (err) {
 				console.warn(`  failed page ${page}:`, err.message);
