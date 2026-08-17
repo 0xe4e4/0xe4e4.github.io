@@ -97,11 +97,18 @@ function daysBetween(fromYmd: string, toYmd: string) {
 	);
 }
 
-function isFreshListing(item: RentalListing) {
-	return [item.listedAt, item.sourceUpdatedAt].filter(Boolean).some((d) => {
-		const n = daysBetween(String(d), snapshotDay);
-		return n >= 0 && n <= 2;
-	});
+function isWithinTwoDays(iso: string | null | undefined) {
+	if (!iso) return false;
+	const n = daysBetween(String(iso), snapshotDay);
+	return n >= 0 && n <= 2;
+}
+
+function isFreshListed(item: RentalListing) {
+	return isWithinTwoDays(item.listedAt);
+}
+
+function isFreshUpdated(item: RentalListing) {
+	return isWithinTwoDays(item.sourceUpdatedAt);
 }
 
 function formatMd(iso: string | null | undefined) {
@@ -392,11 +399,31 @@ const structureDetailOptions = [
 			.rentals-group .rentals-source + .rentals-source {
 				margin-left: 0.25rem;
 			}
-			.rentals-fresh td {
-				background: rgba(250, 204, 21, 0.14);
+			.rentals-fresh-listed td {
+				background: rgba(250, 204, 21, 0.16);
 			}
-			.rentals-fresh:hover td {
-				background: rgba(250, 204, 21, 0.2);
+			.rentals-fresh-listed:hover td {
+				background: rgba(250, 204, 21, 0.24);
+			}
+			.rentals-fresh-updated td {
+				background: rgba(52, 211, 153, 0.14);
+			}
+			.rentals-fresh-updated:hover td {
+				background: rgba(52, 211, 153, 0.22);
+			}
+			.rentals-fresh-listed.rentals-fresh-updated td {
+				background: linear-gradient(
+					90deg,
+					rgba(250, 204, 21, 0.2) 0%,
+					rgba(52, 211, 153, 0.16) 100%
+				);
+			}
+			.rentals-fresh-listed.rentals-fresh-updated:hover td {
+				background: linear-gradient(
+					90deg,
+					rgba(250, 204, 21, 0.28) 0%,
+					rgba(52, 211, 153, 0.24) 100%
+				);
 			}
 			.rentals-table th.rentals-sort {
 				cursor: pointer;
@@ -428,7 +455,8 @@ const structureDetailOptions = [
 					<li>件数: <span id="rentals-total">{listings.length}</span></li>
 					<li>SUUMO: {bySource.suumo}</li>
 					<li>Yahoo!不動産: {bySource.yahoo}</li>
-					<li>黄は掲載または更新が2日以内</li>
+					<li>黄は掲載が2日以内</li>
+					<li>緑は更新が2日以内</li>
 				</ul>
 			</header>
 
@@ -689,12 +717,14 @@ const structureDetailOptions = [
 											group.items,
 											'sourceUpdatedAt',
 										);
-										const groupFresh = group.items.some(isFreshListing);
+										const groupFreshListed = group.items.some(isFreshListed);
+										const groupFreshUpdated = group.items.some(isFreshUpdated);
 										const roomRows = group.items.map((item) => (
 											<tr
 												class:list={[
 													multi && 'rentals-room',
-													isFreshListing(item) && 'rentals-fresh',
+													isFreshListed(item) && 'rentals-fresh-listed',
+													isFreshUpdated(item) && 'rentals-fresh-updated',
 												]}
 												data-group={group.id}
 												data-city={item.city}
@@ -816,7 +846,8 @@ const structureDetailOptions = [
 												<tr
 													class:list={[
 														'rentals-group',
-														groupFresh && 'rentals-fresh',
+														groupFreshListed && 'rentals-fresh-listed',
+														groupFreshUpdated && 'rentals-fresh-updated',
 													]}
 													data-group={group.id}
 													data-sort-title={group.title}
@@ -931,7 +962,7 @@ const structureDetailOptions = [
 				<h2 id="howto-heading">この一覧について</h2>
 				<p>
 					毎日 9時・14時・20時（日本時間）に GitHub Actions
-					が自動で取り直します。掲載日または情報更新日が2日以内の物件は黄色で示します。
+					が自動で取り直します。掲載2日以内は黄色、情報更新2日以内は緑で示します。
 				</p>
 				<p>列見出しをクリックすると並び替えできます。</p>
 				<p>
