@@ -2,24 +2,30 @@
 /**
  * Manual updater for src/data/rentals.json
  *
- * Run explicitly when you want a fresh snapshot:
  *   npm run update:rentals
+ *   npm run update:rentals -- --enrich-only   # add carMinutes / coords to existing JSON
  *
- * Not hooked into build/CI. Requests are delayed and page-capped so
- * SUUMO / Yahoo Real Estate are not hammered.
+ * Not hooked into build/CI. Requests are delayed and page-capped.
  */
 
-import { writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const OUT_PATH = join(__dirname, '../src/data/rentals.json');
+const GEO_CACHE_PATH = join(__dirname, '../src/data/geocode-cache.json');
 
 const UA =
 	'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
 
-/** Approx. car-commute area around 船橋市西浦1-1-1 (≤ ~20 min). */
+/** 〒273-0017 千葉県船橋市西浦１丁目１−１ (GSI AddressSearch) */
+const DESTINATION = {
+	label: '〒273-0017 千葉県船橋市西浦１丁目１−１',
+	lat: 35.692646,
+	lon: 139.966736,
+};
+
 const CITIES = [
 	{ code: '12204', name: '船橋市', suumoSlug: 'sc_funabashi' },
 	{ code: '12216', name: '習志野市', suumoSlug: 'sc_narashino' },
@@ -32,8 +38,8 @@ const ALLOWED_LAYOUTS = new Set(['1K', '1DK', '1LDK', '2K', '2DK']);
 const MIN_BUILT_YEAR = 1981;
 const MAX_WALK = 15;
 
-/** Default: few pages per city × source. Override with --pages=N */
 const args = process.argv.slice(2);
+const enrichOnly = args.includes('--enrich-only');
 const maxPages = Number(
 	args.find((a) => a.startsWith('--pages='))?.split('=')[1] ?? 2,
 );
@@ -74,9 +80,24 @@ function stripTags(html) {
 }
 
 function parseWalkMinutes(text) {
-	const m = text.match(/歩\s*(\d+)\s*分|徒歩\s*(\d+)\s*分|(\d+)\s*分以内/);
+	const m = String(text).match(
+		/歩\s*(\d+)\s*分|徒歩\s*(\d+)\s*分|(\d+)\s*分以内/,
+	);
 	if (!m) return null;
 	return Number(m[1] || m[2] || m[3]);
+}
+
+function normalizeStationName(text) {
+	const t = String(text || '').trim();
+	if (!t) return '';
+	const withEki = t.match(/([^/\s　]+駅)/);
+	if (withEki) return withEki[1];
+	const afterSlash = t.match(/\/\s*([^/\s　]+)/);
+	if (afterSlash) {
+		const n = afterSlash[1];
+		return n.endsWith('駅') ? n : `${n}駅`;
+	}
+	return t.split(/\s|　/)[0] || '';
 }
 
 function parseBuiltYear(ageLabel, nowYear = new Date().getFullYear()) {
@@ -87,12 +108,24 @@ function parseBuiltYear(ageLabel, nowYear = new Date().getFullYear()) {
 	return y ? Number(y[0]) : null;
 }
 
+function parseAgeYears(
+	ageLabel,
+	builtYear,
+	nowYear = new Date().getFullYear(),
+) {
+	if (/新築/.test(ageLabel || '')) return 0;
+	const age = String(ageLabel || '').match(/築\s*(\d+)\s*年/);
+	if (age) return Number(age[1]);
+	if (builtYear != null) return Math.max(0, nowYear - builtYear);
+	return null;
+}
+
 function normalizeLayout(raw) {
 	const t = raw.replace(/\s+/g, '').toUpperCase();
 	const m = t.match(/(\d)\s*(S?L?D?K|R)/);
 	if (!m) return t;
 	const n = m[1];
-	const kind = m[2].replace(/^S/, ''); // ignore service room prefix loosely
+	const kind = m[2].replace(/^S/, '');
 	if (kind === 'R') return 'ワンルーム';
 	return `${n}${kind}`;
 }
@@ -104,11 +137,40 @@ function parseArea(raw) {
 	return m ? Number(m[1]) : null;
 }
 
+function parseRentYen(label) {
+	const t = String(label || '')
+		.replace(/,/g, '')
+		.trim();
+	if (!t || t === '-' || t === '―') return null;
+	const man = t.match(/([\d.]+)\s*万/);
+	if (man) return Math.round(Number(man[1]) * 10000);
+	const yen = t.match(/([\d]+)\s*円/);
+	if (yen) return Number(yen[1]);
+	const bare = Number(t);
+	return Number.isFinite(bare) ? bare : null;
+}
+
 function cityFromAddress(address, fallback) {
 	for (const c of CITIES) {
 		if (address.includes(c.name)) return c.name;
 	}
 	return fallback;
+}
+
+function baseListingFields(partial) {
+	const builtYear = partial.builtYear ?? null;
+	const buildingAgeLabel = partial.buildingAgeLabel || '';
+	return {
+		...partial,
+		builtYear,
+		buildingAgeLabel,
+		stationName: normalizeStationName(partial.station || ''),
+		rentYen: parseRentYen(partial.rentLabel),
+		ageYears: parseAgeYears(buildingAgeLabel, builtYear),
+		carMinutes: partial.carMinutes ?? null,
+		lat: partial.lat ?? null,
+		lon: partial.lon ?? null,
+	};
 }
 
 function passesFilters(listing) {
@@ -139,9 +201,7 @@ function buildSuumoUrl(cityCode, page) {
 	params.set('et', String(MAX_WALK));
 	params.set('po1', '25');
 	params.set('pc', '50');
-	// 1K / 1DK / 1LDK / 2K / 2DK
 	for (const md of ['02', '03', '04', '05', '06']) params.append('md', md);
-	// 駐車場あり / 洗面所独立
 	params.append('tc', '0400901');
 	params.append('tc', '0400502');
 	if (page > 1) params.set('page', String(page));
@@ -215,7 +275,7 @@ function parseSuumo(html, city) {
 			const idMatch = url.match(/bc=(\d+)/) || url.match(/jnc_(\d+)/);
 			const id = `suumo:${idMatch?.[1] || url}`;
 
-			const listing = {
+			const listing = baseListingFields({
 				id,
 				source: 'suumo',
 				title: title || address,
@@ -233,7 +293,7 @@ function parseSuumo(html, city) {
 				city: cityFromAddress(address, city.name),
 				parking: true,
 				independentWashbasin: true,
-			};
+			});
 			if (passesFilters(listing)) listings.push(listing);
 		}
 	}
@@ -269,15 +329,14 @@ async function fetchSuumo() {
 	return out;
 }
 
-/** ---- Yahoo Real Estate ---- */
+/** ---- Yahoo ---- */
 
 function buildYahooUrl(cityCode, page) {
 	const params = new URLSearchParams();
 	params.set('min_st', String(MAX_WALK));
-	// 1K–2DK detail room layouts
 	for (const n of [2, 3, 4, 5, 6]) params.append('rl_dtl', String(n));
-	params.append('po', 'cr'); // 駐車場(近隣含む)
-	params.append('po', 'ws'); // 洗面台（Yahoo側に「洗面所独立」は無し）
+	params.append('po', 'cr');
+	params.append('po', 'ws');
 	if (page > 1) params.set('page', String(page));
 	return `https://realestate.yahoo.co.jp/rent/search/03/12/${cityCode}/?${params.toString()}`;
 }
@@ -287,7 +346,6 @@ function extractYahooContext(html) {
 		/window\.__SERVER_SIDE_CONTEXT__\s*=\s*(\{[\s\S]*?\});\s*\/\*\]\]>/,
 	);
 	if (!m) return null;
-	// Trusted snapshot from Yahoo's own page; eval is required because keys are unquoted JS.
 	return Function(`"use strict"; return (${m[1]});`)();
 }
 
@@ -298,6 +356,16 @@ const YAHOO_LAYOUT = {
 	5: '2K',
 	6: '2DK',
 };
+
+function parseYahooCoords(raw) {
+	if (!raw) return { lat: null, lon: null };
+	const [lat, lon] = String(raw)
+		.split(',')
+		.map((n) => Number(n.trim()));
+	if (!Number.isFinite(lat) || !Number.isFinite(lon))
+		return { lat: null, lon: null };
+	return { lat, lon };
+}
 
 function parseYahoo(html, city) {
 	const ctx = extractYahooContext(html);
@@ -321,6 +389,7 @@ function parseYahoo(html, city) {
 		const builtYear = builtOn ? Number(String(builtOn).slice(0, 4)) : null;
 		const ageLabel =
 			building.YearsOld != null ? `築${building.YearsOld}年` : builtOn || '';
+		const { lat, lon } = parseYahooCoords(building.CoordinatesWgs);
 
 		for (const room of building.GroupProperties || []) {
 			const layout =
@@ -333,7 +402,7 @@ function parseYahoo(html, city) {
 					? `${room.FloorNum}階`
 					: '';
 
-			const listing = {
+			const listing = baseListingFields({
 				id,
 				source: 'yahoo',
 				title: building.BuildingName || address,
@@ -349,10 +418,11 @@ function parseYahoo(html, city) {
 				floorLabel: floorNum,
 				url,
 				city: cityFromAddress(address, city.name),
-				// Search URL already applies po=cr / po=ws (洗面台 ≈ 洗面独立の近似)
 				parking: true,
 				independentWashbasin: true,
-			};
+				lat,
+				lon,
+			});
 			if (passesFilters(listing)) listings.push(listing);
 		}
 	}
@@ -387,6 +457,157 @@ async function fetchYahoo() {
 	return out;
 }
 
+/** ---- Geocode + car minutes ---- */
+
+function loadGeoCache() {
+	if (!existsSync(GEO_CACHE_PATH)) return {};
+	try {
+		return JSON.parse(readFileSync(GEO_CACHE_PATH, 'utf8'));
+	} catch {
+		return {};
+	}
+}
+
+function saveGeoCache(cache) {
+	writeFileSync(
+		GEO_CACHE_PATH,
+		`${JSON.stringify(cache, null, '\t')}\n`,
+		'utf8',
+	);
+}
+
+function normalizeAddressKey(address) {
+	return String(address || '')
+		.replace(/\s+/g, '')
+		.replace(/[０-９]/g, (c) => String.fromCharCode(c.charCodeAt(0) - 0xfee0))
+		.replace(/[ー−‐-]/g, '-')
+		.replace(/丁目/g, '-')
+		.replace(/番/g, '-')
+		.replace(/号/g, '');
+}
+
+async function geocodeAddress(address, cache) {
+	const key = normalizeAddressKey(address);
+	if (!key) return null;
+	if (cache[key]) return cache[key];
+
+	const url = new URL('https://msearch.gsi.go.jp/address-search/AddressSearch');
+	url.searchParams.set('q', address);
+	try {
+		const res = await fetch(url, {
+			headers: { 'User-Agent': UA, Accept: 'application/json' },
+		});
+		if (!res.ok) throw new Error(`HTTP ${res.status}`);
+		const data = await res.json();
+		const feature = Array.isArray(data) ? data[0] : null;
+		const coords = feature?.geometry?.coordinates;
+		if (!coords) {
+			cache[key] = null;
+			return null;
+		}
+		const hit = { lon: coords[0], lat: coords[1] };
+		cache[key] = hit;
+		return hit;
+	} catch (err) {
+		console.warn(`  geocode failed: ${address} (${err.message})`);
+		cache[key] = null;
+		return null;
+	}
+}
+
+async function fillCoordinates(listings) {
+	const cache = loadGeoCache();
+	let lookups = 0;
+	for (const item of listings) {
+		if (item.lat != null && item.lon != null) continue;
+		const hit = await geocodeAddress(item.address, cache);
+		lookups += 1;
+		if (hit) {
+			item.lat = hit.lat;
+			item.lon = hit.lon;
+		}
+		if (lookups % 20 === 0) {
+			saveGeoCache(cache);
+			console.log(`  geocoded ${lookups} addresses…`);
+		}
+		await sleep(120);
+	}
+	saveGeoCache(cache);
+	console.log(
+		`Geocode done (${lookups} lookups, cache ${Object.keys(cache).length})`,
+	);
+}
+
+async function osrmDurations(sources) {
+	/** @type {Map<string, number>} */
+	const out = new Map();
+	const batchSize = 40;
+	for (let i = 0; i < sources.length; i += batchSize) {
+		const batch = sources.slice(i, i + batchSize);
+		const coords = [
+			...batch.map((s) => `${s.lon},${s.lat}`),
+			`${DESTINATION.lon},${DESTINATION.lat}`,
+		].join(';');
+		const destIndex = batch.length;
+		const sourcesParam = batch.map((_, idx) => idx).join(';');
+		const url = `https://router.project-osrm.org/table/v1/driving/${coords}?sources=${sourcesParam}&destinations=${destIndex}&annotations=duration`;
+		try {
+			const res = await fetch(url, { headers: { 'User-Agent': UA } });
+			if (!res.ok) throw new Error(`HTTP ${res.status}`);
+			const data = await res.json();
+			if (data.code !== 'Ok' || !data.durations)
+				throw new Error(data.message || data.code);
+			batch.forEach((src, idx) => {
+				const sec = data.durations[idx]?.[0];
+				if (sec != null && Number.isFinite(sec)) {
+					out.set(src.key, Math.max(1, Math.round(sec / 60)));
+				}
+			});
+		} catch (err) {
+			console.warn(`  OSRM batch failed: ${err.message}`);
+		}
+		await sleep(400);
+	}
+	return out;
+}
+
+async function fillCarMinutes(listings) {
+	const unique = new Map();
+	for (const item of listings) {
+		if (item.lat == null || item.lon == null) continue;
+		const key = `${item.lat.toFixed(5)},${item.lon.toFixed(5)}`;
+		if (!unique.has(key))
+			unique.set(key, { key, lat: item.lat, lon: item.lon });
+	}
+	console.log(`OSRM routing for ${unique.size} unique points → destination…`);
+	const durations = await osrmDurations([...unique.values()]);
+	let filled = 0;
+	for (const item of listings) {
+		if (item.lat == null || item.lon == null) {
+			item.carMinutes = null;
+			continue;
+		}
+		const key = `${item.lat.toFixed(5)},${item.lon.toFixed(5)}`;
+		const mins = durations.get(key);
+		item.carMinutes = mins ?? null;
+		if (mins != null) filled += 1;
+	}
+	console.log(`Car minutes filled for ${filled}/${listings.length} listings`);
+}
+
+function normalizeExistingListing(item) {
+	return baseListingFields({
+		...item,
+		station: item.station || '',
+		rentLabel: item.rentLabel || '',
+		buildingAgeLabel: item.buildingAgeLabel || '',
+		builtYear: item.builtYear ?? null,
+		lat: item.lat ?? null,
+		lon: item.lon ?? null,
+		carMinutes: item.carMinutes ?? null,
+	});
+}
+
 function dedupe(listings) {
 	const byKey = new Map();
 	for (const item of listings) {
@@ -401,25 +622,20 @@ function dedupe(listings) {
 		if (!byKey.has(key)) byKey.set(key, item);
 	}
 	return [...byKey.values()].sort((a, b) => {
-		const ra = parseFloat(String(a.rentLabel).replace(/[^\d.]/g, '')) || 0;
-		const rb = parseFloat(String(b.rentLabel).replace(/[^\d.]/g, '')) || 0;
-		return ra - rb;
+		const ca = a.carMinutes ?? 999;
+		const cb = b.carMinutes ?? 999;
+		if (ca !== cb) return ca - cb;
+		return (a.rentYen ?? 0) - (b.rentYen ?? 0);
 	});
 }
 
-async function main() {
-	console.log(
-		`Updating rentals (pages≤${maxPages}, delay=${delayMs}ms, sources=${[...enabledSources]})`,
-	);
-	const collected = [];
-	if (enabledSources.has('suumo')) collected.push(...(await fetchSuumo()));
-	if (enabledSources.has('yahoo')) collected.push(...(await fetchYahoo()));
-
-	const listings = dedupe(collected);
-	const snapshot = {
+function buildSnapshot(listings) {
+	return {
 		updatedAt: new Date().toISOString(),
 		criteria: {
-			destination: '〒273-0017 千葉県船橋市西浦１丁目１−１',
+			destination: DESTINATION.label,
+			destinationLat: DESTINATION.lat,
+			destinationLon: DESTINATION.lon,
 			maxCarMinutes: 20,
 			maxWalkMinutes: MAX_WALK,
 			layouts: [...ALLOWED_LAYOUTS],
@@ -427,7 +643,7 @@ async function main() {
 			requireParking: true,
 			requireIndependentWashbasin: true,
 			commuteAreaNote:
-				'車20分圏は目安として船橋・習志野・市川・千葉市美浜区・浦安を対象。個別の所要時間は地図で要確認。',
+				'車通勤分は OSRM（一般道想定）の概算。渋滞・有料道路利用は含まない。駅徒歩は掲載の最寄駅徒歩。',
 			cities: CITIES.map(({ code, name }) => ({ code, name })),
 		},
 		listings,
@@ -435,10 +651,32 @@ async function main() {
 			'この JSON は npm run update:rentals で手動更新する。ビルドや CI では取得しない。',
 			'SUUMO: 駐車場あり + 洗面所独立 で検索。',
 			'Yahoo!不動産: 駐車場(近隣含む) + 洗面台 で検索（洗面所独立の同等条件が無いため近似）。',
-			'掲載は各サイトの公開情報のスナップショット。最新の空室・条件は必ず元ページで確認すること。',
+			'車通勤時間は国土地理院ジオコード + OSRM の概算。最新の空室・条件は必ず元ページで確認すること。',
 		],
 	};
+}
 
+async function main() {
+	let listings;
+	if (enrichOnly) {
+		console.log('Enrich-only: reading existing rentals.json…');
+		const existing = JSON.parse(readFileSync(OUT_PATH, 'utf8'));
+		listings = existing.listings.map(normalizeExistingListing);
+	} else {
+		console.log(
+			`Updating rentals (pages≤${maxPages}, delay=${delayMs}ms, sources=${[...enabledSources]})`,
+		);
+		const collected = [];
+		if (enabledSources.has('suumo')) collected.push(...(await fetchSuumo()));
+		if (enabledSources.has('yahoo')) collected.push(...(await fetchYahoo()));
+		listings = dedupe(collected);
+	}
+
+	await fillCoordinates(listings);
+	await fillCarMinutes(listings);
+	listings = dedupe(listings);
+
+	const snapshot = buildSnapshot(listings);
 	writeFileSync(OUT_PATH, `${JSON.stringify(snapshot, null, '\t')}\n`, 'utf8');
 	console.log(`Wrote ${listings.length} listings → ${OUT_PATH}`);
 }

@@ -8,22 +8,34 @@ export interface RentalListing {
 	title: string;
 	address: string;
 	station: string;
+	/** Nearest station name when parseable */
+	stationName: string;
 	walkMinutes: number | null;
+	/** Driving minutes to criteria.destination (OSRM estimate) */
+	carMinutes: number | null;
 	layout: string;
 	areaSqm: number | null;
 	rentLabel: string;
+	/** Monthly rent in yen (numeric for filters) */
+	rentYen: number | null;
 	managementFeeLabel: string;
 	buildingAgeLabel: string;
 	builtYear: number | null;
+	/** Building age in years when known */
+	ageYears: number | null;
 	floorLabel: string;
 	url: string;
 	city: string;
 	parking: boolean;
 	independentWashbasin: boolean;
+	lat: number | null;
+	lon: number | null;
 }
 
 export interface RentalsCriteria {
 	destination: string;
+	destinationLat: number;
+	destinationLon: number;
 	maxCarMinutes: number;
 	maxWalkMinutes: number;
 	layouts: string[];
