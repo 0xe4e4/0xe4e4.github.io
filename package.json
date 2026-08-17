@@ -14,7 +14,8 @@
 		"check": "astro check",
 		"lint": "eslint .",
 		"format": "prettier --write .",
-		"format:check": "prettier --check ."
+		"format:check": "prettier --check .",
+		"update:rentals": "node scripts/update-rentals.mjs"
 	},
 	"dependencies": {
 		"@astrojs/mdx": "^5.0.3",
