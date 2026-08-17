@@ -30,6 +30,10 @@ const listings = [...data.listings].sort((a, b) => {
 const stationOptions = [
 	...new Set(listings.map((l) => l.stationName).filter(Boolean)),
 ].sort((a, b) => a.localeCompare(b, 'ja'));
+
+/** GitHub Actions workflow that refreshes rentals.json (static Pages has no local shell). */
+const UPDATE_WORKFLOW_URL =
+	'https://github.com/0xe4e4/0xe4e4.github.io/actions/workflows/update-rentals.yml';
 ---
 
 <!doctype html>
@@ -76,6 +80,40 @@ const stationOptions = [
 				list-style: none;
 				font-size: 0.88rem;
 				color: rgb(var(--gray));
+				align-items: center;
+			}
+			.rentals-refresh {
+				display: flex;
+				flex-wrap: wrap;
+				align-items: center;
+				gap: 0.75rem 1rem;
+				margin: 1.1rem 0 0 0;
+			}
+			.rentals-refresh__btn {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0.55rem 1rem;
+				border: 1px solid rgba(154, 169, 255, 0.45);
+				border-radius: 8px;
+				background: rgba(154, 169, 255, 0.16);
+				color: rgb(var(--black));
+				font: inherit;
+				font-size: 0.92rem;
+				font-weight: 600;
+				text-decoration: none;
+				cursor: pointer;
+			}
+			.rentals-refresh__btn:hover {
+				background: rgba(154, 169, 255, 0.28);
+				color: rgb(var(--black));
+			}
+			.rentals-refresh__hint {
+				margin: 0;
+				font-size: 0.82rem;
+				line-height: 1.55;
+				color: rgb(var(--gray));
+				max-width: 42rem;
 			}
 			.rentals-criteria {
 				margin: 0 0 2rem 0;
@@ -274,6 +312,21 @@ const stationOptions = [
 					<li>SUUMO: {bySource.suumo}</li>
 					<li>Yahoo!不動産: {bySource.yahoo}</li>
 				</ul>
+				<div class="rentals-refresh">
+					<a
+						class="rentals-refresh__btn"
+						href={UPDATE_WORKFLOW_URL}
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						データを最新化
+					</a>
+					<p class="rentals-refresh__hint">
+						GitHub Actions の「Run workflow」を押すと SUUMO / Yahoo
+						から取り直してコミットします（数〜十数分）。完了後に Pages
+						が再デプロイされるとこのページが更新されます。リポジトリへの書き込み権限が必要です。
+					</p>
+				</div>
 			</header>
 
 			<section class="rentals-criteria" aria-labelledby="criteria-heading">
@@ -519,19 +572,19 @@ const stationOptions = [
 			}
 
 			<section class="rentals-howto" aria-labelledby="howto-heading">
-				<h2 id="howto-heading">手動更新</h2>
+				<h2 id="howto-heading">最新化のしかた</h2>
 				<p>
-					サイト表示は静的 JSON（<code>src/data/rentals.json</code
-					>）のみを読みます。最新化したいときだけローカルで:
+					このサイトは GitHub Pages
+					の静的サイトなので、ブラウザだけでは物件サイトへ取りにいけません。上の「データを最新化」から
+					Actions を開き、「Run workflow」を実行してください。
 				</p>
-				<p><code>npm run update:rentals</code></p>
 				<p>
-					座標・車通勤だけ再計算する場合は <code
-						>npm run update:rentals -- --enrich-only</code
-					>。取得間隔やページ数は <code>--delay=1800</code> / <code
-						>--pages=2</code
-					> /
-					<code>--sources=suumo,yahoo</code> で調整できます。CI やビルドでは走りません。
+					ワークフローが <code>src/data/rentals.json</code> を更新して
+					<code>main</code> に push すると、自動デプロイで一覧が入れ替わります。
+				</p>
+				<p>
+					座標・車通勤だけ再計算したい場合は、Actions の入力で
+					<code>enrich_only</code> を true にして実行します。
 				</p>
 			</section>
 
