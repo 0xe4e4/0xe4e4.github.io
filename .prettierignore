@@ -7,5 +7,6 @@ package-lock.json
 src/content/blog
 src/data/rentals.json
 src/data/geocode-cache.json
+src/data/listing-dates-cache.json
 .vscode
 tsconfig.json

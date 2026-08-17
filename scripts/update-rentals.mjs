@@ -15,6 +15,7 @@ import { fileURLToPath } from 'node:url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const OUT_PATH = join(__dirname, '../src/data/rentals.json');
 const GEO_CACHE_PATH = join(__dirname, '../src/data/geocode-cache.json');
+const DATE_CACHE_PATH = join(__dirname, '../src/data/listing-dates-cache.json');
 
 const UA =
 	'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
@@ -40,6 +41,7 @@ const MAX_WALK = 15;
 
 const args = process.argv.slice(2);
 const enrichOnly = args.includes('--enrich-only');
+const datesOnly = args.includes('--dates-only');
 const maxPages = Number(
 	args.find((a) => a.startsWith('--pages='))?.split('=')[1] ?? 2,
 );
@@ -222,6 +224,8 @@ function baseListingFields(partial) {
 		rentYen: parseRentYen(partial.rentLabel),
 		ageYears: parseAgeYears(buildingAgeLabel, builtYear),
 		carMinutes: partial.carMinutes ?? null,
+		listedAt: partial.listedAt ?? null,
+		sourceUpdatedAt: partial.sourceUpdatedAt ?? null,
 		lat: partial.lat ?? null,
 		lon: partial.lon ?? null,
 	};
@@ -658,6 +662,119 @@ async function fillCarMinutes(listings) {
 	console.log(`Car minutes filled for ${filled}/${listings.length} listings`);
 }
 
+function toIsoDate(raw) {
+	const t = String(raw || '').trim();
+	if (!t || t === '-' || t === '―' || t === 'なし') return null;
+	const m = t.match(/(20\d{2})[/\-年.](\d{1,2})[/\-月.](\d{1,2})/);
+	if (!m) return null;
+	return `${m[1]}-${m[2].padStart(2, '0')}-${m[3].padStart(2, '0')}`;
+}
+
+function loadJsonCache(path) {
+	if (!existsSync(path)) return {};
+	try {
+		return JSON.parse(readFileSync(path, 'utf8'));
+	} catch {
+		return {};
+	}
+}
+
+function parseSuumoDates(html) {
+	const published = html.match(/情報公開日<\/th>\s*<td>([^<]+)/);
+	const updated = html.match(/情報更新日<\/th>\s*<td>([^<]+)/);
+	return {
+		listedAt: toIsoDate(published?.[1]),
+		sourceUpdatedAt: toIsoDate(updated?.[1]),
+	};
+}
+
+function parseYahooDetailDates(html) {
+	const ctx = extractYahooContext(html);
+	const prop = ctx?.page?.property;
+	if (!prop) return { listedAt: null, sourceUpdatedAt: null };
+	return {
+		listedAt: toIsoDate(prop.InfoOpenDate),
+		sourceUpdatedAt: toIsoDate(prop.InfoUpdate),
+	};
+}
+
+async function mapPool(items, limit, fn) {
+	let index = 0;
+	async function worker() {
+		while (index < items.length) {
+			const current = index;
+			index += 1;
+			await fn(items[current], current);
+		}
+	}
+	const n = Math.min(limit, items.length) || 0;
+	await Promise.all(Array.from({ length: n }, () => worker()));
+}
+
+async function fillListingDates(listings) {
+	const cache = loadJsonCache(DATE_CACHE_PATH);
+	const pending = listings.filter((item) => {
+		const hit = cache[item.id];
+		if (hit) {
+			item.listedAt = hit.listedAt ?? null;
+			item.sourceUpdatedAt = hit.sourceUpdatedAt ?? null;
+			return false;
+		}
+		if (item.listedAt || item.sourceUpdatedAt) {
+			cache[item.id] = {
+				listedAt: item.listedAt,
+				sourceUpdatedAt: item.sourceUpdatedAt,
+			};
+			return false;
+		}
+		return true;
+	});
+	console.log(
+		`Detail dates: ${pending.length} to fetch, ${listings.length - pending.length} cached`,
+	);
+
+	let done = 0;
+	await mapPool(pending, 4, async (item) => {
+		try {
+			const html = await fetchText(
+				item.url,
+				item.source === 'suumo'
+					? 'https://suumo.jp/'
+					: 'https://realestate.yahoo.co.jp/',
+			);
+			const dates =
+				item.source === 'suumo'
+					? parseSuumoDates(html)
+					: parseYahooDetailDates(html);
+			item.listedAt = dates.listedAt;
+			item.sourceUpdatedAt = dates.sourceUpdatedAt;
+			cache[item.id] = dates;
+		} catch (err) {
+			console.warn(`  date fetch failed ${item.id}: ${err.message}`);
+			cache[item.id] = { listedAt: null, sourceUpdatedAt: null };
+		}
+		done += 1;
+		if (done % 40 === 0) {
+			writeFileSync(
+				DATE_CACHE_PATH,
+				`${JSON.stringify(cache, null, '\t')}\n`,
+				'utf8',
+			);
+			console.log(`  dates ${done}/${pending.length}…`);
+		}
+		await sleep(250);
+	});
+	writeFileSync(
+		DATE_CACHE_PATH,
+		`${JSON.stringify(cache, null, '\t')}\n`,
+		'utf8',
+	);
+	const withDate = listings.filter(
+		(item) => item.listedAt || item.sourceUpdatedAt,
+	).length;
+	console.log(`Dates filled for ${withDate}/${listings.length} listings`);
+}
+
 function normalizeExistingListing(item) {
 	return baseListingFields({
 		...item,
@@ -670,6 +787,8 @@ function normalizeExistingListing(item) {
 		carMinutes: item.carMinutes ?? null,
 		structure: item.structure || '',
 		structureGroup: item.structureGroup || '',
+		listedAt: item.listedAt ?? null,
+		sourceUpdatedAt: item.sourceUpdatedAt ?? null,
 	});
 }
 
@@ -713,9 +832,10 @@ function buildSnapshot(listings) {
 		},
 		listings,
 		notes: [
-			'この JSON は GitHub Actions（1日3回: 9時・14時・20時 JST）または npm run update:rentals で更新する。ビルド時には取得しない。',
+			'この JSON は GitHub Actions（1日3回: 9時・14時・20時 JST）で更新する。ビルド時には取得しない。',
 			'SUUMO: 駐車場あり + 洗面所独立。構造は鉄筋系/鉄骨系/木造/その他の系統のみ。',
 			'Yahoo!不動産: 駐車場(近隣含む) + 洗面台（洗面所独立の近似）。構造は詳細種別。',
+			'掲載日・更新日は各サイトの詳細ページから取得。2日以内のものは一覧でハイライトする。',
 			'車通勤時間は国土地理院ジオコード + OSRM の概算。最新の空室・条件は必ず元ページで確認すること。',
 		],
 	};
@@ -723,8 +843,10 @@ function buildSnapshot(listings) {
 
 async function main() {
 	let listings;
-	if (enrichOnly) {
-		console.log('Enrich-only: reading existing rentals.json…');
+	if (enrichOnly || datesOnly) {
+		console.log(
+			`${datesOnly ? 'Dates-only' : 'Enrich-only'}: reading existing rentals.json…`,
+		);
 		const existing = JSON.parse(readFileSync(OUT_PATH, 'utf8'));
 		listings = existing.listings.map(normalizeExistingListing);
 	} else {
@@ -737,8 +859,11 @@ async function main() {
 		listings = dedupe(collected);
 	}
 
-	await fillCoordinates(listings);
-	await fillCarMinutes(listings);
+	if (!datesOnly) {
+		await fillCoordinates(listings);
+		await fillCarMinutes(listings);
+	}
+	await fillListingDates(listings);
 	listings = dedupe(listings);
 
 	const snapshot = buildSnapshot(listings);
