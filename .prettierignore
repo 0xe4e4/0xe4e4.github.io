@@ -6,5 +6,6 @@ package-lock.json
 # User content & editor — avoid churn in CI format check
 src/content/blog
 src/data/rentals.json
+src/data/geocode-cache.json
 .vscode
 tsconfig.json

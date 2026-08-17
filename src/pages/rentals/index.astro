@@ -20,14 +20,16 @@ const bySource = {
 	yahoo: data.listings.filter((l) => l.source === 'yahoo').length,
 };
 
-function rentSortKey(label: string) {
-	const n = parseFloat(label.replace(/[^\d.]/g, ''));
-	return Number.isFinite(n) ? n : Number.POSITIVE_INFINITY;
-}
+const listings = [...data.listings].sort((a, b) => {
+	const ca = a.carMinutes ?? 999;
+	const cb = b.carMinutes ?? 999;
+	if (ca !== cb) return ca - cb;
+	return (a.rentYen ?? 0) - (b.rentYen ?? 0);
+});
 
-const listings = [...data.listings].sort(
-	(a, b) => rentSortKey(a.rentLabel) - rentSortKey(b.rentLabel),
-);
+const stationOptions = [
+	...new Set(listings.map((l) => l.stationName).filter(Boolean)),
+].sort((a, b) => a.localeCompare(b, 'ja'));
 ---
 
 <!doctype html>
@@ -37,7 +39,7 @@ const listings = [...data.listings].sort(
 		<meta name="robots" content="noindex, nofollow" />
 		<style is:global>
 			.rentals-page {
-				width: min(920px, calc(100% - 2em));
+				width: min(1080px, calc(100% - 2em));
 				margin: 0 auto;
 				padding: 2.5em 1em 4em;
 			}
@@ -106,18 +108,18 @@ const listings = [...data.listings].sort(
 			.rentals-table {
 				width: 100%;
 				border-collapse: collapse;
-				font-size: 0.9rem;
+				font-size: 0.88rem;
 				line-height: 1.45;
 			}
 			.rentals-table th,
 			.rentals-table td {
-				padding: 0.7rem 0.55rem;
+				padding: 0.65rem 0.5rem;
 				border-bottom: 1px solid rgba(148, 163, 184, 0.2);
 				text-align: left;
 				vertical-align: top;
 			}
 			.rentals-table th {
-				font-size: 0.78rem;
+				font-size: 0.74rem;
 				font-weight: 600;
 				letter-spacing: 0.04em;
 				color: rgb(var(--gray));
@@ -141,7 +143,7 @@ const listings = [...data.listings].sort(
 			.rentals-sub {
 				display: block;
 				margin-top: 0.2rem;
-				font-size: 0.82rem;
+				font-size: 0.8rem;
 				font-weight: 400;
 				color: rgb(var(--gray));
 			}
@@ -155,6 +157,10 @@ const listings = [...data.listings].sort(
 				font-size: 0.78rem;
 				font-weight: 400;
 				color: rgb(var(--gray));
+			}
+			.rentals-num {
+				font-variant-numeric: tabular-nums;
+				white-space: nowrap;
 			}
 			.rentals-source {
 				display: inline-block;
@@ -215,8 +221,8 @@ const listings = [...data.listings].sort(
 				color: rgb(var(--gray));
 			}
 			.rentals-filters select,
-			.rentals-filters input[type='search'] {
-				min-width: 8.5rem;
+			.rentals-filters input {
+				min-width: 7.5rem;
 				padding: 0.4rem 0.55rem;
 				border: 1px solid rgba(148, 163, 184, 0.28);
 				border-radius: 6px;
@@ -226,7 +232,20 @@ const listings = [...data.listings].sort(
 				font-size: 0.9rem;
 			}
 			.rentals-filters input[type='search'] {
-				min-width: 12rem;
+				min-width: 11rem;
+			}
+			.rentals-filters input[type='number'] {
+				min-width: 5.5rem;
+				width: 5.5rem;
+			}
+			.rentals-filters__range {
+				display: flex;
+				align-items: center;
+				gap: 0.35rem;
+			}
+			.rentals-filters__range span {
+				color: rgb(var(--gray));
+				font-weight: 400;
 			}
 			.rentals-count {
 				margin: 0 0 0.35rem 0;
@@ -292,6 +311,15 @@ const listings = [...data.listings].sort(
 								</select>
 							</label>
 							<label>
+								最寄駅
+								<select name="station" id="filter-station">
+									<option value="">すべて</option>
+									{stationOptions.map((name) => (
+										<option value={name}>{name}</option>
+									))}
+								</select>
+							</label>
+							<label>
 								間取り
 								<select name="layout" id="filter-layout">
 									<option value="">すべて</option>
@@ -307,6 +335,82 @@ const listings = [...data.listings].sort(
 									<option value="suumo">SUUMO</option>
 									<option value="yahoo">Yahoo</option>
 								</select>
+							</label>
+							<label>
+								駅徒歩（分以内）
+								<select name="walk" id="filter-walk">
+									<option value="">指定なし</option>
+									<option value="5">5分</option>
+									<option value="7">7分</option>
+									<option value="10">10分</option>
+									<option value="15" selected>
+										15分
+									</option>
+								</select>
+							</label>
+							<label>
+								車通勤（分以内）
+								<select name="car" id="filter-car">
+									<option value="">指定なし</option>
+									<option value="10">10分</option>
+									<option value="15">15分</option>
+									<option value="20" selected>
+										20分
+									</option>
+									<option value="30">30分</option>
+								</select>
+							</label>
+							<label>
+								築年数（年以内）
+								<select name="age" id="filter-age">
+									<option value="">指定なし</option>
+									<option value="5">5年</option>
+									<option value="10">10年</option>
+									<option value="15">15年</option>
+									<option value="20">20年</option>
+									<option value="30">30年</option>
+									<option value="45">45年（目安:1981〜）</option>
+								</select>
+							</label>
+							<label>
+								賃料（万円）
+								<span class="rentals-filters__range">
+									<input
+										type="number"
+										id="filter-rent-min"
+										min="0"
+										step="0.1"
+										placeholder="下限"
+									/>
+									<span>〜</span>
+									<input
+										type="number"
+										id="filter-rent-max"
+										min="0"
+										step="0.1"
+										placeholder="上限"
+									/>
+								</span>
+							</label>
+							<label>
+								面積（㎡）
+								<span class="rentals-filters__range">
+									<input
+										type="number"
+										id="filter-area-min"
+										min="0"
+										step="1"
+										placeholder="下限"
+									/>
+									<span>〜</span>
+									<input
+										type="number"
+										id="filter-area-max"
+										min="0"
+										step="1"
+										placeholder="上限"
+									/>
+								</span>
 							</label>
 							<label>
 								キーワード
@@ -330,7 +434,8 @@ const listings = [...data.listings].sort(
 										<th>物件</th>
 										<th>賃料</th>
 										<th>間取り</th>
-										<th>駅</th>
+										<th>駅徒歩</th>
+										<th>車通勤</th>
 										<th>築年</th>
 										<th>出典</th>
 									</tr>
@@ -341,7 +446,13 @@ const listings = [...data.listings].sort(
 											data-city={item.city}
 											data-layout={item.layout}
 											data-source={item.source}
-											data-text={`${item.title} ${item.address} ${item.station} ${item.layout}`}
+											data-station={item.stationName || ''}
+											data-walk={item.walkMinutes ?? ''}
+											data-car={item.carMinutes ?? ''}
+											data-age={item.ageYears ?? ''}
+											data-rent={item.rentYen ?? ''}
+											data-area={item.areaSqm ?? ''}
+											data-text={`${item.title} ${item.address} ${item.station} ${item.layout} ${item.stationName}`}
 										>
 											<td>
 												<div class="rentals-title">
@@ -368,13 +479,19 @@ const listings = [...data.listings].sort(
 												)}
 											</td>
 											<td>{item.layout}</td>
-											<td>
-												{item.station}
-												{item.walkMinutes != null && (
-													<span class="rentals-sub">
-														徒歩{item.walkMinutes}分
-													</span>
+											<td class="rentals-num">
+												{item.walkMinutes != null
+													? `${item.walkMinutes}分`
+													: '—'}
+												{item.stationName && (
+													<span class="rentals-sub">{item.stationName}</span>
 												)}
+											</td>
+											<td class="rentals-num">
+												{item.carMinutes != null
+													? `約${item.carMinutes}分`
+													: '—'}
+												<span class="rentals-sub">西浦1-1-1</span>
 											</td>
 											<td>
 												{item.buildingAgeLabel}
@@ -409,7 +526,10 @@ const listings = [...data.listings].sort(
 				</p>
 				<p><code>npm run update:rentals</code></p>
 				<p>
-					取得間隔やページ数は <code>--delay=1800</code> / <code>--pages=2</code
+					座標・車通勤だけ再計算する場合は <code
+						>npm run update:rentals -- --enrich-only</code
+					>。取得間隔やページ数は <code>--delay=1800</code> / <code
+						>--pages=2</code
 					> /
 					<code>--sources=suumo,yahoo</code> で調整できます。CI やビルドでは走りません。
 				</p>
@@ -434,10 +554,33 @@ const listings = [...data.listings].sort(
 				var table = document.getElementById('rentals-table');
 				var shown = document.getElementById('rentals-shown');
 				if (!form || !table) return;
+
+				function num(id) {
+					var el = document.getElementById(id);
+					if (!el || el.value === '') return null;
+					var n = Number(el.value);
+					return Number.isFinite(n) ? n : null;
+				}
+
+				function attrNum(row, name) {
+					var raw = row.getAttribute(name);
+					if (raw === null || raw === '') return null;
+					var n = Number(raw);
+					return Number.isFinite(n) ? n : null;
+				}
+
 				function apply() {
 					var city = document.getElementById('filter-city').value;
+					var station = document.getElementById('filter-station').value;
 					var layout = document.getElementById('filter-layout').value;
 					var source = document.getElementById('filter-source').value;
+					var walkMax = num('filter-walk');
+					var carMax = num('filter-car');
+					var ageMax = num('filter-age');
+					var rentMin = num('filter-rent-min');
+					var rentMax = num('filter-rent-max');
+					var areaMin = num('filter-area-min');
+					var areaMax = num('filter-area-max');
 					var q = (document.getElementById('filter-q').value || '')
 						.trim()
 						.toLowerCase();
@@ -445,10 +588,23 @@ const listings = [...data.listings].sort(
 					var n = 0;
 					for (var i = 0; i < rows.length; i++) {
 						var row = rows[i];
+						var walk = attrNum(row, 'data-walk');
+						var car = attrNum(row, 'data-car');
+						var age = attrNum(row, 'data-age');
+						var rent = attrNum(row, 'data-rent');
+						var area = attrNum(row, 'data-area');
 						var ok =
 							(!city || row.getAttribute('data-city') === city) &&
+							(!station || row.getAttribute('data-station') === station) &&
 							(!layout || row.getAttribute('data-layout') === layout) &&
 							(!source || row.getAttribute('data-source') === source) &&
+							(walkMax == null || (walk != null && walk <= walkMax)) &&
+							(carMax == null || (car != null && car <= carMax)) &&
+							(ageMax == null || (age != null && age <= ageMax)) &&
+							(rentMin == null || (rent != null && rent >= rentMin * 10000)) &&
+							(rentMax == null || (rent != null && rent <= rentMax * 10000)) &&
+							(areaMin == null || (area != null && area >= areaMin)) &&
+							(areaMax == null || (area != null && area <= areaMax)) &&
 							(!q ||
 								(row.getAttribute('data-text') || '')
 									.toLowerCase()
@@ -458,8 +614,10 @@ const listings = [...data.listings].sort(
 					}
 					if (shown) shown.textContent = String(n);
 				}
+
 				form.addEventListener('input', apply);
 				form.addEventListener('change', apply);
+				apply();
 			})();
 		</script>
 		<Footer />
