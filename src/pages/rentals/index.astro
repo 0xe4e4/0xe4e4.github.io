@@ -76,6 +76,50 @@ function uniqueLabels(
 	return [...new Set(items.map(pick).filter(Boolean))];
 }
 
+function jstYmd(iso: string) {
+	return new Intl.DateTimeFormat('en-CA', {
+		timeZone: 'Asia/Tokyo',
+		year: 'numeric',
+		month: '2-digit',
+		day: '2-digit',
+	}).format(new Date(iso));
+}
+
+const snapshotDay = data.updatedAt
+	? jstYmd(data.updatedAt)
+	: jstYmd(new Date().toISOString());
+
+function daysBetween(fromYmd: string, toYmd: string) {
+	return Math.round(
+		(Date.parse(`${toYmd}T00:00:00+09:00`) -
+			Date.parse(`${fromYmd}T00:00:00+09:00`)) /
+			86400000,
+	);
+}
+
+function isFreshListing(item: RentalListing) {
+	return [item.listedAt, item.sourceUpdatedAt].filter(Boolean).some((d) => {
+		const n = daysBetween(String(d), snapshotDay);
+		return n >= 0 && n <= 2;
+	});
+}
+
+function formatMd(iso: string | null | undefined) {
+	if (!iso) return '';
+	const parts = iso.split('-');
+	if (parts.length < 3) return iso;
+	return `${Number(parts[1])}/${Number(parts[2])}`;
+}
+
+function newestDate(
+	items: RentalListing[],
+	field: 'listedAt' | 'sourceUpdatedAt',
+) {
+	const dates = items.map((item) => item[field]).filter(Boolean) as string[];
+	dates.sort();
+	return dates.at(-1) || null;
+}
+
 const stationOptions = [
 	...new Set(listings.map((l) => l.stationName).filter(Boolean)),
 ].sort((a, b) => a.localeCompare(b, 'ja'));
@@ -84,10 +128,6 @@ const STRUCTURE_GROUP_OPTIONS = ['鉄筋系', '鉄骨系', '木造', 'その他'
 const structureDetailOptions = [
 	...new Set(listings.map((l) => l.structure).filter(Boolean)),
 ].sort((a, b) => a.localeCompare(b, 'ja'));
-
-/** GitHub Actions workflow that refreshes rentals.json (static Pages has no local shell). */
-const UPDATE_WORKFLOW_URL =
-	'https://github.com/0xe4e4/0xe4e4.github.io/actions/workflows/update-rentals.yml';
 ---
 
 <!doctype html>
@@ -135,39 +175,6 @@ const UPDATE_WORKFLOW_URL =
 				font-size: 0.88rem;
 				color: rgb(var(--gray));
 				align-items: center;
-			}
-			.rentals-refresh {
-				display: flex;
-				flex-wrap: wrap;
-				align-items: center;
-				gap: 0.75rem 1rem;
-				margin: 1.1rem 0 0 0;
-			}
-			.rentals-refresh__btn {
-				display: inline-flex;
-				align-items: center;
-				justify-content: center;
-				padding: 0.55rem 1rem;
-				border: 1px solid rgba(154, 169, 255, 0.45);
-				border-radius: 8px;
-				background: rgba(154, 169, 255, 0.16);
-				color: rgb(var(--black));
-				font: inherit;
-				font-size: 0.92rem;
-				font-weight: 600;
-				text-decoration: none;
-				cursor: pointer;
-			}
-			.rentals-refresh__btn:hover {
-				background: rgba(154, 169, 255, 0.28);
-				color: rgb(var(--black));
-			}
-			.rentals-refresh__hint {
-				margin: 0;
-				font-size: 0.82rem;
-				line-height: 1.55;
-				color: rgb(var(--gray));
-				max-width: 42rem;
 			}
 			.rentals-criteria {
 				margin: 0 0 2rem 0;
@@ -385,6 +392,24 @@ const UPDATE_WORKFLOW_URL =
 			.rentals-group .rentals-source + .rentals-source {
 				margin-left: 0.25rem;
 			}
+			.rentals-fresh td {
+				background: rgba(250, 204, 21, 0.14);
+			}
+			.rentals-fresh:hover td {
+				background: rgba(250, 204, 21, 0.2);
+			}
+			.rentals-table th.rentals-sort {
+				cursor: pointer;
+				user-select: none;
+			}
+			.rentals-table th.rentals-sort:hover {
+				color: rgb(var(--black));
+			}
+			.rentals-sort__mark {
+				font-size: 0.7em;
+				margin-left: 0.15em;
+				opacity: 0.65;
+			}
 		</style>
 	</head>
 	<body>
@@ -403,23 +428,8 @@ const UPDATE_WORKFLOW_URL =
 					<li>件数: <span id="rentals-total">{listings.length}</span></li>
 					<li>SUUMO: {bySource.suumo}</li>
 					<li>Yahoo!不動産: {bySource.yahoo}</li>
+					<li>黄は掲載または更新が2日以内</li>
 				</ul>
-				<div class="rentals-refresh">
-					<a
-						class="rentals-refresh__btn"
-						href={UPDATE_WORKFLOW_URL}
-						target="_blank"
-						rel="noopener noreferrer"
-					>
-						データを最新化
-					</a>
-					<p class="rentals-refresh__hint">
-						1日3回（9時・14時・20時）に GitHub Actions
-						が自動更新します。すぐ取り直したいときだけボタンから「Run
-						workflow」を実行してください（数〜十数分）。完了後に Pages
-						が再デプロイされるとこのページが更新されます。
-					</p>
-				</div>
 			</header>
 
 			<section class="rentals-criteria" aria-labelledby="criteria-heading">
@@ -596,14 +606,66 @@ const UPDATE_WORKFLOW_URL =
 							<table class="rentals-table" id="rentals-table">
 								<thead>
 									<tr>
-										<th>物件</th>
-										<th>賃料</th>
-										<th>間取り</th>
-										<th>構造</th>
-										<th>駅徒歩</th>
-										<th>車通勤</th>
-										<th>築年</th>
-										<th>出典</th>
+										<th class="rentals-sort" data-sort="title" data-type="text">
+											物件
+											<span class="rentals-sort__mark" aria-hidden="true" />
+										</th>
+										<th
+											class="rentals-sort"
+											data-sort="rent"
+											data-type="number"
+										>
+											賃料
+											<span class="rentals-sort__mark" aria-hidden="true" />
+										</th>
+										<th
+											class="rentals-sort"
+											data-sort="layout"
+											data-type="text"
+										>
+											間取り
+											<span class="rentals-sort__mark" aria-hidden="true" />
+										</th>
+										<th
+											class="rentals-sort"
+											data-sort="structure"
+											data-type="text"
+										>
+											構造
+											<span class="rentals-sort__mark" aria-hidden="true" />
+										</th>
+										<th
+											class="rentals-sort"
+											data-sort="walk"
+											data-type="number"
+										>
+											駅徒歩
+											<span class="rentals-sort__mark" aria-hidden="true" />
+										</th>
+										<th class="rentals-sort" data-sort="car" data-type="number">
+											車通勤
+											<span class="rentals-sort__mark" aria-hidden="true" />
+										</th>
+										<th class="rentals-sort" data-sort="age" data-type="number">
+											築年
+											<span class="rentals-sort__mark" aria-hidden="true" />
+										</th>
+										<th
+											class="rentals-sort"
+											data-sort="listed"
+											data-type="text"
+										>
+											掲載日
+											<span class="rentals-sort__mark" aria-hidden="true" />
+										</th>
+										<th
+											class="rentals-sort"
+											data-sort="source"
+											data-type="text"
+										>
+											出典
+											<span class="rentals-sort__mark" aria-hidden="true" />
+										</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -622,9 +684,18 @@ const UPDATE_WORKFLOW_URL =
 											group.items,
 											(item) => item.source,
 										);
+										const groupListed = newestDate(group.items, 'listedAt');
+										const groupUpdated = newestDate(
+											group.items,
+											'sourceUpdatedAt',
+										);
+										const groupFresh = group.items.some(isFreshListing);
 										const roomRows = group.items.map((item) => (
 											<tr
-												class={multi ? 'rentals-room' : undefined}
+												class:list={[
+													multi && 'rentals-room',
+													isFreshListing(item) && 'rentals-fresh',
+												]}
 												data-group={group.id}
 												data-city={item.city}
 												data-layout={item.layout}
@@ -637,6 +708,17 @@ const UPDATE_WORKFLOW_URL =
 												data-age={item.ageYears ?? ''}
 												data-rent={item.rentYen ?? ''}
 												data-area={item.areaSqm ?? ''}
+												data-sort-title={item.title}
+												data-sort-rent={item.rentYen ?? ''}
+												data-sort-layout={item.layout}
+												data-sort-structure={item.structure || ''}
+												data-sort-walk={item.walkMinutes ?? ''}
+												data-sort-car={item.carMinutes ?? ''}
+												data-sort-age={item.ageYears ?? ''}
+												data-sort-listed={
+													item.listedAt || item.sourceUpdatedAt || ''
+												}
+												data-sort-source={item.source}
 												data-text={`${item.title} ${item.address} ${item.station} ${item.layout} ${item.stationName} ${item.structure} ${item.structureGroup}`}
 												hidden={multi}
 											>
@@ -698,6 +780,21 @@ const UPDATE_WORKFLOW_URL =
 														</span>
 													)}
 												</td>
+												<td class="rentals-num">
+													{item.listedAt || item.sourceUpdatedAt ? (
+														<>
+															{formatMd(item.listedAt) ||
+																formatMd(item.sourceUpdatedAt)}
+															{item.sourceUpdatedAt && (
+																<span class="rentals-sub">
+																	更新 {formatMd(item.sourceUpdatedAt)}
+																</span>
+															)}
+														</>
+													) : (
+														'—'
+													)}
+												</td>
 												<td>
 													<span
 														class:list={[
@@ -716,7 +813,26 @@ const UPDATE_WORKFLOW_URL =
 
 										return (
 											<>
-												<tr class="rentals-group" data-group={group.id}>
+												<tr
+													class:list={[
+														'rentals-group',
+														groupFresh && 'rentals-fresh',
+													]}
+													data-group={group.id}
+													data-sort-title={group.title}
+													data-sort-rent={Math.min(
+														...group.items.map(
+															(item) => item.rentYen ?? 9999999,
+														),
+													)}
+													data-sort-layout={layouts[0] || ''}
+													data-sort-structure={structures[0] || ''}
+													data-sort-walk={first.walkMinutes ?? ''}
+													data-sort-car={first.carMinutes ?? ''}
+													data-sort-age={first.ageYears ?? ''}
+													data-sort-listed={groupListed || groupUpdated || ''}
+													data-sort-source={sources[0] || ''}
+												>
 													<td>
 														<button
 															type="button"
@@ -772,6 +888,21 @@ const UPDATE_WORKFLOW_URL =
 															</span>
 														)}
 													</td>
+													<td class="rentals-num">
+														{groupListed || groupUpdated ? (
+															<>
+																{formatMd(groupListed) ||
+																	formatMd(groupUpdated)}
+																{groupUpdated && (
+																	<span class="rentals-sub">
+																		更新 {formatMd(groupUpdated)}
+																	</span>
+																)}
+															</>
+														) : (
+															'—'
+														)}
+													</td>
 													<td>
 														{sources.map((source) => (
 															<span
@@ -797,16 +928,12 @@ const UPDATE_WORKFLOW_URL =
 			}
 
 			<section class="rentals-howto" aria-labelledby="howto-heading">
-				<h2 id="howto-heading">最新化のしかた</h2>
+				<h2 id="howto-heading">この一覧について</h2>
 				<p>
 					毎日 9時・14時・20時（日本時間）に GitHub Actions
-					が自動で取り直します。すぐ更新したいときは上の「データを最新化」から
-					「Run workflow」を実行してください。
+					が自動で取り直します。掲載日または情報更新日が2日以内の物件は黄色で示します。
 				</p>
-				<p>
-					ワークフローが <code>src/data/rentals.json</code> を更新して
-					<code>main</code> に push すると、自動デプロイで一覧が入れ替わります。
-				</p>
+				<p>列見出しをクリックすると並び替えできます。</p>
 				<p>
 					SUUMO の構造は鉄筋系 / 鉄骨系 / 木造 /
 					その他の系統のみです。鉄筋コンクリートや軽量鉄骨などの詳細は Yahoo
@@ -965,6 +1092,82 @@ const UPDATE_WORKFLOW_URL =
 						var match = room.getAttribute('data-match') !== '0';
 						room.hidden = !open || !match;
 					}
+				});
+
+				function sortChunks(key, type, dir) {
+					var tbody = table.tBodies[0];
+					var rows = Array.prototype.slice.call(tbody.rows);
+					var chunks = [];
+					for (var i = 0; i < rows.length; ) {
+						var row = rows[i];
+						if (row.classList.contains('rentals-group')) {
+							var gid = row.getAttribute('data-group');
+							var nodes = [row];
+							i += 1;
+							while (
+								i < rows.length &&
+								rows[i].classList.contains('rentals-room') &&
+								rows[i].getAttribute('data-group') === gid
+							) {
+								nodes.push(rows[i]);
+								i += 1;
+							}
+							chunks.push({ head: row, nodes: nodes });
+						} else {
+							chunks.push({ head: row, nodes: [row] });
+							i += 1;
+						}
+					}
+					chunks.sort(function (a, b) {
+						var av = a.head.getAttribute('data-sort-' + key) || '';
+						var bv = b.head.getAttribute('data-sort-' + key) || '';
+						if (key === 'listed') {
+							if (!av && !bv) return 0;
+							if (!av) return 1;
+							if (!bv) return -1;
+						}
+						var cmp = 0;
+						if (type === 'number') {
+							var an = av === '' ? Number.POSITIVE_INFINITY : Number(av);
+							var bn = bv === '' ? Number.POSITIVE_INFINITY : Number(bv);
+							if (!Number.isFinite(an)) an = Number.POSITIVE_INFINITY;
+							if (!Number.isFinite(bn)) bn = Number.POSITIVE_INFINITY;
+							cmp = an - bn;
+						} else {
+							cmp = av.localeCompare(bv, 'ja');
+						}
+						return dir === 'desc' ? -cmp : cmp;
+					});
+					chunks.forEach(function (chunk) {
+						chunk.nodes.forEach(function (node) {
+							tbody.appendChild(node);
+						});
+					});
+				}
+
+				table.querySelectorAll('th.rentals-sort').forEach(function (th) {
+					th.addEventListener('click', function () {
+						var key = th.getAttribute('data-sort');
+						var type = th.getAttribute('data-type') || 'text';
+						var current = table.getAttribute('data-sort-key');
+						var dir = table.getAttribute('data-sort-dir') || 'asc';
+						if (current === key) dir = dir === 'asc' ? 'desc' : 'asc';
+						else dir = key === 'listed' ? 'desc' : 'asc';
+						table.setAttribute('data-sort-key', key);
+						table.setAttribute('data-sort-dir', dir);
+						table.querySelectorAll('th.rentals-sort').forEach(function (other) {
+							other.setAttribute('aria-sort', 'none');
+							var mark = other.querySelector('.rentals-sort__mark');
+							if (mark) mark.textContent = '';
+						});
+						th.setAttribute(
+							'aria-sort',
+							dir === 'asc' ? 'ascending' : 'descending',
+						);
+						var mark = th.querySelector('.rentals-sort__mark');
+						if (mark) mark.textContent = dir === 'asc' ? '▲' : '▼';
+						sortChunks(key, type, dir);
+					});
 				});
 
 				form.addEventListener('input', apply);

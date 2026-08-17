@@ -32,6 +32,10 @@ export interface RentalListing {
 	structure: string;
 	/** 鉄筋系 | 鉄骨系 | 木造 | その他 */
 	structureGroup: string;
+	/** 元サイトの情報公開日 (YYYY-MM-DD) */
+	listedAt: string | null;
+	/** 元サイトの情報更新日 (YYYY-MM-DD) */
+	sourceUpdatedAt: string | null;
 	lat: number | null;
 	lon: number | null;
 }
