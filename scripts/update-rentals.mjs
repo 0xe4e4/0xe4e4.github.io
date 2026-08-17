@@ -28,16 +28,43 @@ const DESTINATION = {
 };
 
 const CITIES = [
-	{ code: '12204', name: '船橋市', suumoSlug: 'sc_funabashi' },
-	{ code: '12216', name: '習志野市', suumoSlug: 'sc_narashino' },
-	{ code: '12203', name: '市川市', suumoSlug: 'sc_ichikawa' },
-	{ code: '12106', name: '千葉市美浜区', suumoSlug: 'sc_chibashimihama' },
-	{ code: '12227', name: '浦安市', suumoSlug: 'sc_urayasu' },
+	{
+		code: '12204',
+		name: '船橋市',
+		suumoSlug: 'sc_funabashi',
+		athomeSlug: 'funabashi-city',
+	},
+	{
+		code: '12216',
+		name: '習志野市',
+		suumoSlug: 'sc_narashino',
+		athomeSlug: 'narashino-city',
+	},
+	{
+		code: '12203',
+		name: '市川市',
+		suumoSlug: 'sc_ichikawa',
+		athomeSlug: 'ichikawa-city',
+	},
+	{
+		code: '12106',
+		name: '千葉市美浜区',
+		suumoSlug: 'sc_chibashimihama',
+		athomeSlug: 'chiba_mihama-city',
+	},
+	{
+		code: '12227',
+		name: '浦安市',
+		suumoSlug: 'sc_urayasu',
+		athomeSlug: 'urayasu-city',
+	},
 ];
 
-const ALLOWED_LAYOUTS = new Set(['1K', '1DK', '1LDK', '2K', '2DK']);
+const LAYOUT_ORDER = ['1DK', '1LDK', '2K', '2DK', '3K', '3DK', '3LDK'];
+const ALLOWED_LAYOUTS = new Set(LAYOUT_ORDER);
 const MIN_BUILT_YEAR = 1981;
 const MAX_WALK = 15;
+const MAX_RENT_YEN = 100000;
 
 const args = process.argv.slice(2);
 const enrichOnly = args.includes('--enrich-only');
@@ -49,23 +76,52 @@ const delayMs = Number(
 	args.find((a) => a.startsWith('--delay='))?.split('=')[1] ?? 1800,
 );
 const sourcesArg =
-	args.find((a) => a.startsWith('--sources='))?.split('=')[1] ?? 'suumo,yahoo';
+	args.find((a) => a.startsWith('--sources='))?.split('=')[1] ??
+	'suumo,yahoo,athome';
 const enabledSources = new Set(sourcesArg.split(',').map((s) => s.trim()));
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
+const cookieMap = new Map();
+
+function rememberCookies(res) {
+	const raw =
+		typeof res.headers.getSetCookie === 'function'
+			? res.headers.getSetCookie()
+			: [];
+	for (const cookie of raw) {
+		const nv = String(cookie).split(';')[0];
+		const i = nv.indexOf('=');
+		if (i > 0) cookieMap.set(nv.slice(0, i), nv.slice(i + 1));
+	}
+}
+
+function cookieHeader() {
+	if (cookieMap.size === 0) return '';
+	return [...cookieMap.entries()].map(([k, v]) => `${k}=${v}`).join('; ');
+}
+
+function isCaptchaHtml(html) {
+	return /initGeetest|geetest|solvedCaptcha/i.test(html) && html.length < 40000;
+}
+
 async function fetchText(url, referer) {
-	const res = await fetch(url, {
-		headers: {
-			'User-Agent': UA,
-			Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-			'Accept-Language': 'ja,en-US;q=0.9,en;q=0.8',
-			...(referer ? { Referer: referer } : {}),
-		},
-		redirect: 'follow',
-	});
+	const headers = {
+		'User-Agent': UA,
+		Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+		'Accept-Language': 'ja,en-US;q=0.9,en;q=0.8',
+		...(referer ? { Referer: referer } : {}),
+	};
+	const cookies = cookieHeader();
+	if (cookies) headers.Cookie = cookies;
+	const res = await fetch(url, { headers, redirect: 'follow' });
+	rememberCookies(res);
+	const html = await res.text();
+	if (isCaptchaHtml(html) || res.status === 403 || res.status === 405) {
+		throw new Error(`blocked HTTP ${res.status} for ${url}`);
+	}
 	if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
-	return res.text();
+	return html;
 }
 
 function stripTags(html) {
@@ -235,6 +291,7 @@ function passesFilters(listing) {
 	if (!ALLOWED_LAYOUTS.has(listing.layout)) return false;
 	if (listing.walkMinutes != null && listing.walkMinutes > MAX_WALK)
 		return false;
+	if (listing.rentYen != null && listing.rentYen > MAX_RENT_YEN) return false;
 	if (listing.builtYear != null && listing.builtYear < MIN_BUILT_YEAR)
 		return false;
 	if (!listing.parking) return false;
@@ -257,9 +314,11 @@ function buildSuumoUrl(cityCode, page, kz) {
 	params.set('ta', '12');
 	params.set('sc', cityCode);
 	params.set('et', String(MAX_WALK));
+	params.set('kt', String(Math.round(MAX_RENT_YEN / 10000)));
 	params.set('po1', '25');
 	params.set('pc', '50');
-	for (const md of ['02', '03', '04', '05', '06']) params.append('md', md);
+	for (const md of ['03', '04', '05', '06', '08', '09', '10'])
+		params.append('md', md);
 	params.append('tc', '0400901');
 	params.append('tc', '0400502');
 	if (kz) params.append('kz', String(kz));
@@ -397,7 +456,8 @@ async function fetchSuumo() {
 function buildYahooUrl(cityCode, page) {
 	const params = new URLSearchParams();
 	params.set('min_st', String(MAX_WALK));
-	for (const n of [2, 3, 4, 5, 6]) params.append('rl_dtl', String(n));
+	params.set('max_pr', String(Math.round(MAX_RENT_YEN / 10000)));
+	for (const n of [3, 4, 5, 6, 8, 9, 10]) params.append('rl_dtl', String(n));
 	params.append('po', 'cr');
 	params.append('po', 'ws');
 	if (page > 1) params.set('page', String(page));
@@ -413,11 +473,13 @@ function extractYahooContext(html) {
 }
 
 const YAHOO_LAYOUT = {
-	2: '1K',
 	3: '1DK',
 	4: '1LDK',
 	5: '2K',
 	6: '2DK',
+	8: '3K',
+	9: '3DK',
+	10: '3LDK',
 };
 
 function parseYahooCoords(raw) {
@@ -524,6 +586,173 @@ async function fetchYahoo() {
 	return out;
 }
 
+/** ---- At Home ---- */
+
+const ATHOME_MADORI = [
+	'km004',
+	'km005',
+	'km008',
+	'km009',
+	'km013',
+	'km014',
+	'km015',
+];
+
+function buildAthomeUrl(slug, page) {
+	const params = new URLSearchParams();
+	params.set('PRICETO', 'kc115');
+	params.set('EKITOHO', 'ke005');
+	for (const md of ATHOME_MADORI) params.append('MADORI[]', md);
+	params.append('KODAWARI[]', 'O20');
+	params.append('KODAWARI[]', 'B15');
+	params.append('SHUMOKU[]', 'kb001');
+	params.append('SHUMOKU[]', 'kb002');
+	const qs = params.toString();
+	const base = `https://www.athome.co.jp/chintai/chiba/${slug}/list/`;
+	return page > 1 ? `${base}page${page}/?${qs}` : `${base}?${qs}`;
+}
+
+function parseAthomeHomeText(block) {
+	const raw =
+		(block.match(/u-icon--home-mini[\s\S]*?<dd>([\s\S]*?)<\/dd>/) || [])[1] ||
+		'';
+	return stripTags(raw);
+}
+
+function parseAthome(html, city) {
+	const listings = [];
+	if (isCaptchaHtml(html)) {
+		console.warn(`  At Home captcha page for ${city.name}`);
+		return listings;
+	}
+	const buildings = html.split(/<div class="p-property p-property--building/);
+	for (const block of buildings.slice(1)) {
+		const title = stripTags(
+			(block.match(/p-property__title--building[^>]*>([\s\S]*?)<\//) ||
+				[])[1] || '',
+		);
+		const addressRaw = stripTags(
+			(block.match(/u-icon--map-mini[\s\S]*?<strong>([\s\S]*?)<\/strong>/) ||
+				[])[1] || '',
+		);
+		const address = addressRaw.includes('千葉県')
+			? addressRaw
+			: addressRaw
+				? `千葉県${addressRaw}`
+				: '';
+		const stationRaw = stripTags(
+			(block.match(/u-icon--train-mini[\s\S]*?<dd>([\s\S]*?)<\/dd>/) ||
+				[])[1] || '',
+		);
+		const homeText = parseAthomeHomeText(block);
+		const walkMinutes = parseWalkMinutes(stationRaw);
+		const builtYear = parseBuiltYear(homeText);
+		const ageMatch = homeText.match(/築\s*\d+\s*年/);
+		const yearMatch = homeText.match(/(19|20)\d{2}年/);
+		const buildingAgeLabel = ageMatch
+			? ageMatch[0]
+			: yearMatch
+				? yearMatch[0]
+				: homeText;
+		let structure = '';
+		for (const label of Object.keys(STRUCTURE_GROUP_BY_LABEL)) {
+			if (label !== 'その他' && homeText.includes(label)) {
+				structure = label;
+				break;
+			}
+		}
+
+		const rooms = block.split(/data-bukken-no="/).slice(1);
+		for (const room of rooms) {
+			const bukkenNo = (room.match(/^(\d+)/) || [])[1];
+			if (!bukkenNo) continue;
+			const rentNum = (room.match(
+				/p-property__information-rent[^>]*>([\s\S]*?)<\//,
+			) || [])[1];
+			const rentLabel = rentNum ? `${stripTags(rentNum)}万円` : '';
+			const feeSpan = (room.match(
+				/p-property__information-rent[\s\S]*?<\/b>[\s\S]*?万円[\s\S]*?<span>([\s\S]*?)<\/span>/,
+			) || [])[1];
+			const managementFeeLabel = stripTags(feeSpan || '');
+			const layout = normalizeLayout(
+				stripTags(
+					(room.match(/p-property__floor[^>]*>([\s\S]*?)<\//) || [])[1] || '',
+				),
+			);
+			const areaSqm = parseArea(
+				stripTags(
+					(room.match(
+						/p-property__floor[\s\S]*?<\/div>\s*<span>([\s\S]*?)<\/span>/,
+					) || [])[1] || '',
+				),
+			);
+			const floorRaw = stripTags(
+				(room.match(
+					/p-property__room-number list_width--two[^>]*>([\s\S]*?)<\//,
+				) || [])[1] || '',
+			);
+			const floorLabel = floorRaw
+				? /階/.test(floorRaw)
+					? floorRaw
+					: `${floorRaw}階`
+				: '';
+			const listing = baseListingFields({
+				id: `athome:${bukkenNo}`,
+				source: 'athome',
+				title: title || address,
+				address,
+				station: stationRaw,
+				walkMinutes,
+				layout,
+				areaSqm,
+				rentLabel,
+				managementFeeLabel,
+				buildingAgeLabel,
+				builtYear,
+				floorLabel,
+				url: `https://www.athome.co.jp/chintai/${bukkenNo}/`,
+				city: cityFromAddress(address, city.name),
+				parking: true,
+				independentWashbasin: true,
+				structure,
+			});
+			if (passesFilters(listing)) listings.push(listing);
+		}
+	}
+	return listings;
+}
+
+async function fetchAthome() {
+	const out = [];
+	for (const city of CITIES) {
+		console.log(`At Home ${city.name}…`);
+		let blocked = false;
+		for (let page = 1; page <= maxPages; page++) {
+			const url = buildAthomeUrl(city.athomeSlug, page);
+			try {
+				const html = await fetchText(url, 'https://www.athome.co.jp/chintai/');
+				if (!/p-property--building/.test(html)) {
+					console.log(`  page ${page}: no buildings`);
+					break;
+				}
+				const items = parseAthome(html, city);
+				console.log(`  page ${page}: ${items.length} matching rooms`);
+				out.push(...items);
+			} catch (err) {
+				console.warn(`  failed page ${page}: ${err.message}`);
+				if (/blocked/.test(err.message)) blocked = true;
+				break;
+			}
+			await sleep(delayMs);
+		}
+		if (blocked) {
+			console.warn('  At Home blocked further requests; stopping source.');
+			break;
+		}
+	}
+	return out;
+}
+
 /** ---- Geocode + car minutes ---- */
 
 function loadGeoCache() {
@@ -555,8 +784,10 @@ function normalizeAddressKey(address) {
 
 async function geocodeAddress(address, cache) {
 	const key = normalizeAddressKey(address);
-	if (!key) return null;
-	if (cache[key]) return cache[key];
+	if (!key) return { hit: null, fetched: false };
+	if (Object.prototype.hasOwnProperty.call(cache, key)) {
+		return { hit: cache[key], fetched: false };
+	}
 
 	const url = new URL('https://msearch.gsi.go.jp/address-search/AddressSearch');
 	url.searchParams.set('q', address);
@@ -570,15 +801,15 @@ async function geocodeAddress(address, cache) {
 		const coords = feature?.geometry?.coordinates;
 		if (!coords) {
 			cache[key] = null;
-			return null;
+			return { hit: null, fetched: true };
 		}
 		const hit = { lon: coords[0], lat: coords[1] };
 		cache[key] = hit;
-		return hit;
+		return { hit, fetched: true };
 	} catch (err) {
 		console.warn(`  geocode failed: ${address} (${err.message})`);
 		cache[key] = null;
-		return null;
+		return { hit: null, fetched: true };
 	}
 }
 
@@ -587,17 +818,19 @@ async function fillCoordinates(listings) {
 	let lookups = 0;
 	for (const item of listings) {
 		if (item.lat != null && item.lon != null) continue;
-		const hit = await geocodeAddress(item.address, cache);
-		lookups += 1;
+		const { hit, fetched } = await geocodeAddress(item.address, cache);
 		if (hit) {
 			item.lat = hit.lat;
 			item.lon = hit.lon;
 		}
-		if (lookups % 20 === 0) {
-			saveGeoCache(cache);
-			console.log(`  geocoded ${lookups} addresses…`);
+		if (fetched) {
+			lookups += 1;
+			if (lookups % 20 === 0) {
+				saveGeoCache(cache);
+				console.log(`  geocoded ${lookups} addresses…`);
+			}
+			await sleep(120);
 		}
-		await sleep(120);
 	}
 	saveGeoCache(cache);
 	console.log(
@@ -698,6 +931,32 @@ function parseYahooDetailDates(html) {
 	};
 }
 
+function parseAthomeDates(html) {
+	const published = html.match(
+		/情報公開日[\s\S]{0,80}?((?:20\d{2})[/\-年.]\d{1,2}[/\-月.]\d{1,2})/,
+	);
+	const updated = html.match(
+		/(?:情報更新日|更新日)[\s\S]{0,80}?((?:20\d{2})[/\-年.]\d{1,2}[/\-月.]\d{1,2})/,
+	);
+	return {
+		listedAt: toIsoDate(published?.[1]),
+		sourceUpdatedAt: toIsoDate(updated?.[1]),
+	};
+}
+
+function parseListingDates(item, html) {
+	if (item.source === 'suumo') return parseSuumoDates(html);
+	if (item.source === 'yahoo') return parseYahooDetailDates(html);
+	if (item.source === 'athome') return parseAthomeDates(html);
+	return { listedAt: null, sourceUpdatedAt: null };
+}
+
+function refererFor(item) {
+	if (item.source === 'suumo') return 'https://suumo.jp/';
+	if (item.source === 'yahoo') return 'https://realestate.yahoo.co.jp/';
+	return 'https://www.athome.co.jp/chintai/';
+}
+
 async function mapPool(items, limit, fn) {
 	let index = 0;
 	async function worker() {
@@ -734,24 +993,24 @@ async function fillListingDates(listings) {
 	);
 
 	let done = 0;
+	let athomeBlocked = false;
 	await mapPool(pending, 4, async (item) => {
+		if (item.source === 'athome' && athomeBlocked) {
+			cache[item.id] = { listedAt: null, sourceUpdatedAt: null };
+			return;
+		}
 		try {
-			const html = await fetchText(
-				item.url,
-				item.source === 'suumo'
-					? 'https://suumo.jp/'
-					: 'https://realestate.yahoo.co.jp/',
-			);
-			const dates =
-				item.source === 'suumo'
-					? parseSuumoDates(html)
-					: parseYahooDetailDates(html);
+			const html = await fetchText(item.url, refererFor(item));
+			const dates = parseListingDates(item, html);
 			item.listedAt = dates.listedAt;
 			item.sourceUpdatedAt = dates.sourceUpdatedAt;
 			cache[item.id] = dates;
 		} catch (err) {
 			console.warn(`  date fetch failed ${item.id}: ${err.message}`);
 			cache[item.id] = { listedAt: null, sourceUpdatedAt: null };
+			if (item.source === 'athome' && /blocked/.test(err.message)) {
+				athomeBlocked = true;
+			}
 		}
 		done += 1;
 		if (done % 40 === 0) {
@@ -762,8 +1021,13 @@ async function fillListingDates(listings) {
 			);
 			console.log(`  dates ${done}/${pending.length}…`);
 		}
-		await sleep(250);
+		await sleep(item.source === 'athome' ? 600 : 250);
 	});
+
+	const keep = new Set(listings.map((item) => item.id));
+	for (const key of Object.keys(cache)) {
+		if (!keep.has(key)) delete cache[key];
+	}
 	writeFileSync(
 		DATE_CACHE_PATH,
 		`${JSON.stringify(cache, null, '\t')}\n`,
@@ -822,7 +1086,8 @@ function buildSnapshot(listings) {
 			destinationLon: DESTINATION.lon,
 			maxCarMinutes: 20,
 			maxWalkMinutes: MAX_WALK,
-			layouts: [...ALLOWED_LAYOUTS],
+			maxRentYen: MAX_RENT_YEN,
+			layouts: [...LAYOUT_ORDER],
 			minBuiltYear: MIN_BUILT_YEAR,
 			requireParking: true,
 			requireIndependentWashbasin: true,
@@ -835,6 +1100,7 @@ function buildSnapshot(listings) {
 			'この JSON は GitHub Actions（1日3回: 9時・14時・20時 JST）で更新する。ビルド時には取得しない。',
 			'SUUMO: 駐車場あり + 洗面所独立。構造は鉄筋系/鉄骨系/木造/その他の系統のみ。',
 			'Yahoo!不動産: 駐車場(近隣含む) + 洗面台（洗面所独立の近似）。構造は詳細種別。',
+			'アットホーム: 駐車場(近隣含む) + 洗面所独立。ボット対策で取得できない場合あり。',
 			'掲載日・更新日は各サイトの詳細ページから取得。2日以内のものは一覧でハイライトする。',
 			'車通勤時間は国土地理院ジオコード + OSRM の概算。最新の空室・条件は必ず元ページで確認すること。',
 		],
@@ -856,8 +1122,11 @@ async function main() {
 		const collected = [];
 		if (enabledSources.has('suumo')) collected.push(...(await fetchSuumo()));
 		if (enabledSources.has('yahoo')) collected.push(...(await fetchYahoo()));
+		if (enabledSources.has('athome')) collected.push(...(await fetchAthome()));
 		listings = dedupe(collected);
 	}
+
+	listings = listings.filter(passesFilters);
 
 	if (!datesOnly) {
 		await fillCoordinates(listings);

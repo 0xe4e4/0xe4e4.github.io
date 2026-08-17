@@ -17,7 +17,7 @@ on:
         default: '1800'
         type: string
       sources:
-        description: 'Sources: suumo,yahoo'
+        description: 'Sources: suumo,yahoo,athome'
         required: false
         default: 'suumo,yahoo'
         type: string
@@ -57,7 +57,7 @@ jobs:
         env:
           PAGES: ${{ github.event.inputs.pages || '2' }}
           DELAY: ${{ github.event.inputs.delay || '1800' }}
-          SOURCES: ${{ github.event.inputs.sources || 'suumo,yahoo' }}
+          SOURCES: ${{ github.event.inputs.sources || 'suumo,yahoo,athome' }}
           ENRICH_ONLY: ${{ github.event.inputs.enrich_only || 'false' }}
         run: |
           if [ "$ENRICH_ONLY" = "true" ]; then

@@ -9,7 +9,7 @@ import rentalsJson from '../../data/rentals.json';
 const data = rentalsJson as RentalsSnapshot;
 const title = `通勤圏の賃貸空室 | ${SITE_TITLE}`;
 const description =
-	'船橋市西浦付近への車通勤圏・駅徒歩15分以内・1K〜2DK・洗面独立・駐車場ありの賃貸スナップショット。';
+	'船橋市西浦付近への車通勤圏・駅徒歩15分以内・1DK〜3LDK・家賃10万以下・洗面独立・駐車場ありの賃貸スナップショット。';
 
 const updatedLabel = data.updatedAt
 	? new Date(data.updatedAt).toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' })
@@ -18,7 +18,15 @@ const updatedLabel = data.updatedAt
 const bySource = {
 	suumo: data.listings.filter((l) => l.source === 'suumo').length,
 	yahoo: data.listings.filter((l) => l.source === 'yahoo').length,
+	athome: data.listings.filter((l) => l.source === 'athome').length,
 };
+
+function sourceLabel(source: string) {
+	if (source === 'suumo') return 'SUUMO';
+	if (source === 'yahoo') return 'Yahoo';
+	if (source === 'athome') return 'アットホーム';
+	return source;
+}
 
 const listings = [...data.listings].sort((a, b) => {
 	const ca = a.carMinutes ?? 999;
@@ -318,6 +326,10 @@ const structureDetailOptions = [
 				background: rgba(250, 204, 21, 0.14);
 				color: #fde68a;
 			}
+			.rentals-source--athome {
+				background: rgba(125, 211, 252, 0.16);
+				color: #7dd3fc;
+			}
 			.rentals-notes {
 				margin-top: 2.5rem;
 				font-size: 0.85rem;
@@ -490,6 +502,7 @@ const structureDetailOptions = [
 					<li>件数: <span id="rentals-total">{listings.length}</span></li>
 					<li>SUUMO: {bySource.suumo}</li>
 					<li>Yahoo!不動産: {bySource.yahoo}</li>
+					<li>アットホーム: {bySource.athome}</li>
 					<li>黄は掲載が2日以内</li>
 					<li>緑は更新が2日以内</li>
 				</ul>
@@ -499,6 +512,13 @@ const structureDetailOptions = [
 				<h2 id="criteria-heading">検索条件</h2>
 				<ul>
 					<li>最寄駅まで徒歩 {data.criteria.maxWalkMinutes} 分以内</li>
+					<li>
+						賃料 {
+							data.criteria.maxRentYen != null
+								? `${data.criteria.maxRentYen / 10000}万円以下`
+								: '指定なし'
+						}
+					</li>
 					<li>間取り: {data.criteria.layouts.join(' / ')}</li>
 					<li>{data.criteria.minBuiltYear} 年以降竣工</li>
 					<li>駐車場あり / 洗面台独立（Yahoo は「洗面台」条件で近似）</li>
@@ -571,6 +591,7 @@ const structureDetailOptions = [
 									<option value="">すべて</option>
 									<option value="suumo">SUUMO</option>
 									<option value="yahoo">Yahoo</option>
+									<option value="athome">アットホーム</option>
 								</select>
 							</label>
 							<label>
@@ -882,9 +903,11 @@ const structureDetailOptions = [
 																'rentals-source',
 																item.source === 'yahoo' &&
 																	'rentals-source--yahoo',
+																item.source === 'athome' &&
+																	'rentals-source--athome',
 															]}
 														>
-															{item.source === 'suumo' ? 'SUUMO' : 'Yahoo'}
+															{sourceLabel(item.source)}
 														</span>
 													</td>
 												</tr>
@@ -1003,9 +1026,11 @@ const structureDetailOptions = [
 																class:list={[
 																	'rentals-source',
 																	source === 'yahoo' && 'rentals-source--yahoo',
+																	source === 'athome' &&
+																		'rentals-source--athome',
 																]}
 															>
-																{source === 'suumo' ? 'SUUMO' : 'Yahoo'}
+																{sourceLabel(source)}
 															</span>
 														))}
 													</td>
@@ -1036,7 +1061,7 @@ const structureDetailOptions = [
 				<p>
 					SUUMO の構造は鉄筋系 / 鉄骨系 / 木造 /
 					その他の系統のみです。鉄筋コンクリートや軽量鉄骨などの詳細は Yahoo
-					側で絞れます。
+					側で絞れます。アットホームは駐車場（近隣含む）と洗面所独立で近似しています。
 				</p>
 			</section>
 
