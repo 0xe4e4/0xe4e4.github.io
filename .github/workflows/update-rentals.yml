@@ -1,6 +1,9 @@
 name: Update rentals snapshot
 
 on:
+  # 09:00 / 14:00 / 20:00 JST
+  schedule:
+    - cron: '0 0,5,11 * * *'
   workflow_dispatch:
     inputs:
       pages:
@@ -51,14 +54,19 @@ jobs:
         run: npm ci
 
       - name: Fetch / enrich listings
+        env:
+          PAGES: ${{ github.event.inputs.pages || '2' }}
+          DELAY: ${{ github.event.inputs.delay || '1800' }}
+          SOURCES: ${{ github.event.inputs.sources || 'suumo,yahoo' }}
+          ENRICH_ONLY: ${{ github.event.inputs.enrich_only || 'false' }}
         run: |
-          if [ "${{ inputs.enrich_only }}" = "true" ]; then
+          if [ "$ENRICH_ONLY" = "true" ]; then
             npm run update:rentals -- --enrich-only
           else
             npm run update:rentals -- \
-              --pages=${{ inputs.pages }} \
-              --delay=${{ inputs.delay }} \
-              --sources=${{ inputs.sources }}
+              --pages="$PAGES" \
+              --delay="$DELAY" \
+              --sources="$SOURCES"
           fi
 
       - name: Commit and push if changed

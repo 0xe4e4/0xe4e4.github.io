@@ -31,6 +31,11 @@ const stationOptions = [
 	...new Set(listings.map((l) => l.stationName).filter(Boolean)),
 ].sort((a, b) => a.localeCompare(b, 'ja'));
 
+const STRUCTURE_GROUP_OPTIONS = ['鉄筋系', '鉄骨系', '木造', 'その他'];
+const structureDetailOptions = [
+	...new Set(listings.map((l) => l.structure).filter(Boolean)),
+].sort((a, b) => a.localeCompare(b, 'ja'));
+
 /** GitHub Actions workflow that refreshes rentals.json (static Pages has no local shell). */
 const UPDATE_WORKFLOW_URL =
 	'https://github.com/0xe4e4/0xe4e4.github.io/actions/workflows/update-rentals.yml';
@@ -322,9 +327,10 @@ const UPDATE_WORKFLOW_URL =
 						データを最新化
 					</a>
 					<p class="rentals-refresh__hint">
-						GitHub Actions の「Run workflow」を押すと SUUMO / Yahoo
-						から取り直してコミットします（数〜十数分）。完了後に Pages
-						が再デプロイされるとこのページが更新されます。リポジトリへの書き込み権限が必要です。
+						1日3回（9時・14時・20時）に GitHub Actions
+						が自動更新します。すぐ取り直したいときだけボタンから「Run
+						workflow」を実行してください（数〜十数分）。完了後に Pages
+						が再デプロイされるとこのページが更新されます。
 					</p>
 				</div>
 			</header>
@@ -378,6 +384,24 @@ const UPDATE_WORKFLOW_URL =
 									<option value="">すべて</option>
 									{data.criteria.layouts.map((layout) => (
 										<option value={layout}>{layout}</option>
+									))}
+								</select>
+							</label>
+							<label>
+								構造
+								<select name="structure-group" id="filter-structure-group">
+									<option value="">すべて</option>
+									{STRUCTURE_GROUP_OPTIONS.map((name) => (
+										<option value={name}>{name}</option>
+									))}
+								</select>
+							</label>
+							<label>
+								構造（詳細）
+								<select name="structure" id="filter-structure">
+									<option value="">すべて</option>
+									{structureDetailOptions.map((name) => (
+										<option value={name}>{name}</option>
 									))}
 								</select>
 							</label>
@@ -487,6 +511,7 @@ const UPDATE_WORKFLOW_URL =
 										<th>物件</th>
 										<th>賃料</th>
 										<th>間取り</th>
+										<th>構造</th>
 										<th>駅徒歩</th>
 										<th>車通勤</th>
 										<th>築年</th>
@@ -500,12 +525,14 @@ const UPDATE_WORKFLOW_URL =
 											data-layout={item.layout}
 											data-source={item.source}
 											data-station={item.stationName || ''}
+											data-structure={item.structure || ''}
+											data-structure-group={item.structureGroup || ''}
 											data-walk={item.walkMinutes ?? ''}
 											data-car={item.carMinutes ?? ''}
 											data-age={item.ageYears ?? ''}
 											data-rent={item.rentYen ?? ''}
 											data-area={item.areaSqm ?? ''}
-											data-text={`${item.title} ${item.address} ${item.station} ${item.layout} ${item.stationName}`}
+											data-text={`${item.title} ${item.address} ${item.station} ${item.layout} ${item.stationName} ${item.structure} ${item.structureGroup}`}
 										>
 											<td>
 												<div class="rentals-title">
@@ -532,6 +559,15 @@ const UPDATE_WORKFLOW_URL =
 												)}
 											</td>
 											<td>{item.layout}</td>
+											<td>
+												{item.structure || '—'}
+												{item.structureGroup &&
+													item.structureGroup !== item.structure && (
+														<span class="rentals-sub">
+															{item.structureGroup}
+														</span>
+													)}
+											</td>
 											<td class="rentals-num">
 												{item.walkMinutes != null
 													? `${item.walkMinutes}分`
@@ -574,17 +610,18 @@ const UPDATE_WORKFLOW_URL =
 			<section class="rentals-howto" aria-labelledby="howto-heading">
 				<h2 id="howto-heading">最新化のしかた</h2>
 				<p>
-					このサイトは GitHub Pages
-					の静的サイトなので、ブラウザだけでは物件サイトへ取りにいけません。上の「データを最新化」から
-					Actions を開き、「Run workflow」を実行してください。
+					毎日 9時・14時・20時（日本時間）に GitHub Actions
+					が自動で取り直します。すぐ更新したいときは上の「データを最新化」から
+					「Run workflow」を実行してください。
 				</p>
 				<p>
 					ワークフローが <code>src/data/rentals.json</code> を更新して
 					<code>main</code> に push すると、自動デプロイで一覧が入れ替わります。
 				</p>
 				<p>
-					座標・車通勤だけ再計算したい場合は、Actions の入力で
-					<code>enrich_only</code> を true にして実行します。
+					SUUMO の構造は鉄筋系 / 鉄骨系 / 木造 /
+					その他の系統のみです。鉄筋コンクリートや軽量鉄骨などの詳細は Yahoo
+					側で絞れます。
 				</p>
 			</section>
 
@@ -627,6 +664,10 @@ const UPDATE_WORKFLOW_URL =
 					var station = document.getElementById('filter-station').value;
 					var layout = document.getElementById('filter-layout').value;
 					var source = document.getElementById('filter-source').value;
+					var structureGroup = document.getElementById(
+						'filter-structure-group',
+					).value;
+					var structure = document.getElementById('filter-structure').value;
 					var walkMax = num('filter-walk');
 					var carMax = num('filter-car');
 					var ageMax = num('filter-age');
@@ -651,6 +692,10 @@ const UPDATE_WORKFLOW_URL =
 							(!station || row.getAttribute('data-station') === station) &&
 							(!layout || row.getAttribute('data-layout') === layout) &&
 							(!source || row.getAttribute('data-source') === source) &&
+							(!structureGroup ||
+								row.getAttribute('data-structure-group') === structureGroup) &&
+							(!structure ||
+								row.getAttribute('data-structure') === structure) &&
 							(walkMax == null || (walk != null && walk <= walkMax)) &&
 							(carMax == null || (car != null && car <= carMax)) &&
 							(ageMax == null || (age != null && age <= ageMax)) &&
