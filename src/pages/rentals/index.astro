@@ -118,6 +118,26 @@ function formatMd(iso: string | null | undefined) {
 	return `${Number(parts[1])}/${Number(parts[2])}`;
 }
 
+function mapsOrigin(item: Pick<RentalListing, 'address' | 'lat' | 'lon'>) {
+	if (item.lat != null && item.lon != null) return `${item.lat},${item.lon}`;
+	return item.address.trim();
+}
+
+function googleMapsDrivingUrl(
+	item: Pick<RentalListing, 'address' | 'lat' | 'lon'>,
+) {
+	const origin = mapsOrigin(item);
+	const destination = data.criteria.destination;
+	if (!origin || !destination) return '';
+	const params = new URLSearchParams({
+		api: '1',
+		origin,
+		destination,
+		travelmode: 'driving',
+	});
+	return `https://www.google.com/maps/dir/?${params.toString()}`;
+}
+
 function newestDate(
 	items: RentalListing[],
 	field: 'listedAt' | 'sourceUpdatedAt',
@@ -267,6 +287,21 @@ const structureDetailOptions = [
 			.rentals-num {
 				font-variant-numeric: tabular-nums;
 				white-space: nowrap;
+			}
+			.rentals-maps {
+				display: inline-block;
+				margin-top: 0.35rem;
+				padding: 0.12rem 0.45rem;
+				font-size: 0.72rem;
+				font-weight: 600;
+				letter-spacing: 0.02em;
+				color: var(--accent-dark);
+				background: rgba(154, 169, 255, 0.18);
+				border-radius: 4px;
+				text-decoration: none;
+			}
+			.rentals-maps:hover {
+				text-decoration: underline;
 			}
 			.rentals-source {
 				display: inline-block;
@@ -719,125 +754,142 @@ const structureDetailOptions = [
 										);
 										const groupFreshListed = group.items.some(isFreshListed);
 										const groupFreshUpdated = group.items.some(isFreshUpdated);
-										const roomRows = group.items.map((item) => (
-											<tr
-												class:list={[
-													multi && 'rentals-room',
-													isFreshListed(item) && 'rentals-fresh-listed',
-													isFreshUpdated(item) && 'rentals-fresh-updated',
-												]}
-												data-group={group.id}
-												data-city={item.city}
-												data-layout={item.layout}
-												data-source={item.source}
-												data-station={item.stationName || ''}
-												data-structure={item.structure || ''}
-												data-structure-group={item.structureGroup || ''}
-												data-walk={item.walkMinutes ?? ''}
-												data-car={item.carMinutes ?? ''}
-												data-age={item.ageYears ?? ''}
-												data-rent={item.rentYen ?? ''}
-												data-area={item.areaSqm ?? ''}
-												data-sort-title={item.title}
-												data-sort-rent={item.rentYen ?? ''}
-												data-sort-layout={item.layout}
-												data-sort-structure={item.structure || ''}
-												data-sort-walk={item.walkMinutes ?? ''}
-												data-sort-car={item.carMinutes ?? ''}
-												data-sort-age={item.ageYears ?? ''}
-												data-sort-listed={
-													item.listedAt || item.sourceUpdatedAt || ''
-												}
-												data-sort-source={item.source}
-												data-text={`${item.title} ${item.address} ${item.station} ${item.layout} ${item.stationName} ${item.structure} ${item.structureGroup}`}
-												hidden={multi}
-											>
-												<td>
-													<div class="rentals-title">
-														<a
-															href={item.url}
-															target="_blank"
-															rel="noopener noreferrer"
-														>
-															{multi
-																? item.floorLabel || item.layout
-																: item.title}
-														</a>
-														<span class="rentals-sub">
-															{multi
-																? `${item.layout}${item.areaSqm != null ? ` / ${item.areaSqm}㎡` : ''}`
-																: `${item.address}${item.floorLabel ? ` / ${item.floorLabel}` : ''}${item.areaSqm != null ? ` / ${item.areaSqm}㎡` : ''}`}
-														</span>
-													</div>
-												</td>
-												<td>
-													<span class="rentals-rent">{item.rentLabel}</span>
-													{item.managementFeeLabel && (
-														<span class="rentals-fee">
-															{item.managementFeeLabel}
-														</span>
-													)}
-												</td>
-												<td>{item.layout}</td>
-												<td>
-													{item.structure || '—'}
-													{item.structureGroup &&
-														item.structureGroup !== item.structure && (
+										const groupMapsUrl = googleMapsDrivingUrl(first);
+										const roomRows = group.items.map((item) => {
+											const mapsUrl = googleMapsDrivingUrl(item);
+											return (
+												<tr
+													class:list={[
+														multi && 'rentals-room',
+														isFreshListed(item) && 'rentals-fresh-listed',
+														isFreshUpdated(item) && 'rentals-fresh-updated',
+													]}
+													data-group={group.id}
+													data-city={item.city}
+													data-layout={item.layout}
+													data-source={item.source}
+													data-station={item.stationName || ''}
+													data-structure={item.structure || ''}
+													data-structure-group={item.structureGroup || ''}
+													data-walk={item.walkMinutes ?? ''}
+													data-car={item.carMinutes ?? ''}
+													data-age={item.ageYears ?? ''}
+													data-rent={item.rentYen ?? ''}
+													data-area={item.areaSqm ?? ''}
+													data-sort-title={item.title}
+													data-sort-rent={item.rentYen ?? ''}
+													data-sort-layout={item.layout}
+													data-sort-structure={item.structure || ''}
+													data-sort-walk={item.walkMinutes ?? ''}
+													data-sort-car={item.carMinutes ?? ''}
+													data-sort-age={item.ageYears ?? ''}
+													data-sort-listed={
+														item.listedAt || item.sourceUpdatedAt || ''
+													}
+													data-sort-source={item.source}
+													data-text={`${item.title} ${item.address} ${item.station} ${item.layout} ${item.stationName} ${item.structure} ${item.structureGroup}`}
+													hidden={multi}
+												>
+													<td>
+														<div class="rentals-title">
+															<a
+																href={item.url}
+																target="_blank"
+																rel="noopener noreferrer"
+															>
+																{multi
+																	? item.floorLabel || item.layout
+																	: item.title}
+															</a>
 															<span class="rentals-sub">
-																{item.structureGroup}
+																{multi
+																	? `${item.layout}${item.areaSqm != null ? ` / ${item.areaSqm}㎡` : ''}`
+																	: `${item.address}${item.floorLabel ? ` / ${item.floorLabel}` : ''}${item.areaSqm != null ? ` / ${item.areaSqm}㎡` : ''}`}
+															</span>
+														</div>
+													</td>
+													<td>
+														<span class="rentals-rent">{item.rentLabel}</span>
+														{item.managementFeeLabel && (
+															<span class="rentals-fee">
+																{item.managementFeeLabel}
 															</span>
 														)}
-												</td>
-												<td class="rentals-num">
-													{item.walkMinutes != null
-														? `${item.walkMinutes}分`
-														: '—'}
-													{item.stationName && (
-														<span class="rentals-sub">{item.stationName}</span>
-													)}
-												</td>
-												<td class="rentals-num">
-													{item.carMinutes != null
-														? `約${item.carMinutes}分`
-														: '—'}
-													<span class="rentals-sub">西浦1-1-1</span>
-												</td>
-												<td>
-													{item.buildingAgeLabel}
-													{item.builtYear != null && (
-														<span class="rentals-sub">
-															{item.builtYear}年頃
-														</span>
-													)}
-												</td>
-												<td class="rentals-num">
-													{item.listedAt || item.sourceUpdatedAt ? (
-														<>
-															{formatMd(item.listedAt) ||
-																formatMd(item.sourceUpdatedAt)}
-															{item.sourceUpdatedAt && (
+													</td>
+													<td>{item.layout}</td>
+													<td>
+														{item.structure || '—'}
+														{item.structureGroup &&
+															item.structureGroup !== item.structure && (
 																<span class="rentals-sub">
-																	更新 {formatMd(item.sourceUpdatedAt)}
+																	{item.structureGroup}
 																</span>
 															)}
-														</>
-													) : (
-														'—'
-													)}
-												</td>
-												<td>
-													<span
-														class:list={[
-															'rentals-source',
-															item.source === 'yahoo' &&
-																'rentals-source--yahoo',
-														]}
-													>
-														{item.source === 'suumo' ? 'SUUMO' : 'Yahoo'}
-													</span>
-												</td>
-											</tr>
-										));
+													</td>
+													<td class="rentals-num">
+														{item.walkMinutes != null
+															? `${item.walkMinutes}分`
+															: '—'}
+														{item.stationName && (
+															<span class="rentals-sub">
+																{item.stationName}
+															</span>
+														)}
+													</td>
+													<td class="rentals-num">
+														{item.carMinutes != null
+															? `約${item.carMinutes}分`
+															: '—'}
+														<span class="rentals-sub">西浦1-1-1</span>
+														{mapsUrl && (
+															<a
+																class="rentals-maps"
+																href={mapsUrl}
+																target="_blank"
+																rel="noopener noreferrer"
+																aria-label={`${item.address}から西浦1-1-1までの車の経路をGoogleマップで開く`}
+															>
+																Googleで経路
+															</a>
+														)}
+													</td>
+													<td>
+														{item.buildingAgeLabel}
+														{item.builtYear != null && (
+															<span class="rentals-sub">
+																{item.builtYear}年頃
+															</span>
+														)}
+													</td>
+													<td class="rentals-num">
+														{item.listedAt || item.sourceUpdatedAt ? (
+															<>
+																{formatMd(item.listedAt) ||
+																	formatMd(item.sourceUpdatedAt)}
+																{item.sourceUpdatedAt && (
+																	<span class="rentals-sub">
+																		更新 {formatMd(item.sourceUpdatedAt)}
+																	</span>
+																)}
+															</>
+														) : (
+															'—'
+														)}
+													</td>
+													<td>
+														<span
+															class:list={[
+																'rentals-source',
+																item.source === 'yahoo' &&
+																	'rentals-source--yahoo',
+															]}
+														>
+															{item.source === 'suumo' ? 'SUUMO' : 'Yahoo'}
+														</span>
+													</td>
+												</tr>
+											);
+										});
 
 										if (!multi) return roomRows;
 
@@ -910,6 +962,17 @@ const structureDetailOptions = [
 															? `約${first.carMinutes}分`
 															: '—'}
 														<span class="rentals-sub">西浦1-1-1</span>
+														{groupMapsUrl && (
+															<a
+																class="rentals-maps"
+																href={groupMapsUrl}
+																target="_blank"
+																rel="noopener noreferrer"
+																aria-label={`${group.address}から西浦1-1-1までの車の経路をGoogleマップで開く`}
+															>
+																Googleで経路
+															</a>
+														)}
 													</td>
 													<td>
 														{first.buildingAgeLabel}
@@ -965,6 +1028,11 @@ const structureDetailOptions = [
 					が自動で取り直します。掲載2日以内は黄色、情報更新2日以内は緑で示します。
 				</p>
 				<p>列見出しをクリックすると並び替えできます。</p>
+				<p>
+					車通勤の分数は OSRM
+					の概算です。Googleで経路を押すと、その物件から西浦1-1-1までの車ルートが
+					Google マップで開きます。
+				</p>
 				<p>
 					SUUMO の構造は鉄筋系 / 鉄骨系 / 木造 /
 					その他の系統のみです。鉄筋コンクリートや軽量鉄骨などの詳細は Yahoo
