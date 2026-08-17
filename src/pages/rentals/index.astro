@@ -1,0 +1,454 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import { SITE_TITLE } from '../../consts';
+import type { RentalsSnapshot } from '../../data/rentals.types';
+import rentalsJson from '../../data/rentals.json';
+
+const data = rentalsJson as RentalsSnapshot;
+const title = `通勤圏の賃貸空室 | ${SITE_TITLE}`;
+const description =
+	'船橋市西浦付近への車通勤圏・駅徒歩15分以内・1K〜2DK・洗面独立・駐車場ありの賃貸スナップショット。';
+
+const updatedLabel = data.updatedAt
+	? new Date(data.updatedAt).toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' })
+	: '未更新';
+
+const bySource = {
+	suumo: data.listings.filter((l) => l.source === 'suumo').length,
+	yahoo: data.listings.filter((l) => l.source === 'yahoo').length,
+};
+
+function rentSortKey(label: string) {
+	const n = parseFloat(label.replace(/[^\d.]/g, ''));
+	return Number.isFinite(n) ? n : Number.POSITIVE_INFINITY;
+}
+
+const listings = [...data.listings].sort(
+	(a, b) => rentSortKey(a.rentLabel) - rentSortKey(b.rentLabel),
+);
+---
+
+<!doctype html>
+<html lang="ja" data-base={import.meta.env.BASE_URL}>
+	<head>
+		<BaseHead title={title} description={description} />
+		<meta name="robots" content="noindex, nofollow" />
+		<style is:global>
+			.rentals-page {
+				width: min(920px, calc(100% - 2em));
+				margin: 0 auto;
+				padding: 2.5em 1em 4em;
+			}
+			.rentals-hero {
+				margin-bottom: 2rem;
+				padding-bottom: 1.25rem;
+				border-bottom: 1px solid rgba(148, 163, 184, 0.28);
+			}
+			.rentals-hero__tag {
+				display: block;
+				margin: 0 0 0.45rem 0;
+				font-size: 0.75rem;
+				font-weight: 600;
+				letter-spacing: 0.08em;
+				color: rgb(var(--gray));
+			}
+			.rentals-hero h1 {
+				margin: 0 0 0.65rem 0;
+				font-size: clamp(1.55rem, 3.5vw, 2rem);
+				letter-spacing: -0.02em;
+			}
+			.rentals-hero__lead {
+				margin: 0 0 1rem 0;
+				font-size: 0.98rem;
+				line-height: 1.7;
+				color: rgb(var(--gray-dark));
+			}
+			.rentals-meta {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.55rem 1.1rem;
+				margin: 0;
+				padding: 0;
+				list-style: none;
+				font-size: 0.88rem;
+				color: rgb(var(--gray));
+			}
+			.rentals-criteria {
+				margin: 0 0 2rem 0;
+				padding: 1rem 1.15rem;
+				border-left: 3px solid var(--accent);
+				border-radius: 0 8px 8px 0;
+				background: rgba(148, 163, 184, 0.08);
+				font-size: 0.92rem;
+				line-height: 1.65;
+			}
+			.rentals-criteria h2 {
+				margin: 0 0 0.5rem 0;
+				font-size: 1rem;
+			}
+			.rentals-criteria ul {
+				margin: 0.35rem 0 0.75rem 1.1rem;
+				padding: 0;
+			}
+			.rentals-criteria p {
+				margin: 0.35rem 0 0 0;
+			}
+			.rentals-empty {
+				padding: 1.5rem 0;
+				color: rgb(var(--gray));
+			}
+			.rentals-table-wrap {
+				overflow-x: auto;
+				margin-top: 0.75rem;
+			}
+			.rentals-table {
+				width: 100%;
+				border-collapse: collapse;
+				font-size: 0.9rem;
+				line-height: 1.45;
+			}
+			.rentals-table th,
+			.rentals-table td {
+				padding: 0.7rem 0.55rem;
+				border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+				text-align: left;
+				vertical-align: top;
+			}
+			.rentals-table th {
+				font-size: 0.78rem;
+				font-weight: 600;
+				letter-spacing: 0.04em;
+				color: rgb(var(--gray));
+				white-space: nowrap;
+			}
+			.rentals-table tr:hover td {
+				background: rgba(148, 163, 184, 0.06);
+			}
+			.rentals-title {
+				font-weight: 600;
+				color: rgb(var(--black));
+			}
+			.rentals-title a {
+				color: inherit;
+				text-decoration: none;
+			}
+			.rentals-title a:hover {
+				color: var(--accent-dark);
+				text-decoration: underline;
+			}
+			.rentals-sub {
+				display: block;
+				margin-top: 0.2rem;
+				font-size: 0.82rem;
+				font-weight: 400;
+				color: rgb(var(--gray));
+			}
+			.rentals-rent {
+				font-weight: 700;
+				color: rgb(var(--black));
+				white-space: nowrap;
+			}
+			.rentals-fee {
+				display: block;
+				font-size: 0.78rem;
+				font-weight: 400;
+				color: rgb(var(--gray));
+			}
+			.rentals-source {
+				display: inline-block;
+				font-size: 0.72rem;
+				font-weight: 600;
+				letter-spacing: 0.03em;
+				padding: 0.12rem 0.4rem;
+				border-radius: 4px;
+				background: rgba(154, 169, 255, 0.18);
+				color: var(--accent-dark);
+				white-space: nowrap;
+			}
+			.rentals-source--yahoo {
+				background: rgba(250, 204, 21, 0.14);
+				color: #fde68a;
+			}
+			.rentals-notes {
+				margin-top: 2.5rem;
+				font-size: 0.85rem;
+				color: rgb(var(--gray));
+			}
+			.rentals-notes h2 {
+				font-size: 0.95rem;
+				margin-bottom: 0.4rem;
+			}
+			.rentals-notes ul {
+				margin: 0;
+				padding-left: 1.15rem;
+			}
+			.rentals-howto {
+				margin-top: 1.5rem;
+				padding-top: 1.25rem;
+				border-top: 1px solid rgba(148, 163, 184, 0.2);
+				font-size: 0.88rem;
+				line-height: 1.65;
+				color: rgb(var(--gray-dark));
+			}
+			.rentals-howto code {
+				font-size: 0.86em;
+				padding: 0.1em 0.35em;
+				border-radius: 4px;
+				background: rgba(148, 163, 184, 0.14);
+			}
+			.rentals-filters {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.65rem 0.85rem;
+				align-items: end;
+				margin: 0 0 1rem 0;
+			}
+			.rentals-filters label {
+				display: flex;
+				flex-direction: column;
+				gap: 0.25rem;
+				font-size: 0.78rem;
+				font-weight: 600;
+				letter-spacing: 0.04em;
+				color: rgb(var(--gray));
+			}
+			.rentals-filters select,
+			.rentals-filters input[type='search'] {
+				min-width: 8.5rem;
+				padding: 0.4rem 0.55rem;
+				border: 1px solid rgba(148, 163, 184, 0.28);
+				border-radius: 6px;
+				background: rgba(15, 23, 42, 0.85);
+				color: rgb(var(--gray-dark));
+				font: inherit;
+				font-size: 0.9rem;
+			}
+			.rentals-filters input[type='search'] {
+				min-width: 12rem;
+			}
+			.rentals-count {
+				margin: 0 0 0.35rem 0;
+				font-size: 0.88rem;
+				color: rgb(var(--gray));
+			}
+			.rentals-table tr[hidden] {
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main class="rentals-page">
+			<header class="rentals-hero">
+				<span class="rentals-hero__tag">個人用メモ</span>
+				<h1>通勤圏の賃貸空室</h1>
+				<p class="rentals-hero__lead">
+					{data.criteria.destination} まで車でおおよそ{data.criteria.maxCarMinutes}分以内のエリアから、条件に合う掲載をまとめたスナップショットです。ナビには載せていません。
+				</p>
+				<ul class="rentals-meta">
+					<li>最終更新: {updatedLabel}</li>
+					<li>件数: <span id="rentals-total">{listings.length}</span></li>
+					<li>SUUMO: {bySource.suumo}</li>
+					<li>Yahoo!不動産: {bySource.yahoo}</li>
+				</ul>
+			</header>
+
+			<section class="rentals-criteria" aria-labelledby="criteria-heading">
+				<h2 id="criteria-heading">検索条件</h2>
+				<ul>
+					<li>最寄駅まで徒歩 {data.criteria.maxWalkMinutes} 分以内</li>
+					<li>間取り: {data.criteria.layouts.join(' / ')}</li>
+					<li>{data.criteria.minBuiltYear} 年以降竣工</li>
+					<li>駐車場あり / 洗面台独立（Yahoo は「洗面台」条件で近似）</li>
+				</ul>
+				<p>{data.criteria.commuteAreaNote}</p>
+				<p>
+					対象市区: {data.criteria.cities.map((c) => c.name).join('、')}
+				</p>
+			</section>
+
+			{
+				listings.length === 0 ? (
+					<p class="rentals-empty">
+						まだデータがありません。リポジトリで{' '}
+						<code>npm run update:rentals</code> を実行し、生成された JSON
+						をコミットしてください。
+					</p>
+				) : (
+					<section aria-labelledby="list-heading">
+						<h2 id="list-heading">空室一覧</h2>
+						<form class="rentals-filters" id="rentals-filters">
+							<label>
+								市区
+								<select name="city" id="filter-city">
+									<option value="">すべて</option>
+									{data.criteria.cities.map((c) => (
+										<option value={c.name}>{c.name}</option>
+									))}
+								</select>
+							</label>
+							<label>
+								間取り
+								<select name="layout" id="filter-layout">
+									<option value="">すべて</option>
+									{data.criteria.layouts.map((layout) => (
+										<option value={layout}>{layout}</option>
+									))}
+								</select>
+							</label>
+							<label>
+								出典
+								<select name="source" id="filter-source">
+									<option value="">すべて</option>
+									<option value="suumo">SUUMO</option>
+									<option value="yahoo">Yahoo</option>
+								</select>
+							</label>
+							<label>
+								キーワード
+								<input
+									type="search"
+									name="q"
+									id="filter-q"
+									placeholder="駅名・住所など"
+									autocomplete="off"
+								/>
+							</label>
+						</form>
+						<p class="rentals-count">
+							表示 <span id="rentals-shown">{listings.length}</span> / {listings.length} 件
+						</p>
+						<div class="rentals-table-wrap">
+							<table class="rentals-table" id="rentals-table">
+								<thead>
+									<tr>
+										<th>物件</th>
+										<th>賃料</th>
+										<th>間取り</th>
+										<th>駅</th>
+										<th>築年</th>
+										<th>出典</th>
+									</tr>
+								</thead>
+								<tbody>
+									{listings.map((item) => (
+										<tr
+											data-city={item.city}
+											data-layout={item.layout}
+											data-source={item.source}
+											data-text={`${item.title} ${item.address} ${item.station} ${item.layout}`}
+										>
+											<td>
+												<div class="rentals-title">
+													<a href={item.url} target="_blank" rel="noopener noreferrer">
+														{item.title}
+													</a>
+													<span class="rentals-sub">
+														{item.address}
+														{item.floorLabel ? ` / ${item.floorLabel}` : ''}
+														{item.areaSqm != null ? ` / ${item.areaSqm}㎡` : ''}
+													</span>
+												</div>
+											</td>
+											<td>
+												<span class="rentals-rent">{item.rentLabel}</span>
+												{item.managementFeeLabel && (
+													<span class="rentals-fee">{item.managementFeeLabel}</span>
+												)}
+											</td>
+											<td>{item.layout}</td>
+											<td>
+												{item.station}
+												{item.walkMinutes != null && (
+													<span class="rentals-sub">徒歩{item.walkMinutes}分</span>
+												)}
+											</td>
+											<td>
+												{item.buildingAgeLabel}
+												{item.builtYear != null && (
+													<span class="rentals-sub">{item.builtYear}年頃</span>
+												)}
+											</td>
+											<td>
+												<span
+													class:list={[
+														'rentals-source',
+														item.source === 'yahoo' && 'rentals-source--yahoo',
+													]}
+												>
+													{item.source === 'suumo' ? 'SUUMO' : 'Yahoo'}
+												</span>
+											</td>
+										</tr>
+									))}
+								</tbody>
+							</table>
+						</div>
+						<script is:inline>
+							(function () {
+								var form = document.getElementById('rentals-filters');
+								var table = document.getElementById('rentals-table');
+								var shown = document.getElementById('rentals-shown');
+								if (!form || !table) return;
+								function apply() {
+									var city = document.getElementById('filter-city').value;
+									var layout = document.getElementById('filter-layout').value;
+									var source = document.getElementById('filter-source').value;
+									var q = (document.getElementById('filter-q').value || '')
+										.trim()
+										.toLowerCase();
+									var rows = table.tBodies[0].rows;
+									var n = 0;
+									for (var i = 0; i < rows.length; i++) {
+										var row = rows[i];
+										var ok =
+											(!city || row.getAttribute('data-city') === city) &&
+											(!layout || row.getAttribute('data-layout') === layout) &&
+											(!source || row.getAttribute('data-source') === source) &&
+											(!q ||
+												(row.getAttribute('data-text') || '')
+													.toLowerCase()
+													.indexOf(q) !== -1);
+										row.hidden = !ok;
+										if (ok) n++;
+									}
+									if (shown) shown.textContent = String(n);
+								}
+								form.addEventListener('input', apply);
+								form.addEventListener('change', apply);
+							})();
+						</script>
+					</section>
+				)
+			}
+
+			<section class="rentals-howto" aria-labelledby="howto-heading">
+				<h2 id="howto-heading">手動更新</h2>
+				<p>
+					サイト表示は静的 JSON（<code>src/data/rentals.json</code>）のみを読みます。最新化したいときだけローカルで:
+				</p>
+				<p><code>npm run update:rentals</code></p>
+				<p>
+					取得間隔やページ数は <code>--delay=1800</code> / <code>--pages=2</code> /
+					<code>--sources=suumo,yahoo</code> で調整できます。CI やビルドでは走りません。
+				</p>
+			</section>
+
+			{
+				data.notes?.length > 0 && (
+					<section class="rentals-notes" aria-labelledby="notes-heading">
+						<h2 id="notes-heading">注意</h2>
+						<ul>
+							{data.notes.map((note) => (
+								<li>{note}</li>
+							))}
+						</ul>
+					</section>
+				)
+			}
+		</main>
+		<Footer />
+	</body>
+</html>
