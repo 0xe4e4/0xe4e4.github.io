@@ -286,7 +286,20 @@ function baseListingFields(partial) {
 		lat: partial.lat ?? null,
 		lon: partial.lon ?? null,
 		parking: typeof partial.parking === 'boolean' ? partial.parking : null,
+		bikeParking:
+			typeof partial.bikeParking === 'boolean' ? partial.bikeParking : null,
 	};
+}
+
+function mentionsBikeParkingText(text) {
+	const t = String(text || '');
+	if (!t) return false;
+	if (/バイク(?:置き?場|駐輪)|原付(?:置|可|駐)/.test(t)) return true;
+	if (/駐輪場/.test(t)) {
+		if (/駐輪場(?:なし|無|不可|空無|－|―|-)/.test(t)) return false;
+		return true;
+	}
+	return false;
 }
 
 function isWoodenStructure(listing) {
@@ -317,6 +330,33 @@ function parseSuumoParking(html) {
 	if (/空無/.test(t)) return false;
 	if (/なし|無し|^無$|不可/.test(t) && !/近隣/.test(t)) return false;
 	return true;
+}
+
+function parseYahooBikeParking(room) {
+	if (!Array.isArray(room?.Pickouts)) return null;
+	return room.Pickouts.includes('bc') || room.Pickouts.includes('ba');
+}
+
+function parseAthomeBikeParking(blockHtml, roomHtml) {
+	const hay = `${blockHtml}${roomHtml}`;
+	for (const label of ['バイク置き場', '駐輪場']) {
+		const m = hay.match(new RegExp(`<li([^>]*)>\\s*${label}(?:\\([^)]*\\))?`));
+		if (m && !/disabled/.test(m[1] || '')) return true;
+	}
+	const modal = hay.match(/data-modal-msg="([^"]*)"/);
+	if (modal && mentionsBikeParkingText(modal[1])) return true;
+	return null;
+}
+
+function parseSuumoBikeParking(html) {
+	const raw = String(html);
+	for (const m of raw.matchAll(/labeloption[^>]*>([\s\S]*?)<\//g)) {
+		if (mentionsBikeParkingText(stripTags(m[1]))) return true;
+	}
+	for (const m of raw.matchAll(/>([^<]{0,240}(?:駐輪|バイク)[^<]{0,240})</g)) {
+		if (mentionsBikeParkingText(m[1])) return true;
+	}
+	return false;
 }
 
 function passesFilters(listing) {
@@ -441,6 +481,7 @@ function parseSuumo(html, city, structureInfo) {
 				url,
 				city: cityFromAddress(address, city.name),
 				parking: null,
+				bikeParking: null,
 				independentWashbasin: true,
 				structure: structureInfo?.structure || '',
 				structureGroup: structureInfo?.structureGroup || '',
@@ -578,6 +619,7 @@ function parseYahoo(html, city) {
 				url,
 				city: cityFromAddress(address, city.name),
 				parking: parseYahooParking(room),
+				bikeParking: parseYahooBikeParking(room),
 				independentWashbasin: true,
 				structure: yahooStructure,
 				lat,
@@ -746,6 +788,7 @@ function parseAthome(html, city) {
 				url: `https://www.athome.co.jp/chintai/${bukkenNo}/`,
 				city: cityFromAddress(address, city.name),
 				parking: parseAthomeParking(room),
+				bikeParking: parseAthomeBikeParking(block, room),
 				independentWashbasin: true,
 				structure,
 			});
@@ -1020,6 +1063,16 @@ async function fillListingDates(listings) {
 				// Older cache rows came from parking-required searches.
 				item.parking = true;
 			}
+			if (typeof hit.bikeParking === 'boolean') {
+				item.bikeParking = hit.bikeParking;
+			}
+			if (
+				item.source === 'suumo' &&
+				item.bikeParking == null &&
+				!Object.prototype.hasOwnProperty.call(hit, 'bikeParking')
+			) {
+				return true;
+			}
 			return false;
 		}
 		if (item.listedAt || item.sourceUpdatedAt) {
@@ -1027,6 +1080,8 @@ async function fillListingDates(listings) {
 				listedAt: item.listedAt,
 				sourceUpdatedAt: item.sourceUpdatedAt,
 				parking: typeof item.parking === 'boolean' ? item.parking : null,
+				bikeParking:
+					typeof item.bikeParking === 'boolean' ? item.bikeParking : null,
 			};
 			return false;
 		}
@@ -1048,13 +1103,20 @@ async function fillListingDates(listings) {
 			const dates = parseListingDates(item, html);
 			item.listedAt = dates.listedAt;
 			item.sourceUpdatedAt = dates.sourceUpdatedAt;
-			if (item.source === 'suumo' && item.parking == null) {
-				const parsed = parseSuumoParking(html);
-				if (typeof parsed === 'boolean') item.parking = parsed;
+			if (item.source === 'suumo') {
+				if (item.parking == null) {
+					const parsed = parseSuumoParking(html);
+					if (typeof parsed === 'boolean') item.parking = parsed;
+				}
+				if (item.bikeParking == null) {
+					item.bikeParking = parseSuumoBikeParking(html);
+				}
 			}
 			cache[item.id] = {
 				...dates,
 				parking: typeof item.parking === 'boolean' ? item.parking : null,
+				bikeParking:
+					typeof item.bikeParking === 'boolean' ? item.bikeParking : null,
 			};
 		} catch (err) {
 			console.warn(`  date fetch failed ${item.id}: ${err.message}`);

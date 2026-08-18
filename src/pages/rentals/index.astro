@@ -155,6 +155,10 @@ function newestDate(
 	return dates.at(-1) || null;
 }
 
+function hasBikeParking(item: RentalListing) {
+	return item.bikeParking === true;
+}
+
 const stationOptions = [
 	...new Set(listings.map((l) => l.stationName).filter(Boolean)),
 ].sort((a, b) => a.localeCompare(b, 'ja'));
@@ -443,6 +447,33 @@ const structureDetailOptions = [
 				color: var(--accent-dark);
 				font-size: 0.86em;
 			}
+			.rentals-title {
+				display: flex;
+				flex-wrap: wrap;
+				align-items: center;
+				gap: 0.35rem 0.45rem;
+			}
+			.rentals-badge {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.2rem;
+				padding: 0.1rem 0.45rem;
+				border-radius: 999px;
+				font-size: 0.72rem;
+				font-weight: 600;
+				line-height: 1.35;
+				white-space: nowrap;
+				vertical-align: middle;
+			}
+			.rentals-badge--bike {
+				background: rgba(56, 189, 248, 0.16);
+				color: rgb(3, 105, 161);
+				border: 1px solid rgba(56, 189, 248, 0.32);
+			}
+			.rentals-badge__icon {
+				font-size: 0.95em;
+				line-height: 1;
+			}
 			.rentals-group .rentals-source + .rentals-source {
 				margin-left: 0.25rem;
 			}
@@ -505,6 +536,13 @@ const structureDetailOptions = [
 					<li>アットホーム: {bySource.athome}</li>
 					<li>黄は掲載が2日以内</li>
 					<li>緑は更新が2日以内</li>
+					<li>
+						<span class="rentals-badge rentals-badge--bike" aria-hidden="true">
+							<span class="rentals-badge__icon">🛵</span>
+							<span class="rentals-badge__label">駐輪</span>
+						</span>
+						= バイク・駐輪場あり
+					</li>
 				</ul>
 			</header>
 
@@ -784,6 +822,7 @@ const structureDetailOptions = [
 										);
 										const groupFreshListed = group.items.some(isFreshListed);
 										const groupFreshUpdated = group.items.some(isFreshUpdated);
+										const groupBikeParking = group.items.some(hasBikeParking);
 										const groupMapsUrl = googleMapsDrivingUrl(first);
 										const roomRows = group.items.map((item) => {
 											const mapsUrl = googleMapsDrivingUrl(item);
@@ -824,7 +863,7 @@ const structureDetailOptions = [
 														item.listedAt || item.sourceUpdatedAt || ''
 													}
 													data-sort-source={item.source}
-													data-text={`${item.title} ${item.address} ${item.station} ${item.layout} ${item.stationName} ${item.structure} ${item.structureGroup} ${item.parking ? '駐車場あり' : item.parking === false ? '駐車場なし' : ''}`}
+													data-text={`${item.title} ${item.address} ${item.station} ${item.layout} ${item.stationName} ${item.structure} ${item.structureGroup} ${item.parking ? '駐車場あり' : item.parking === false ? '駐車場なし' : ''}${item.bikeParking ? ' バイク・駐輪場あり' : ''}`}
 													hidden={multi}
 												>
 													<td>
@@ -838,6 +877,21 @@ const structureDetailOptions = [
 																	? item.floorLabel || item.layout
 																	: item.title}
 															</a>
+															{hasBikeParking(item) && (
+																<span
+																	class="rentals-badge rentals-badge--bike"
+																	title="バイク・駐輪場あり"
+																	aria-label="バイク・駐輪場あり"
+																>
+																	<span
+																		class="rentals-badge__icon"
+																		aria-hidden="true"
+																	>
+																		🛵
+																	</span>
+																	<span class="rentals-badge__label">駐輪</span>
+																</span>
+															)}
 															<span class="rentals-sub">
 																{multi
 																	? `${item.layout}${item.areaSqm != null ? ` / ${item.areaSqm}㎡` : ''}`
@@ -969,6 +1023,21 @@ const structureDetailOptions = [
 																▶
 															</span>
 															<span>{group.title}</span>
+															{groupBikeParking && (
+																<span
+																	class="rentals-badge rentals-badge--bike"
+																	title="バイク・駐輪場あり"
+																	aria-label="バイク・駐輪場あり"
+																>
+																	<span
+																		class="rentals-badge__icon"
+																		aria-hidden="true"
+																	>
+																		🛵
+																	</span>
+																	<span class="rentals-badge__label">駐輪</span>
+																</span>
+															)}
 															<span class="rentals-toggle__count">
 																（
 																<span data-group-count>
