@@ -26,7 +26,8 @@ export interface RentalListing {
 	floorLabel: string;
 	url: string;
 	city: string;
-	parking: boolean;
+	/** true/false when known; null if the source list did not include it */
+	parking: boolean | null;
 	independentWashbasin: boolean;
 	/** Display label, e.g. 鉄筋コンクリート / 軽量鉄骨 / 鉄筋系 */
 	structure: string;

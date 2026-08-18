@@ -9,7 +9,7 @@ import rentalsJson from '../../data/rentals.json';
 const data = rentalsJson as RentalsSnapshot;
 const title = `通勤圏の賃貸空室 | ${SITE_TITLE}`;
 const description =
-	'船橋市西浦付近への車通勤圏・駅徒歩15分以内・1DK〜3LDK・家賃10万以下・洗面独立・駐車場ありの賃貸スナップショット。';
+	'船橋市西浦付近への車通勤圏・駅徒歩15分以内・1DK〜3LDK・家賃10万以下・洗面独立・木造以外の賃貸スナップショット。駐車場はページ上で絞り込み。';
 
 const updatedLabel = data.updatedAt
 	? new Date(data.updatedAt).toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' })
@@ -159,7 +159,7 @@ const stationOptions = [
 	...new Set(listings.map((l) => l.stationName).filter(Boolean)),
 ].sort((a, b) => a.localeCompare(b, 'ja'));
 
-const STRUCTURE_GROUP_OPTIONS = ['鉄筋系', '鉄骨系', '木造', 'その他'];
+const STRUCTURE_GROUP_OPTIONS = ['鉄筋系', '鉄骨系', 'その他'];
 const structureDetailOptions = [
 	...new Set(listings.map((l) => l.structure).filter(Boolean)),
 ].sort((a, b) => a.localeCompare(b, 'ja'));
@@ -521,7 +521,8 @@ const structureDetailOptions = [
 					</li>
 					<li>間取り: {data.criteria.layouts.join(' / ')}</li>
 					<li>{data.criteria.minBuiltYear} 年以降竣工</li>
-					<li>駐車場あり / 洗面台独立（Yahoo は「洗面台」条件で近似）</li>
+					<li>洗面台独立（Yahoo は「洗面台」条件で近似）</li>
+					<li>木造は対象外。駐車場は下の一覧で絞り込み</li>
 				</ul>
 				<p>{data.criteria.commuteAreaNote}</p>
 				<p>
@@ -592,6 +593,14 @@ const structureDetailOptions = [
 									<option value="suumo">SUUMO</option>
 									<option value="yahoo">Yahoo</option>
 									<option value="athome">アットホーム</option>
+								</select>
+							</label>
+							<label>
+								駐車場
+								<select name="parking" id="filter-parking">
+									<option value="">指定なし</option>
+									<option value="yes">あり</option>
+									<option value="no">なし</option>
 								</select>
 							</label>
 							<label>
@@ -792,6 +801,13 @@ const structureDetailOptions = [
 													data-station={item.stationName || ''}
 													data-structure={item.structure || ''}
 													data-structure-group={item.structureGroup || ''}
+													data-parking={
+														item.parking == null
+															? ''
+															: item.parking
+																? 'yes'
+																: 'no'
+													}
 													data-walk={item.walkMinutes ?? ''}
 													data-car={item.carMinutes ?? ''}
 													data-age={item.ageYears ?? ''}
@@ -808,7 +824,7 @@ const structureDetailOptions = [
 														item.listedAt || item.sourceUpdatedAt || ''
 													}
 													data-sort-source={item.source}
-													data-text={`${item.title} ${item.address} ${item.station} ${item.layout} ${item.stationName} ${item.structure} ${item.structureGroup}`}
+													data-text={`${item.title} ${item.address} ${item.station} ${item.layout} ${item.stationName} ${item.structure} ${item.structureGroup} ${item.parking ? '駐車場あり' : item.parking === false ? '駐車場なし' : ''}`}
 													hidden={multi}
 												>
 													<td>
@@ -1059,9 +1075,9 @@ const structureDetailOptions = [
 					Google マップで開きます。
 				</p>
 				<p>
-					SUUMO の構造は鉄筋系 / 鉄骨系 / 木造 /
-					その他の系統のみです。鉄筋コンクリートや軽量鉄骨などの詳細は Yahoo
-					側で絞れます。アットホームは駐車場（近隣含む）と洗面所独立で近似しています。
+					木造は取得対象から外しています。SUUMO の構造は鉄筋系 / 鉄骨系 /
+					その他の系統です。鉄筋コンクリートや軽量鉄骨などの詳細は Yahoo
+					側で絞れます。駐車場は初期条件にはせず、上のフィルタで絞り込めます。
 				</p>
 			</section>
 
@@ -1120,6 +1136,7 @@ const structureDetailOptions = [
 						'filter-structure-group',
 					).value;
 					var structure = document.getElementById('filter-structure').value;
+					var parking = document.getElementById('filter-parking').value;
 					var walkMax = num('filter-walk');
 					var carMax = num('filter-car');
 					var ageMax = num('filter-age');
@@ -1151,6 +1168,7 @@ const structureDetailOptions = [
 								row.getAttribute('data-structure-group') === structureGroup) &&
 							(!structure ||
 								row.getAttribute('data-structure') === structure) &&
+							(!parking || row.getAttribute('data-parking') === parking) &&
 							(walkMax == null || (walk != null && walk <= walkMax)) &&
 							(carMax == null || (car != null && car <= carMax)) &&
 							(ageMax == null || (age != null && age <= ageMax)) &&
