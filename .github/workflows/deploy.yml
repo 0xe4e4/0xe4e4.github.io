@@ -4,6 +4,10 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # GITHUB_TOKEN commits from "Update rentals snapshot" do not fire `push` workflows.
+  workflow_run:
+    workflows: ['Update rentals snapshot']
+    types: [completed]
 
 permissions:
   contents: read
@@ -12,6 +16,7 @@ permissions:
 
 jobs:
   build:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

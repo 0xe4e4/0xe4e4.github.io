@@ -69,6 +69,8 @@ jobs:
               --sources="$SOURCES"
           fi
 
+      # A GITHUB_TOKEN push does not start Deploy to GitHub Pages; that workflow
+      # listens for this job via workflow_run.
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions[bot]"
