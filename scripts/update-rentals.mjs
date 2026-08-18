@@ -294,9 +294,8 @@ function baseListingFields(partial) {
 function mentionsBikeParkingText(text) {
 	const t = String(text || '');
 	if (!t) return false;
-	if (/バイク(?:置き?場|駐輪)|原付(?:置|可|駐)/.test(t)) return true;
-	if (/駐輪場/.test(t)) {
-		if (/駐輪場(?:なし|無|不可|空無|－|―|-)/.test(t)) return false;
+	if (/バイク(?:置き?場|駐輪場?)|バイク駐輪|原付(?:置|可|駐)/.test(t)) {
+		if (/バイク(?:置き?場|駐輪)?(?:なし|無|不可|空無)/.test(t)) return false;
 		return true;
 	}
 	return false;
@@ -332,17 +331,26 @@ function parseSuumoParking(html) {
 	return true;
 }
 
-function parseYahooBikeParking(room) {
-	if (!Array.isArray(room?.Pickouts)) return null;
-	return room.Pickouts.includes('bc') || room.Pickouts.includes('ba');
+function parseYahooBikeParking(_room) {
+	// 一覧の Pickouts（bc=駐輪場 など）は自転車と区別できないため詳細で判定する。
+	return null;
+}
+
+function parseYahooBikeParkingFromHtml(html) {
+	const raw = String(html);
+	for (const m of raw.matchAll(/labeloption[^>]*>([\s\S]*?)<\//g)) {
+		if (mentionsBikeParkingText(stripTags(m[1]))) return true;
+	}
+	for (const m of raw.matchAll(/>([^<]{0,240}バイク[^<]{0,240})</g)) {
+		if (mentionsBikeParkingText(m[1])) return true;
+	}
+	return false;
 }
 
 function parseAthomeBikeParking(blockHtml, roomHtml) {
 	const hay = `${blockHtml}${roomHtml}`;
-	for (const label of ['バイク置き場', '駐輪場']) {
-		const m = hay.match(new RegExp(`<li([^>]*)>\\s*${label}(?:\\([^)]*\\))?`));
-		if (m && !/disabled/.test(m[1] || '')) return true;
-	}
+	const m = hay.match(/<li([^>]*)>\s*バイク置き場(?:\([^)]*\))?/);
+	if (m && !/disabled/.test(m[1] || '')) return true;
 	const modal = hay.match(/data-modal-msg="([^"]*)"/);
 	if (modal && mentionsBikeParkingText(modal[1])) return true;
 	return null;
@@ -353,7 +361,7 @@ function parseSuumoBikeParking(html) {
 	for (const m of raw.matchAll(/labeloption[^>]*>([\s\S]*?)<\//g)) {
 		if (mentionsBikeParkingText(stripTags(m[1]))) return true;
 	}
-	for (const m of raw.matchAll(/>([^<]{0,240}(?:駐輪|バイク)[^<]{0,240})</g)) {
+	for (const m of raw.matchAll(/>([^<]{0,240}バイク[^<]{0,240})</g)) {
 		if (mentionsBikeParkingText(m[1])) return true;
 	}
 	return false;
@@ -1067,9 +1075,8 @@ async function fillListingDates(listings) {
 				item.bikeParking = hit.bikeParking;
 			}
 			if (
-				item.source === 'suumo' &&
-				item.bikeParking == null &&
-				!Object.prototype.hasOwnProperty.call(hit, 'bikeParking')
+				(item.source === 'suumo' || item.source === 'yahoo') &&
+				!hit.bikeStrict
 			) {
 				return true;
 			}
@@ -1082,6 +1089,7 @@ async function fillListingDates(listings) {
 				parking: typeof item.parking === 'boolean' ? item.parking : null,
 				bikeParking:
 					typeof item.bikeParking === 'boolean' ? item.bikeParking : null,
+				bikeStrict: true,
 			};
 			return false;
 		}
@@ -1108,15 +1116,17 @@ async function fillListingDates(listings) {
 					const parsed = parseSuumoParking(html);
 					if (typeof parsed === 'boolean') item.parking = parsed;
 				}
-				if (item.bikeParking == null) {
-					item.bikeParking = parseSuumoBikeParking(html);
-				}
+				item.bikeParking = parseSuumoBikeParking(html);
+			}
+			if (item.source === 'yahoo') {
+				item.bikeParking = parseYahooBikeParkingFromHtml(html);
 			}
 			cache[item.id] = {
 				...dates,
 				parking: typeof item.parking === 'boolean' ? item.parking : null,
 				bikeParking:
 					typeof item.bikeParking === 'boolean' ? item.bikeParking : null,
+				bikeStrict: true,
 			};
 		} catch (err) {
 			console.warn(`  date fetch failed ${item.id}: ${err.message}`);

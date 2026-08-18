@@ -1,5 +1,5 @@
 {
-	"updatedAt": "2026-08-18T02:13:02.039Z",
+	"updatedAt": "2026-08-18T02:18:55.092Z",
 	"criteria": {
 		"destination": "〒273-0017 千葉県船橋市西浦１丁目１−１",
 		"destinationLat": 35.692646,
@@ -72,7 +72,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.690651,
 			"lon": 139.982834,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100517992141",
@@ -162,7 +162,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.694653,
 			"lon": 139.981644,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100518091592",
@@ -278,7 +278,7 @@
 			"rentYen": 95000,
 			"ageYears": 34,
 			"carMinutes": 4,
-			"listedAt": null,
+			"listedAt": "2026-08-04",
 			"sourceUpdatedAt": null,
 			"lat": 35.700714,
 			"lon": 139.96698,
@@ -312,7 +312,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.7029,
 			"lon": 139.96756,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1111788523",
@@ -368,7 +368,7 @@
 			"rentYen": 96000,
 			"ageYears": 36,
 			"carMinutes": 4,
-			"listedAt": null,
+			"listedAt": "2026-04-23",
 			"sourceUpdatedAt": null,
 			"lat": 35.7029,
 			"lon": 139.96756,
@@ -912,7 +912,7 @@
 			"carMinutes": 6,
 			"listedAt": "2026-08-10",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1104256009",
@@ -1062,7 +1062,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.694191,
 			"lon": 139.990814,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1122158027",
@@ -1152,7 +1152,7 @@
 			"sourceUpdatedAt": "2026-08-04",
 			"lat": 35.707909,
 			"lon": 139.952087,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100513145359",
@@ -1212,7 +1212,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.709488,
 			"lon": 139.969894,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:000008884272b834f59bee58da8703972b2682e5b75f",
@@ -1240,9 +1240,9 @@
 			"rentYen": 82000,
 			"ageYears": 41,
 			"carMinutes": 6,
-			"listedAt": "2026-08-04",
+			"listedAt": "2026-08-13",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100518371547",
@@ -1272,7 +1272,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.711132,
 			"lon": 139.955154,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:0000088842721c17a8545891c95ee84a825b119bb022",
@@ -1302,7 +1302,7 @@
 			"carMinutes": 6,
 			"listedAt": "2026-08-16",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1101580430",
@@ -1872,7 +1872,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.712799,
 			"lon": 139.950241,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100521377699",
@@ -2142,7 +2142,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.686512,
 			"lon": 139.931519,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:000008713006dd51ee100a08b112d28256ed73211e65",
@@ -2442,7 +2442,7 @@
 			"carMinutes": 7,
 			"listedAt": "2026-08-10",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1104824230",
@@ -2562,7 +2562,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.707973,
 			"lon": 139.974472,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1019485035",
@@ -2772,7 +2772,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.692764,
 			"lon": 140.00563,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100519951264",
@@ -2832,7 +2832,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.687698,
 			"lon": 140.008301,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:000005342664dc0a6e555b8ad8041651d4e71b821cce",
@@ -2862,7 +2862,7 @@
 			"carMinutes": 8,
 			"listedAt": "2026-08-11",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1038352998",
@@ -3102,7 +3102,7 @@
 			"carMinutes": 8,
 			"listedAt": "2026-08-13",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:0000013221043cfc2405cbcc0c946c84786730c179eb",
@@ -3130,9 +3130,9 @@
 			"rentYen": 88000,
 			"ageYears": 32,
 			"carMinutes": 8,
-			"listedAt": "2026-08-03",
+			"listedAt": "2026-08-16",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1105745530",
@@ -3342,7 +3342,7 @@
 			"carMinutes": 8,
 			"listedAt": "2026-08-11",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:000002069220a034b31fcf1ac27347bda0e24b75177a",
@@ -3372,7 +3372,7 @@
 			"carMinutes": 8,
 			"listedAt": "2026-07-11",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1105744830",
@@ -3492,7 +3492,7 @@
 			"carMinutes": 8,
 			"listedAt": "2026-08-10",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:00000698920023bfdf0328c40b902c531da5fa3e67c8",
@@ -3520,9 +3520,9 @@
 			"rentYen": 92000,
 			"ageYears": 5,
 			"carMinutes": 8,
-			"listedAt": "2026-08-08",
+			"listedAt": "2026-08-11",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1106189030",
@@ -3698,7 +3698,7 @@
 			"rentYen": 93000,
 			"ageYears": 0,
 			"carMinutes": 8,
-			"listedAt": null,
+			"listedAt": "2026-08-07",
 			"sourceUpdatedAt": null,
 			"lat": 35.697556,
 			"lon": 140.00705,
@@ -3822,7 +3822,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.695351,
 			"lon": 140.012375,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1104675930",
@@ -4032,7 +4032,7 @@
 			"carMinutes": 8,
 			"listedAt": "2026-08-10",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:0000023522617084f74d7e22bfdc27dcae4e27fc55fa",
@@ -4062,7 +4062,7 @@
 			"carMinutes": 8,
 			"listedAt": "2026-08-09",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1105745230",
@@ -4238,7 +4238,7 @@
 			"rentYen": 99000,
 			"ageYears": 32,
 			"carMinutes": 8,
-			"listedAt": null,
+			"listedAt": "2026-08-17",
 			"sourceUpdatedAt": null,
 			"lat": 35.681641,
 			"lon": 140.013626,
@@ -4302,7 +4302,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.71423,
 			"lon": 139.959885,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100510541897",
@@ -4332,7 +4332,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.70792,
 			"lon": 139.989273,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:6991768463",
@@ -4812,7 +4812,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.710796,
 			"lon": 139.98938,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1185790327",
@@ -4932,7 +4932,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.71534,
 			"lon": 139.922668,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100507184483",
@@ -4962,7 +4962,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.710369,
 			"lon": 139.98204,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100516590194",
@@ -5022,7 +5022,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.713959,
 			"lon": 139.938385,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1167749527",
@@ -5112,7 +5112,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.683418,
 			"lon": 139.91629,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:0000037517611ed46fb6094abadf0c2e9b92389626f2",
@@ -5142,7 +5142,7 @@
 			"carMinutes": 9,
 			"listedAt": "2026-08-09",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100500647276",
@@ -5202,7 +5202,7 @@
 			"carMinutes": 9,
 			"listedAt": "2026-08-10",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100508515199",
@@ -5472,7 +5472,7 @@
 			"carMinutes": 10,
 			"listedAt": "2026-08-11",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100518158815",
@@ -5502,7 +5502,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.695915,
 			"lon": 140.020401,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100519778346",
@@ -5532,7 +5532,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.682655,
 			"lon": 140.020599,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:6991636230",
@@ -5802,7 +5802,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.718021,
 			"lon": 139.927795,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:_00000102260714282f25048bcfb2183e4f0bc297d8c8",
@@ -5862,7 +5862,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.70554,
 			"lon": 140.007294,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100518753361",
@@ -5922,7 +5922,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.679337,
 			"lon": 139.912735,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:000008021813ca461177bcae5ae3e5f17441970b4c67",
@@ -5952,7 +5952,7 @@
 			"carMinutes": 10,
 			"listedAt": "2026-08-09",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:0000080218139beac908e7e60be940cfc8526314367e",
@@ -5982,7 +5982,7 @@
 			"carMinutes": 10,
 			"listedAt": "2026-08-09",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1185322327",
@@ -6072,7 +6072,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.718021,
 			"lon": 139.927795,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:0000014524680860dac48c3630850faa90b2bec2fc3c",
@@ -6102,7 +6102,7 @@
 			"carMinutes": 10,
 			"listedAt": "2026-08-15",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:0000009932575527a7f409747493e3e54544112c210e",
@@ -6130,9 +6130,9 @@
 			"rentYen": 100000,
 			"ageYears": 18,
 			"carMinutes": 10,
-			"listedAt": "2026-08-13",
+			"listedAt": "2026-08-18",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100520118075",
@@ -6192,7 +6192,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.721893,
 			"lon": 139.912842,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100512078074",
@@ -6402,7 +6402,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.687202,
 			"lon": 140.022247,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100518991418",
@@ -6460,9 +6460,9 @@
 			"rentYen": 78000,
 			"ageYears": 14,
 			"carMinutes": 11,
-			"listedAt": "2026-08-09",
+			"listedAt": "2026-07-31",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1105540630",
@@ -6640,9 +6640,9 @@
 			"rentYen": 80000,
 			"ageYears": 39,
 			"carMinutes": 11,
-			"listedAt": "2026-08-17",
+			"listedAt": "2026-08-16",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1107608230",
@@ -6942,7 +6942,7 @@
 			"carMinutes": 11,
 			"listedAt": "2026-08-15",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:000001154242c529c05135626937305bb4a9a696205c",
@@ -6970,9 +6970,9 @@
 			"rentYen": 85000,
 			"ageYears": 20,
 			"carMinutes": 11,
-			"listedAt": "2026-08-08",
+			"listedAt": "2026-08-09",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1101389930",
@@ -7062,7 +7062,7 @@
 			"carMinutes": 11,
 			"listedAt": "2026-08-12",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:_0000081603858e36e277acf7d18fd44c1fa61e0b4b1a",
@@ -7092,7 +7092,7 @@
 			"carMinutes": 11,
 			"listedAt": "2026-08-14",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100516811578",
@@ -7122,7 +7122,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.69997,
 			"lon": 140.024185,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100521195889",
@@ -7152,7 +7152,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.721596,
 			"lon": 139.93869,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1116557828",
@@ -7212,7 +7212,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.721333,
 			"lon": 139.948486,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100520568810",
@@ -7242,7 +7242,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.721333,
 			"lon": 139.948486,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100520715509",
@@ -7452,7 +7452,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.695877,
 			"lon": 140.030472,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100521266148",
@@ -7482,7 +7482,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.721333,
 			"lon": 139.948486,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1172322727",
@@ -7692,7 +7692,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.726849,
 			"lon": 139.919876,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100516466387",
@@ -7722,7 +7722,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.726849,
 			"lon": 139.919876,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100518166330",
@@ -8052,7 +8052,7 @@
 			"carMinutes": 12,
 			"listedAt": "2026-07-26",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100517456279",
@@ -8202,7 +8202,7 @@
 			"carMinutes": 12,
 			"listedAt": "2026-08-10",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100517146523",
@@ -8260,9 +8260,9 @@
 			"rentYen": 77000,
 			"ageYears": 40,
 			"carMinutes": 12,
-			"listedAt": "2026-07-19",
+			"listedAt": "2026-08-08",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:_000001001525e6cdf3d4364e04b2baf2a3b075adadc7",
@@ -8292,7 +8292,7 @@
 			"carMinutes": 12,
 			"listedAt": "2026-07-15",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1146705530",
@@ -8412,7 +8412,7 @@
 			"carMinutes": 12,
 			"listedAt": "2026-08-10",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100507650194",
@@ -8442,7 +8442,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.689682,
 			"lon": 140.030075,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100520993262",
@@ -8472,7 +8472,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.661846,
 			"lon": 139.903091,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:000002582930803938b7791b882fefc80deb5bf8b739",
@@ -8500,9 +8500,9 @@
 			"rentYen": 85000,
 			"ageYears": 37,
 			"carMinutes": 12,
-			"listedAt": "2026-07-31",
+			"listedAt": "2026-08-08",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:_000002582930803938b7791b882fefc80deb5bf8b739",
@@ -8532,7 +8532,7 @@
 			"carMinutes": 12,
 			"listedAt": "2026-07-31",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1072537991",
@@ -8772,7 +8772,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.672726,
 			"lon": 139.904434,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100503663656",
@@ -8892,7 +8892,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.68066,
 			"lon": 140.03006,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100521146381",
@@ -8952,7 +8952,7 @@
 			"carMinutes": 12,
 			"listedAt": "2026-08-11",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:000001116821fb9adc004df14d272b603b9f9adf8cff",
@@ -8982,7 +8982,7 @@
 			"carMinutes": 12,
 			"listedAt": "2026-08-09",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1027574298",
@@ -9072,7 +9072,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.659458,
 			"lon": 139.899155,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:_0000040480129395d1fd26661f2ed3acba516b7d7de2",
@@ -9102,7 +9102,7 @@
 			"carMinutes": 12,
 			"listedAt": "2026-08-08",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100514898855",
@@ -9312,7 +9312,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.741905,
 			"lon": 139.964264,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100518215987",
@@ -9372,7 +9372,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.675499,
 			"lon": 139.892151,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100414582121",
@@ -9402,7 +9402,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.686993,
 			"lon": 140.037537,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100493194655",
@@ -9432,7 +9432,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.730171,
 			"lon": 139.901596,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100513762696",
@@ -9522,7 +9522,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.708206,
 			"lon": 140.027527,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100515526736",
@@ -9822,7 +9822,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.65366,
 			"lon": 139.895065,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:_000003421016ce529bd8859279a460065564a36249f9",
@@ -9882,7 +9882,7 @@
 			"sourceUpdatedAt": "2026-08-06",
 			"lat": 35.64426,
 			"lon": 139.908066,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:000004329036372e9a8dfcde11d70f6a9e412136faad",
@@ -9912,7 +9912,7 @@
 			"carMinutes": 13,
 			"listedAt": "2026-07-20",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:6991538806",
@@ -9972,7 +9972,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.672569,
 			"lon": 140.033813,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100521990179",
@@ -10032,7 +10032,7 @@
 			"carMinutes": 13,
 			"listedAt": "2026-08-17",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1107397230",
@@ -10122,7 +10122,7 @@
 			"carMinutes": 13,
 			"listedAt": "2026-08-11",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100521546248",
@@ -10180,9 +10180,9 @@
 			"rentYen": 100000,
 			"ageYears": 42,
 			"carMinutes": 13,
-			"listedAt": "2026-08-11",
+			"listedAt": "2026-08-12",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1123915526",
@@ -10242,7 +10242,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.67944,
 			"lon": 140.045441,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100513717327",
@@ -10272,7 +10272,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.745625,
 			"lon": 139.951569,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100513923565",
@@ -10482,7 +10482,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.66407,
 			"lon": 139.889267,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100521046496",
@@ -10542,7 +10542,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.66407,
 			"lon": 139.889267,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100518093072",
@@ -10572,7 +10572,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.655758,
 			"lon": 139.890503,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100521979660",
@@ -10602,7 +10602,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.666649,
 			"lon": 139.890213,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1106258128",
@@ -10692,7 +10692,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.655758,
 			"lon": 139.890503,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:000002339846ac5464ed0ba8e2aff44e70f415b4c095",
@@ -10752,7 +10752,7 @@
 			"carMinutes": 14,
 			"listedAt": "2026-08-01",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100484920631",
@@ -10782,7 +10782,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.642189,
 			"lon": 139.888123,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1017374124",
@@ -10842,7 +10842,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.677948,
 			"lon": 140.039001,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100507684694",
@@ -10872,7 +10872,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.642189,
 			"lon": 139.888123,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1116567728",
@@ -11142,7 +11142,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.659451,
 			"lon": 139.892502,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:000002321806978af9333a51bde9eec82d01e4195332",
@@ -11170,9 +11170,9 @@
 			"rentYen": 100000,
 			"ageYears": 21,
 			"carMinutes": 14,
-			"listedAt": "2026-08-05",
+			"listedAt": "2026-08-08",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:_000002321806978af9333a51bde9eec82d01e4195332",
@@ -11292,7 +11292,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.682522,
 			"lon": 140.050919,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:000008318263dfc82a8d03603b3d6cee8082281175ff",
@@ -11352,7 +11352,7 @@
 			"carMinutes": 15,
 			"listedAt": "2026-07-25",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100515523310",
@@ -11442,7 +11442,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.682522,
 			"lon": 140.050919,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100512342747",
@@ -11682,7 +11682,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.747204,
 			"lon": 139.945236,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100516404946",
@@ -11742,7 +11742,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.687916,
 			"lon": 140.047241,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100498894690",
@@ -11802,7 +11802,7 @@
 			"carMinutes": 15,
 			"listedAt": "2026-07-27",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1135070827",
@@ -11952,7 +11952,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.687916,
 			"lon": 140.047241,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100498894700",
@@ -12012,7 +12012,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.687916,
 			"lon": 140.047241,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100520238000",
@@ -12372,7 +12372,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.660347,
 			"lon": 139.889282,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:0000023180123393fc04c31869f978c7ee757bf80ace",
@@ -12402,7 +12402,7 @@
 			"carMinutes": 15,
 			"listedAt": "2026-08-01",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100519628926",
@@ -12432,7 +12432,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.660347,
 			"lon": 139.889282,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:0000023180128ea3ebe377652cb8de4d56803cf4caec",
@@ -12462,7 +12462,7 @@
 			"carMinutes": 15,
 			"listedAt": "2026-08-01",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100502891299",
@@ -12492,7 +12492,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.708275,
 			"lon": 140.041,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100522031849",
@@ -12732,7 +12732,7 @@
 			"carMinutes": 15,
 			"listedAt": "2026-08-06",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100520451943",
@@ -12972,7 +12972,7 @@
 			"carMinutes": 16,
 			"listedAt": "2026-07-25",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:_000009024032a65792e5e0c9398eaaede7467ca97119",
@@ -13002,7 +13002,7 @@
 			"carMinutes": 16,
 			"listedAt": "2026-07-25",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1102491530",
@@ -13482,7 +13482,7 @@
 			"carMinutes": 16,
 			"listedAt": "2026-08-10",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1102491730",
@@ -14622,7 +14622,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.682758,
 			"lon": 140.059265,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1102493530",
@@ -14682,7 +14682,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.753849,
 			"lon": 139.948059,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:_000008819018f98edddffeaa9ee388d99ba8994fe5b3",
@@ -14862,7 +14862,7 @@
 			"carMinutes": 16,
 			"listedAt": "2026-08-02",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:6991854422",
@@ -15010,9 +15010,9 @@
 			"rentYen": 95000,
 			"ageYears": 33,
 			"carMinutes": 16,
-			"listedAt": "2026-08-03",
+			"listedAt": "2026-08-04",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100520886501",
@@ -15100,9 +15100,9 @@
 			"rentYen": 96000,
 			"ageYears": 29,
 			"carMinutes": 16,
-			"listedAt": "2026-08-07",
+			"listedAt": "2026-08-08",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1056399687",
@@ -15280,9 +15280,9 @@
 			"rentYen": 97000,
 			"ageYears": 29,
 			"carMinutes": 16,
-			"listedAt": "2026-08-07",
+			"listedAt": "2026-08-09",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:_00000169767122e6d49951c116ac98ded1441411e788",
@@ -15492,7 +15492,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.687309,
 			"lon": 140.053848,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100510269601",
@@ -15822,7 +15822,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.720673,
 			"lon": 140.03894,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100520525367",
@@ -16032,7 +16032,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.635975,
 			"lon": 140.077591,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1102252230",
@@ -16182,7 +16182,7 @@
 			"carMinutes": 17,
 			"listedAt": "2026-08-04",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100458744297",
@@ -16242,7 +16242,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.725914,
 			"lon": 140.038391,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100513470135",
@@ -16272,7 +16272,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.684902,
 			"lon": 140.071365,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1186321001",
@@ -16362,7 +16362,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.716785,
 			"lon": 140.054688,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100473607055",
@@ -16422,7 +16422,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.725273,
 			"lon": 140.045502,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:0000047564105f6df26189e674b7c9f1fae1c35eed00",
@@ -16452,7 +16452,7 @@
 			"carMinutes": 18,
 			"listedAt": "2026-07-27",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "suumo:100519805296",
@@ -16810,9 +16810,9 @@
 			"rentYen": 86000,
 			"ageYears": 9,
 			"carMinutes": 19,
-			"listedAt": "2026-08-07",
+			"listedAt": "2026-08-05",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:_0000025930482d73fcc96e4d85254aef2fd2d0516c31",
@@ -16870,9 +16870,9 @@
 			"rentYen": 87000,
 			"ageYears": 9,
 			"carMinutes": 19,
-			"listedAt": "2026-08-07",
+			"listedAt": "2026-08-05",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:00000257674740824fcbf824a59d3ffcd1a9ef62a9d4",
@@ -16902,7 +16902,7 @@
 			"carMinutes": 19,
 			"listedAt": "2026-07-28",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:_000002576747848f6f2e048139b6ccb79a9c17136a0e",
@@ -16962,7 +16962,7 @@
 			"carMinutes": 19,
 			"listedAt": "2026-07-22",
 			"sourceUpdatedAt": null,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "yahoo:0000014221832ba5b22c388289c436ae64b1cc0ad4ae",
@@ -16990,7 +16990,7 @@
 			"rentYen": 61000,
 			"ageYears": 31,
 			"carMinutes": 20,
-			"listedAt": "2026-08-17",
+			"listedAt": "2026-08-12",
 			"sourceUpdatedAt": null,
 			"bikeParking": false
 		},
@@ -17862,7 +17862,7 @@
 			"sourceUpdatedAt": "2026-08-17",
 			"lat": 35.629486,
 			"lon": 140.078568,
-			"bikeParking": true
+			"bikeParking": false
 		},
 		{
 			"id": "athome:1099064668",
@@ -18008,7 +18008,7 @@
 			"rentYen": 84000,
 			"ageYears": 3,
 			"carMinutes": 21,
-			"listedAt": null,
+			"listedAt": "2026-08-03",
 			"sourceUpdatedAt": null,
 			"lat": 35.753792,
 			"lon": 140.026596,

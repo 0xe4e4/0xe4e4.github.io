@@ -28,7 +28,7 @@ export interface RentalListing {
 	city: string;
 	/** true/false when known; null if the source list did not include it */
 	parking: boolean | null;
-	/** バイク置き場 / 駐輪場（true/false when known） */
+	/** バイク置き場 / バイク駐輪場（true/false when known。自転車の駐輪場のみは含めない） */
 	bikeParking: boolean | null;
 	independentWashbasin: boolean;
 	/** Display label, e.g. 鉄筋コンクリート / 軽量鉄骨 / 鉄筋系 */

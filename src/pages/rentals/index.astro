@@ -539,9 +539,9 @@ const structureDetailOptions = [
 					<li>
 						<span class="rentals-badge rentals-badge--bike" aria-hidden="true">
 							<span class="rentals-badge__icon">🛵</span>
-							<span class="rentals-badge__label">駐輪</span>
+							<span class="rentals-badge__label">バイク</span>
 						</span>
-						= バイク・駐輪場あり
+						= バイク置き場・バイク駐輪場あり
 					</li>
 				</ul>
 			</header>
@@ -863,7 +863,7 @@ const structureDetailOptions = [
 														item.listedAt || item.sourceUpdatedAt || ''
 													}
 													data-sort-source={item.source}
-													data-text={`${item.title} ${item.address} ${item.station} ${item.layout} ${item.stationName} ${item.structure} ${item.structureGroup} ${item.parking ? '駐車場あり' : item.parking === false ? '駐車場なし' : ''}${item.bikeParking ? ' バイク・駐輪場あり' : ''}`}
+													data-text={`${item.title} ${item.address} ${item.station} ${item.layout} ${item.stationName} ${item.structure} ${item.structureGroup} ${item.parking ? '駐車場あり' : item.parking === false ? '駐車場なし' : ''}${item.bikeParking ? ' バイク置き場あり' : ''}`}
 													hidden={multi}
 												>
 													<td>
@@ -880,8 +880,8 @@ const structureDetailOptions = [
 															{hasBikeParking(item) && (
 																<span
 																	class="rentals-badge rentals-badge--bike"
-																	title="バイク・駐輪場あり"
-																	aria-label="バイク・駐輪場あり"
+																	title="バイク置き場・バイク駐輪場あり"
+																	aria-label="バイク置き場・バイク駐輪場あり"
 																>
 																	<span
 																		class="rentals-badge__icon"
@@ -889,7 +889,9 @@ const structureDetailOptions = [
 																	>
 																		🛵
 																	</span>
-																	<span class="rentals-badge__label">駐輪</span>
+																	<span class="rentals-badge__label">
+																		バイク
+																	</span>
 																</span>
 															)}
 															<span class="rentals-sub">
@@ -1026,8 +1028,8 @@ const structureDetailOptions = [
 															{groupBikeParking && (
 																<span
 																	class="rentals-badge rentals-badge--bike"
-																	title="バイク・駐輪場あり"
-																	aria-label="バイク・駐輪場あり"
+																	title="バイク置き場・バイク駐輪場あり"
+																	aria-label="バイク置き場・バイク駐輪場あり"
 																>
 																	<span
 																		class="rentals-badge__icon"
@@ -1035,7 +1037,9 @@ const structureDetailOptions = [
 																	>
 																		🛵
 																	</span>
-																	<span class="rentals-badge__label">駐輪</span>
+																	<span class="rentals-badge__label">
+																		バイク
+																	</span>
 																</span>
 															)}
 															<span class="rentals-toggle__count">
