@@ -1,9 +1,11 @@
 name: Update rentals snapshot
 
 on:
-  # 09:00 / 14:00 / 20:00 JST
+  # GitHub cron is UTC only (no TZ). JST = UTC+9, no DST.
+  # 00:15 / 05:15 / 11:15 UTC → 09:15 / 14:15 / 20:15 JST
+  # Minute 15 avoids the top-of-hour queue (00:00 UTC is especially delayed).
   schedule:
-    - cron: '0 0,5,11 * * *'
+    - cron: '15 0,5,11 * * *'
   workflow_dispatch:
     inputs:
       pages:
