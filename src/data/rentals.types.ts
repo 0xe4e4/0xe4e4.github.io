@@ -30,7 +30,8 @@ export interface RentalListing {
 	parking: boolean | null;
 	/** バイク置き場 / バイク駐輪場（true/false when known。自転車の駐輪場のみは含めない） */
 	bikeParking: boolean | null;
-	independentWashbasin: boolean;
+	/** 洗面台独立 / 洗面所独立（true/false when known） */
+	independentWashbasin: boolean | null;
 	/** Display label, e.g. 鉄筋コンクリート / 軽量鉄骨 / 鉄筋系 */
 	structure: string;
 	/** 鉄筋系 | 鉄骨系 | 木造 | その他 */

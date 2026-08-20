@@ -9,7 +9,7 @@ import rentalsJson from '../../data/rentals.json';
 const data = rentalsJson as RentalsSnapshot;
 const title = `通勤圏の賃貸空室 | ${SITE_TITLE}`;
 const description =
-	'船橋市西浦付近への車通勤圏・駅徒歩15分以内・1DK〜3LDK・家賃10万以下・洗面独立・木造以外の賃貸スナップショット。駐車場はページ上で絞り込み。';
+	'船橋市西浦付近への車通勤圏・駅徒歩15分以内・1DK〜2DK・家賃8万以下・木造以外の賃貸スナップショット。駐車場・洗面独立はページ上で絞り込み。';
 
 const updatedLabel = data.updatedAt
 	? new Date(data.updatedAt).toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' })
@@ -559,8 +559,7 @@ const structureDetailOptions = [
 					</li>
 					<li>間取り: {data.criteria.layouts.join(' / ')}</li>
 					<li>{data.criteria.minBuiltYear} 年以降竣工</li>
-					<li>洗面台独立（Yahoo は「洗面台」条件で近似）</li>
-					<li>木造は対象外。駐車場は下の一覧で絞り込み</li>
+					<li>木造は対象外。駐車場・洗面独立は下の一覧で絞り込み</li>
 				</ul>
 				<p>{data.criteria.commuteAreaNote}</p>
 				<p>
@@ -636,6 +635,14 @@ const structureDetailOptions = [
 							<label>
 								駐車場
 								<select name="parking" id="filter-parking">
+									<option value="">指定なし</option>
+									<option value="yes">あり</option>
+									<option value="no">なし</option>
+								</select>
+							</label>
+							<label>
+								洗面独立
+								<select name="washbasin" id="filter-washbasin">
 									<option value="">指定なし</option>
 									<option value="yes">あり</option>
 									<option value="no">なし</option>
@@ -847,6 +854,13 @@ const structureDetailOptions = [
 																? 'yes'
 																: 'no'
 													}
+													data-washbasin={
+														item.independentWashbasin == null
+															? ''
+															: item.independentWashbasin
+																? 'yes'
+																: 'no'
+													}
 													data-walk={item.walkMinutes ?? ''}
 													data-car={item.carMinutes ?? ''}
 													data-age={item.ageYears ?? ''}
@@ -863,7 +877,7 @@ const structureDetailOptions = [
 														item.listedAt || item.sourceUpdatedAt || ''
 													}
 													data-sort-source={item.source}
-													data-text={`${item.title} ${item.address} ${item.station} ${item.layout} ${item.stationName} ${item.structure} ${item.structureGroup} ${item.parking ? '駐車場あり' : item.parking === false ? '駐車場なし' : ''}${item.bikeParking ? ' バイク置き場あり' : ''}`}
+													data-text={`${item.title} ${item.address} ${item.station} ${item.layout} ${item.stationName} ${item.structure} ${item.structureGroup} ${item.parking ? '駐車場あり' : item.parking === false ? '駐車場なし' : ''}${item.independentWashbasin ? ' 洗面独立あり' : item.independentWashbasin === false ? ' 洗面独立なし' : ''}${item.bikeParking ? ' バイク置き場あり' : ''}`}
 													hidden={multi}
 												>
 													<td>
@@ -1150,7 +1164,7 @@ const structureDetailOptions = [
 				<p>
 					木造は取得対象から外しています。SUUMO の構造は鉄筋系 / 鉄骨系 /
 					その他の系統です。鉄筋コンクリートや軽量鉄骨などの詳細は Yahoo
-					側で絞れます。駐車場は初期条件にはせず、上のフィルタで絞り込めます。
+					側で絞れます。駐車場・洗面独立は初期条件にはせず、上のフィルタで絞り込めます。
 				</p>
 			</section>
 
@@ -1210,6 +1224,7 @@ const structureDetailOptions = [
 					).value;
 					var structure = document.getElementById('filter-structure').value;
 					var parking = document.getElementById('filter-parking').value;
+					var washbasin = document.getElementById('filter-washbasin').value;
 					var walkMax = num('filter-walk');
 					var carMax = num('filter-car');
 					var ageMax = num('filter-age');
@@ -1242,6 +1257,8 @@ const structureDetailOptions = [
 							(!structure ||
 								row.getAttribute('data-structure') === structure) &&
 							(!parking || row.getAttribute('data-parking') === parking) &&
+							(!washbasin ||
+								row.getAttribute('data-washbasin') === washbasin) &&
 							(walkMax == null || (walk != null && walk <= walkMax)) &&
 							(carMax == null || (car != null && car <= carMax)) &&
 							(ageMax == null || (age != null && age <= ageMax)) &&

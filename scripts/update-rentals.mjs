@@ -60,11 +60,11 @@ const CITIES = [
 	},
 ];
 
-const LAYOUT_ORDER = ['1DK', '1LDK', '2K', '2DK', '3K', '3DK', '3LDK'];
+const LAYOUT_ORDER = ['1DK', '1LDK', '2K', '2DK'];
 const ALLOWED_LAYOUTS = new Set(LAYOUT_ORDER);
 const MIN_BUILT_YEAR = 1981;
 const MAX_WALK = 15;
-const MAX_RENT_YEN = 100000;
+const MAX_RENT_YEN = 80000;
 
 const args = process.argv.slice(2);
 const enrichOnly = args.includes('--enrich-only');
@@ -288,6 +288,10 @@ function baseListingFields(partial) {
 		parking: typeof partial.parking === 'boolean' ? partial.parking : null,
 		bikeParking:
 			typeof partial.bikeParking === 'boolean' ? partial.bikeParking : null,
+		independentWashbasin:
+			typeof partial.independentWashbasin === 'boolean'
+				? partial.independentWashbasin
+				: null,
 	};
 }
 
@@ -313,6 +317,11 @@ function parseYahooParking(room) {
 	return room.Pickouts.includes('cr');
 }
 
+function parseYahooWashbasin(room) {
+	if (!Array.isArray(room?.Pickouts)) return null;
+	return room.Pickouts.includes('ws');
+}
+
 function parseAthomeParking(roomHtml) {
 	const m = String(roomHtml).match(/<li([^>]*)>\s*駐車場（近隣含む）/);
 	if (!m) return null;
@@ -329,6 +338,48 @@ function parseSuumoParking(html) {
 	if (/空無/.test(t)) return false;
 	if (/なし|無し|^無$|不可/.test(t) && !/近隣/.test(t)) return false;
 	return true;
+}
+
+function mentionsIndependentWashbasinText(text) {
+	const t = String(text || '');
+	if (!t) return false;
+	if (/洗面(?:所|台)(?:・|\/|／)?(?:独立|別|専用)|独立洗面|洗面独立/.test(t)) {
+		return true;
+	}
+	return false;
+}
+
+function parseSuumoWashbasin(html) {
+	const raw = String(html);
+	for (const m of raw.matchAll(/labeloption[^>]*>([\s\S]*?)<\//g)) {
+		if (mentionsIndependentWashbasinText(stripTags(m[1]))) return true;
+	}
+	for (const m of raw.matchAll(
+		/<th[^>]*>\s*洗面(?:所|台)\s*<\/th>\s*<td>([\s\S]*?)<\/td>/g,
+	)) {
+		if (mentionsIndependentWashbasinText(stripTags(m[1]))) return true;
+	}
+	for (const m of raw.matchAll(/>([^<]{0,240}洗面[^<]{0,240})</g)) {
+		if (mentionsIndependentWashbasinText(m[1])) return true;
+	}
+	return false;
+}
+
+function parseAthomeWashbasin(roomHtml) {
+	const m = String(roomHtml).match(/<li([^>]*)>\s*洗面所独立/);
+	if (!m) return null;
+	return !/disabled/.test(m[1] || '');
+}
+
+function parseYahooWashbasinFromHtml(html) {
+	const raw = String(html);
+	for (const m of raw.matchAll(/labeloption[^>]*>([\s\S]*?)<\//g)) {
+		if (mentionsIndependentWashbasinText(stripTags(m[1]))) return true;
+	}
+	for (const m of raw.matchAll(/>([^<]{0,240}洗面[^<]{0,240})</g)) {
+		if (mentionsIndependentWashbasinText(m[1])) return true;
+	}
+	return false;
 }
 
 function parseYahooBikeParking(_room) {
@@ -375,7 +426,6 @@ function passesFilters(listing) {
 	if (listing.builtYear != null && listing.builtYear < MIN_BUILT_YEAR)
 		return false;
 	if (isWoodenStructure(listing)) return false;
-	if (!listing.independentWashbasin) return false;
 	const cityNames = CITIES.map((c) => c.name);
 	if (
 		listing.address &&
@@ -395,11 +445,9 @@ function buildSuumoUrl(cityCode, page, kz) {
 	params.set('sc', cityCode);
 	params.set('et', String(MAX_WALK));
 	params.set('kt', String(Math.round(MAX_RENT_YEN / 10000)));
-	params.set('po1', '25');
+	params.set('po1', '02');
 	params.set('pc', '50');
-	for (const md of ['03', '04', '05', '06', '08', '09', '10'])
-		params.append('md', md);
-	params.append('tc', '0400502');
+	for (const md of ['03', '04', '05', '06']) params.append('md', md);
 	if (kz) params.append('kz', String(kz));
 	if (page > 1) params.set('page', String(page));
 	return `https://suumo.jp/jj/chintai/ichiran/FR301FC001/?${params.toString()}`;
@@ -490,7 +538,7 @@ function parseSuumo(html, city, structureInfo) {
 				city: cityFromAddress(address, city.name),
 				parking: null,
 				bikeParking: null,
-				independentWashbasin: true,
+				independentWashbasin: null,
 				structure: structureInfo?.structure || '',
 				structureGroup: structureInfo?.structureGroup || '',
 			});
@@ -537,8 +585,8 @@ function buildYahooUrl(cityCode, page) {
 	const params = new URLSearchParams();
 	params.set('min_st', String(MAX_WALK));
 	params.set('max_pr', String(Math.round(MAX_RENT_YEN / 10000)));
-	for (const n of [3, 4, 5, 6, 8, 9, 10]) params.append('rl_dtl', String(n));
-	params.append('po', 'ws');
+	for (const n of [3, 4, 5, 6]) params.append('rl_dtl', String(n));
+	params.set('sort', '01');
 	if (page > 1) params.set('page', String(page));
 	return `https://realestate.yahoo.co.jp/rent/search/03/12/${cityCode}/?${params.toString()}`;
 }
@@ -556,9 +604,6 @@ const YAHOO_LAYOUT = {
 	4: '1LDK',
 	5: '2K',
 	6: '2DK',
-	8: '3K',
-	9: '3DK',
-	10: '3LDK',
 };
 
 function parseYahooCoords(raw) {
@@ -628,7 +673,7 @@ function parseYahoo(html, city) {
 				city: cityFromAddress(address, city.name),
 				parking: parseYahooParking(room),
 				bikeParking: parseYahooBikeParking(room),
-				independentWashbasin: true,
+				independentWashbasin: parseYahooWashbasin(room),
 				structure: yahooStructure,
 				lat,
 				lon,
@@ -669,22 +714,13 @@ async function fetchYahoo() {
 
 /** ---- At Home ---- */
 
-const ATHOME_MADORI = [
-	'km004',
-	'km005',
-	'km008',
-	'km009',
-	'km013',
-	'km014',
-	'km015',
-];
+const ATHOME_MADORI = ['km004', 'km005', 'km008', 'km009'];
 
 function buildAthomeUrl(slug, page) {
 	const params = new URLSearchParams();
-	params.set('PRICETO', 'kc115');
+	params.set('PRICETO', 'kc113');
 	params.set('EKITOHO', 'ke005');
 	for (const md of ATHOME_MADORI) params.append('MADORI[]', md);
-	params.append('KODAWARI[]', 'B15');
 	params.append('SHUMOKU[]', 'kb001');
 	params.append('SHUMOKU[]', 'kb002');
 	params.append('TATEKOUZOU[]', 'kh001');
@@ -797,7 +833,7 @@ function parseAthome(html, city) {
 				city: cityFromAddress(address, city.name),
 				parking: parseAthomeParking(room),
 				bikeParking: parseAthomeBikeParking(block, room),
-				independentWashbasin: true,
+				independentWashbasin: parseAthomeWashbasin(room),
 				structure,
 			});
 			if (passesFilters(listing)) listings.push(listing);
@@ -1074,9 +1110,26 @@ async function fillListingDates(listings) {
 			if (typeof hit.bikeParking === 'boolean') {
 				item.bikeParking = hit.bikeParking;
 			}
+			if (typeof hit.independentWashbasin === 'boolean') {
+				item.independentWashbasin = hit.independentWashbasin;
+			} else if (
+				item.independentWashbasin == null &&
+				hit.independentWashbasin === true
+			) {
+				// Older cache rows assumed washbasin from scrape filters.
+				item.independentWashbasin = null;
+			}
 			if (
 				(item.source === 'suumo' || item.source === 'yahoo') &&
 				!hit.bikeStrict
+			) {
+				return true;
+			}
+			if (
+				(item.source === 'suumo' ||
+					item.source === 'yahoo' ||
+					item.source === 'athome') &&
+				typeof hit.independentWashbasin !== 'boolean'
 			) {
 				return true;
 			}
@@ -1089,6 +1142,10 @@ async function fillListingDates(listings) {
 				parking: typeof item.parking === 'boolean' ? item.parking : null,
 				bikeParking:
 					typeof item.bikeParking === 'boolean' ? item.bikeParking : null,
+				independentWashbasin:
+					typeof item.independentWashbasin === 'boolean'
+						? item.independentWashbasin
+						: null,
 				bikeStrict: true,
 			};
 			return false;
@@ -1117,15 +1174,28 @@ async function fillListingDates(listings) {
 					if (typeof parsed === 'boolean') item.parking = parsed;
 				}
 				item.bikeParking = parseSuumoBikeParking(html);
+				if (item.independentWashbasin == null) {
+					item.independentWashbasin = parseSuumoWashbasin(html);
+				}
 			}
 			if (item.source === 'yahoo') {
 				item.bikeParking = parseYahooBikeParkingFromHtml(html);
+				if (item.independentWashbasin == null) {
+					item.independentWashbasin = parseYahooWashbasinFromHtml(html);
+				}
+			}
+			if (item.source === 'athome' && item.independentWashbasin == null) {
+				item.independentWashbasin = parseAthomeWashbasin(html);
 			}
 			cache[item.id] = {
 				...dates,
 				parking: typeof item.parking === 'boolean' ? item.parking : null,
 				bikeParking:
 					typeof item.bikeParking === 'boolean' ? item.bikeParking : null,
+				independentWashbasin:
+					typeof item.independentWashbasin === 'boolean'
+						? item.independentWashbasin
+						: null,
 				bikeStrict: true,
 			};
 		} catch (err) {
@@ -1213,7 +1283,7 @@ function buildSnapshot(listings) {
 			layouts: [...LAYOUT_ORDER],
 			minBuiltYear: MIN_BUILT_YEAR,
 			requireParking: false,
-			requireIndependentWashbasin: true,
+			requireIndependentWashbasin: false,
 			commuteAreaNote:
 				'車通勤分は OSRM（一般道想定）の概算。渋滞・有料道路利用は含まない。駅徒歩は掲載の最寄駅徒歩。',
 			cities: CITIES.map(({ code, name }) => ({ code, name })),
@@ -1221,9 +1291,9 @@ function buildSnapshot(listings) {
 		listings,
 		notes: [
 			'この JSON は GitHub Actions（1日3回: 9時・14時・20時 JST）で更新する。ビルド時には取得しない。',
-			'SUUMO: 洗面所独立。木造は除外。駐車場は詳細ページから取得し、ページ上で絞り込む。',
-			'Yahoo!不動産: 洗面台（洗面所独立の近似）。木造は除外。駐車場は設備フラグから取得。',
-			'アットホーム: 洗面所独立。木造は除外。駐車場は設備表示から取得。ボット対策で取得できない場合あり。',
+			'SUUMO: 家賃安い順で取得。木造は除外。駐車場・洗面独立は詳細/設備から取得し、ページ上で絞り込む。',
+			'Yahoo!不動産: 家賃安い順。木造は除外。駐車場・洗面台は設備フラグから取得。',
+			'アットホーム: 家賃8万以下・1DK〜2DK。木造は除外。駐車場・洗面所独立は設備表示から取得。ボット対策で取得できない場合あり。',
 			'掲載日・更新日は各サイトの詳細ページから取得。2日以内のものは一覧でハイライトする。',
 			'車通勤時間は国土地理院ジオコード + OSRM の概算。最新の空室・条件は必ず元ページで確認すること。',
 		],
