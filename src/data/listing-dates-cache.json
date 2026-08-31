@@ -1495,14 +1495,6 @@
 		"independentWashbasin": true,
 		"bikeStrict": true
 	},
-	"yahoo:0000025930483e52207bb62cc54850205cb40b25765a": {
-		"listedAt": "2026-08-09",
-		"sourceUpdatedAt": null,
-		"parking": false,
-		"bikeParking": true,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
 	"suumo:100522798240": {
 		"listedAt": null,
 		"sourceUpdatedAt": "2026-08-24",
@@ -1533,14 +1525,6 @@
 		"parking": true,
 		"bikeParking": false,
 		"independentWashbasin": false,
-		"bikeStrict": true
-	},
-	"suumo:100518814337": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-27",
-		"parking": false,
-		"bikeParking": true,
-		"independentWashbasin": true,
 		"bikeStrict": true
 	},
 	"yahoo:00000218491632bfab7dc4c71c5177768e7cbb455c87": {
@@ -1575,14 +1559,6 @@
 		"independentWashbasin": null,
 		"bikeStrict": true
 	},
-	"suumo:100519713119": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-27",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
 	"athome:1120023127": {
 		"listedAt": null,
 		"sourceUpdatedAt": null,
@@ -1597,14 +1573,6 @@
 		"parking": false,
 		"bikeParking": false,
 		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"athome:1110452130": {
-		"listedAt": null,
-		"sourceUpdatedAt": null,
-		"parking": true,
-		"bikeParking": null,
-		"independentWashbasin": null,
 		"bikeStrict": true
 	},
 	"suumo:100498576579": {
@@ -1663,14 +1631,6 @@
 		"independentWashbasin": false,
 		"bikeStrict": true
 	},
-	"suumo:100521895412": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-28",
-		"parking": true,
-		"bikeParking": true,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
 	"suumo:100338855893": {
 		"listedAt": null,
 		"sourceUpdatedAt": "2026-08-28",
@@ -1725,14 +1685,6 @@
 		"parking": false,
 		"bikeParking": false,
 		"independentWashbasin": false,
-		"bikeStrict": true
-	},
-	"athome:1123485223": {
-		"listedAt": null,
-		"sourceUpdatedAt": null,
-		"parking": false,
-		"bikeParking": null,
-		"independentWashbasin": null,
 		"bikeStrict": true
 	},
 	"athome:1131088031": {
@@ -1863,14 +1815,6 @@
 		"independentWashbasin": false,
 		"bikeStrict": true
 	},
-	"yahoo:000001111645f3d0fd593109be7ff309effccd9573f6": {
-		"listedAt": "2026-08-29",
-		"sourceUpdatedAt": null,
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
 	"suumo:100521554832": {
 		"listedAt": null,
 		"sourceUpdatedAt": "2026-08-28",
@@ -1885,14 +1829,6 @@
 		"parking": false,
 		"bikeParking": false,
 		"independentWashbasin": false,
-		"bikeStrict": true
-	},
-	"athome:1130788631": {
-		"listedAt": null,
-		"sourceUpdatedAt": null,
-		"parking": true,
-		"bikeParking": null,
-		"independentWashbasin": null,
 		"bikeStrict": true
 	},
 	"suumo:100518234743": {
@@ -2007,22 +1943,6 @@
 		"independentWashbasin": null,
 		"bikeStrict": true
 	},
-	"athome:1130790231": {
-		"listedAt": null,
-		"sourceUpdatedAt": null,
-		"parking": true,
-		"bikeParking": null,
-		"independentWashbasin": null,
-		"bikeStrict": true
-	},
-	"athome:1102799009": {
-		"listedAt": null,
-		"sourceUpdatedAt": null,
-		"parking": false,
-		"bikeParking": null,
-		"independentWashbasin": null,
-		"bikeStrict": true
-	},
 	"athome:1102492830": {
 		"listedAt": null,
 		"sourceUpdatedAt": null,
@@ -2031,33 +1951,9 @@
 		"independentWashbasin": null,
 		"bikeStrict": true
 	},
-	"athome:1111307933": {
-		"listedAt": null,
-		"sourceUpdatedAt": null,
-		"parking": true,
-		"bikeParking": null,
-		"independentWashbasin": null,
-		"bikeStrict": true
-	},
 	"yahoo:00000108664844321d84867a0a0eac1c35570d82220b": {
 		"listedAt": "2026-08-30",
 		"sourceUpdatedAt": null,
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
-	"suumo:100521163334": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": true,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
-	"suumo:100519989217": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
 		"parking": false,
 		"bikeParking": false,
 		"independentWashbasin": false,
@@ -2101,14 +1997,6 @@
 		"parking": true,
 		"bikeParking": false,
 		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"athome:1130788331": {
-		"listedAt": null,
-		"sourceUpdatedAt": null,
-		"parking": true,
-		"bikeParking": null,
-		"independentWashbasin": null,
 		"bikeStrict": true
 	},
 	"suumo:100518506834": {
@@ -2159,14 +2047,6 @@
 		"independentWashbasin": true,
 		"bikeStrict": true
 	},
-	"suumo:100522426761": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": true,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
 	"athome:1104825630": {
 		"listedAt": null,
 		"sourceUpdatedAt": null,
@@ -2175,42 +2055,10 @@
 		"independentWashbasin": null,
 		"bikeStrict": true
 	},
-	"suumo:100523654320": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": true,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
-	"suumo:100523653987": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": true,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
-	"suumo:100521181703": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
 	"suumo:100524153469": {
 		"listedAt": null,
 		"sourceUpdatedAt": "2026-08-30",
 		"parking": true,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
-	"suumo:100520989307": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
 		"bikeParking": false,
 		"independentWashbasin": false,
 		"bikeStrict": true
@@ -2239,28 +2087,12 @@
 		"independentWashbasin": false,
 		"bikeStrict": true
 	},
-	"suumo:100521429207": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": true,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
 	"athome:1100989931": {
 		"listedAt": null,
 		"sourceUpdatedAt": null,
 		"parking": true,
 		"bikeParking": null,
 		"independentWashbasin": null,
-		"bikeStrict": true
-	},
-	"suumo:100522778466": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": true,
-		"bikeParking": false,
-		"independentWashbasin": true,
 		"bikeStrict": true
 	},
 	"suumo:100516924875": {
@@ -2279,39 +2111,7 @@
 		"independentWashbasin": true,
 		"bikeStrict": true
 	},
-	"athome:1124782827": {
-		"listedAt": null,
-		"sourceUpdatedAt": null,
-		"parking": false,
-		"bikeParking": null,
-		"independentWashbasin": null,
-		"bikeStrict": true
-	},
-	"athome:1127851731": {
-		"listedAt": null,
-		"sourceUpdatedAt": null,
-		"parking": true,
-		"bikeParking": null,
-		"independentWashbasin": null,
-		"bikeStrict": true
-	},
-	"suumo:100520992897": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": true,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
 	"athome:1124271127": {
-		"listedAt": null,
-		"sourceUpdatedAt": null,
-		"parking": true,
-		"bikeParking": null,
-		"independentWashbasin": null,
-		"bikeStrict": true
-	},
-	"athome:1128547431": {
 		"listedAt": null,
 		"sourceUpdatedAt": null,
 		"parking": true,
@@ -2343,55 +2143,7 @@
 		"independentWashbasin": null,
 		"bikeStrict": true
 	},
-	"athome:1108671330": {
-		"listedAt": null,
-		"sourceUpdatedAt": null,
-		"parking": false,
-		"bikeParking": null,
-		"independentWashbasin": null,
-		"bikeStrict": true
-	},
 	"suumo:100517805946": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": true,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100522683964": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": true,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"athome:1101147231": {
-		"listedAt": null,
-		"sourceUpdatedAt": null,
-		"parking": false,
-		"bikeParking": null,
-		"independentWashbasin": null,
-		"bikeStrict": true
-	},
-	"suumo:100523444457": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"athome:1033266192": {
-		"listedAt": null,
-		"sourceUpdatedAt": null,
-		"parking": true,
-		"bikeParking": null,
-		"independentWashbasin": null,
-		"bikeStrict": true
-	},
-	"suumo:100518136964": {
 		"listedAt": null,
 		"sourceUpdatedAt": "2026-08-29",
 		"parking": true,
@@ -2415,22 +2167,6 @@
 		"independentWashbasin": null,
 		"bikeStrict": true
 	},
-	"suumo:100518152240": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": true,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100523598806": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": true,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
 	"athome:1041814797": {
 		"listedAt": null,
 		"sourceUpdatedAt": null,
@@ -2439,87 +2175,7 @@
 		"independentWashbasin": null,
 		"bikeStrict": true
 	},
-	"suumo:100519713475": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
-	"suumo:100514474152": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": true,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
 	"suumo:100521928701": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": true,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
-	"athome:1156376025": {
-		"listedAt": null,
-		"sourceUpdatedAt": null,
-		"parking": true,
-		"bikeParking": null,
-		"independentWashbasin": null,
-		"bikeStrict": true
-	},
-	"suumo:100520888683": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": true,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
-	"suumo:100495037964": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": true,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
-	"suumo:100524203617": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-30",
-		"parking": true,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
-	"suumo:100520885690": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100521522453": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": true,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
-	"suumo:100382850663": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-30",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
-	"suumo:100479231236": {
 		"listedAt": null,
 		"sourceUpdatedAt": "2026-08-29",
 		"parking": true,
@@ -2535,23 +2191,7 @@
 		"independentWashbasin": null,
 		"bikeStrict": true
 	},
-	"athome:1141813217": {
-		"listedAt": null,
-		"sourceUpdatedAt": null,
-		"parking": true,
-		"bikeParking": null,
-		"independentWashbasin": null,
-		"bikeStrict": true
-	},
 	"suumo:100517420717": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100523627789": {
 		"listedAt": null,
 		"sourceUpdatedAt": "2026-08-29",
 		"parking": false,
@@ -2565,102 +2205,6 @@
 		"parking": false,
 		"bikeParking": false,
 		"independentWashbasin": false,
-		"bikeStrict": true
-	},
-	"suumo:100520118075": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": true,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100523067652": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
-	"suumo:100523163586": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
-	"suumo:100508453696": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
-	"suumo:100523973196": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": true,
-		"bikeParking": true,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100450990808": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100523022597": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"athome:1163634517": {
-		"listedAt": null,
-		"sourceUpdatedAt": null,
-		"parking": false,
-		"bikeParking": null,
-		"independentWashbasin": null,
-		"bikeStrict": true
-	},
-	"suumo:100519059091": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
-	"suumo:100521823736": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100515552406": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100515552458": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
 		"bikeStrict": true
 	},
 	"suumo:100518789811": {
@@ -2679,30 +2223,6 @@
 		"independentWashbasin": true,
 		"bikeStrict": true
 	},
-	"suumo:100523022577": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": true,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100523844665": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100504034454": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": true,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
 	"suumo:100504969281": {
 		"listedAt": null,
 		"sourceUpdatedAt": "2026-08-29",
@@ -2711,44 +2231,12 @@
 		"independentWashbasin": false,
 		"bikeStrict": true
 	},
-	"suumo:100515258796": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
-	"suumo:100521558433": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": true,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100523716537": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
 	"suumo:100523854444": {
 		"listedAt": null,
 		"sourceUpdatedAt": "2026-08-29",
 		"parking": true,
 		"bikeParking": false,
 		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100522312841": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": true,
-		"bikeParking": false,
-		"independentWashbasin": false,
 		"bikeStrict": true
 	},
 	"suumo:100523307233": {
@@ -2775,22 +2263,6 @@
 		"independentWashbasin": true,
 		"bikeStrict": true
 	},
-	"suumo:100514830879": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100515232552": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-30",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
 	"suumo:100518506832": {
 		"listedAt": null,
 		"sourceUpdatedAt": "2026-08-29",
@@ -2807,39 +2279,7 @@
 		"independentWashbasin": true,
 		"bikeStrict": true
 	},
-	"suumo:100523936833": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": true,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100514830896": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100514830903": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
 	"suumo:100518506841": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100513779627": {
 		"listedAt": null,
 		"sourceUpdatedAt": "2026-08-29",
 		"parking": false,
@@ -2855,34 +2295,10 @@
 		"independentWashbasin": false,
 		"bikeStrict": true
 	},
-	"suumo:100506024691": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
-	"athome:1130788131": {
-		"listedAt": null,
-		"sourceUpdatedAt": null,
-		"parking": true,
-		"bikeParking": null,
-		"independentWashbasin": null,
-		"bikeStrict": true
-	},
 	"athome:1131084831": {
 		"listedAt": null,
 		"sourceUpdatedAt": null,
 		"parking": true,
-		"bikeParking": null,
-		"independentWashbasin": null,
-		"bikeStrict": true
-	},
-	"athome:1121350802": {
-		"listedAt": null,
-		"sourceUpdatedAt": null,
-		"parking": false,
 		"bikeParking": null,
 		"independentWashbasin": null,
 		"bikeStrict": true
@@ -2895,84 +2311,12 @@
 		"independentWashbasin": false,
 		"bikeStrict": true
 	},
-	"suumo:100522029858": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": true,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100515000212": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": true,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100512078074": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
 	"suumo:100519336372": {
 		"listedAt": null,
 		"sourceUpdatedAt": "2026-08-29",
 		"parking": false,
 		"bikeParking": false,
 		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100514830924": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100515449991": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100498894694": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"athome:1128373233": {
-		"listedAt": null,
-		"sourceUpdatedAt": null,
-		"parking": true,
-		"bikeParking": null,
-		"independentWashbasin": null,
-		"bikeStrict": true
-	},
-	"athome:1191384129": {
-		"listedAt": null,
-		"sourceUpdatedAt": null,
-		"parking": true,
-		"bikeParking": null,
-		"independentWashbasin": null,
-		"bikeStrict": true
-	},
-	"athome:1118906626": {
-		"listedAt": null,
-		"sourceUpdatedAt": null,
-		"parking": false,
-		"bikeParking": null,
-		"independentWashbasin": null,
 		"bikeStrict": true
 	},
 	"athome:1130788231": {
@@ -2983,65 +2327,9 @@
 		"independentWashbasin": null,
 		"bikeStrict": true
 	},
-	"suumo:100522536687": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
-	"athome:1185606229": {
-		"listedAt": null,
-		"sourceUpdatedAt": null,
-		"parking": true,
-		"bikeParking": null,
-		"independentWashbasin": null,
-		"bikeStrict": true
-	},
-	"suumo:100515450103": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100514830883": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100518506820": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
 	"suumo:100518506816": {
 		"listedAt": null,
 		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100498336955": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
-	"suumo:100515232604": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-30",
 		"parking": false,
 		"bikeParking": false,
 		"independentWashbasin": true,
@@ -3063,14 +2351,6 @@
 		"independentWashbasin": null,
 		"bikeStrict": true
 	},
-	"athome:1131085531": {
-		"listedAt": null,
-		"sourceUpdatedAt": null,
-		"parking": true,
-		"bikeParking": null,
-		"independentWashbasin": null,
-		"bikeStrict": true
-	},
 	"athome:1131091531": {
 		"listedAt": null,
 		"sourceUpdatedAt": null,
@@ -3079,116 +2359,12 @@
 		"independentWashbasin": null,
 		"bikeStrict": true
 	},
-	"suumo:100523957256": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100508888724": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": true,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100505448481": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
-	"suumo:100515278897": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
 	"suumo:100518904760": {
 		"listedAt": null,
 		"sourceUpdatedAt": "2026-08-29",
 		"parking": false,
 		"bikeParking": false,
 		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100515449586": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100522121150": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100515232602": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-30",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100515449671": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"athome:1128582627": {
-		"listedAt": null,
-		"sourceUpdatedAt": null,
-		"parking": false,
-		"bikeParking": null,
-		"independentWashbasin": null,
-		"bikeStrict": true
-	},
-	"suumo:100518506847": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100518506829": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"athome:1144852630": {
-		"listedAt": null,
-		"sourceUpdatedAt": null,
-		"parking": true,
-		"bikeParking": null,
-		"independentWashbasin": null,
-		"bikeStrict": true
-	},
-	"athome:1130787431": {
-		"listedAt": null,
-		"sourceUpdatedAt": null,
-		"parking": true,
-		"bikeParking": null,
-		"independentWashbasin": null,
 		"bikeStrict": true
 	},
 	"athome:1130787531": {
@@ -3207,14 +2383,6 @@
 		"independentWashbasin": null,
 		"bikeStrict": true
 	},
-	"suumo:100523980423": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": true,
-		"bikeParking": true,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
 	"suumo:100517274802": {
 		"listedAt": null,
 		"sourceUpdatedAt": "2026-08-29",
@@ -3223,82 +2391,10 @@
 		"independentWashbasin": true,
 		"bikeStrict": true
 	},
-	"suumo:100515232572": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-30",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100522121162": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100514923732": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100518506831": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100498894700": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100505592464": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": true,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100521700380": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": true,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100522788153": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": true,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
 	"athome:1130787031": {
 		"listedAt": null,
 		"sourceUpdatedAt": null,
 		"parking": true,
-		"bikeParking": null,
-		"independentWashbasin": null,
-		"bikeStrict": true
-	},
-	"athome:1118907226": {
-		"listedAt": null,
-		"sourceUpdatedAt": null,
-		"parking": false,
 		"bikeParking": null,
 		"independentWashbasin": null,
 		"bikeStrict": true
@@ -3319,22 +2415,6 @@
 		"independentWashbasin": true,
 		"bikeStrict": true
 	},
-	"suumo:100514765917": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": true,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100500276900": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
 	"athome:1143271327": {
 		"listedAt": null,
 		"sourceUpdatedAt": null,
@@ -3351,103 +2431,7 @@
 		"independentWashbasin": true,
 		"bikeStrict": true
 	},
-	"athome:1139769917": {
-		"listedAt": null,
-		"sourceUpdatedAt": null,
-		"parking": true,
-		"bikeParking": null,
-		"independentWashbasin": null,
-		"bikeStrict": true
-	},
-	"athome:1139770017": {
-		"listedAt": null,
-		"sourceUpdatedAt": null,
-		"parking": true,
-		"bikeParking": null,
-		"independentWashbasin": null,
-		"bikeStrict": true
-	},
-	"suumo:100523980498": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": true,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
-	"suumo:100515898870": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": true,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100512755579": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
-	"suumo:100518804566": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
-	"suumo:100506502386": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
-	"suumo:100338132422": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
-	"suumo:100516256356": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": true,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100393825683": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
 	"suumo:100470643304": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
-	"suumo:100393825640": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": false,
-		"bikeStrict": true
-	},
-	"suumo:100492507350": {
 		"listedAt": null,
 		"sourceUpdatedAt": "2026-08-29",
 		"parking": false,
@@ -3487,36 +2471,12 @@
 		"independentWashbasin": true,
 		"bikeStrict": true
 	},
-	"suumo:100519840161": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100499357429": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
 	"athome:1135711627": {
 		"listedAt": null,
 		"sourceUpdatedAt": null,
 		"parking": true,
 		"bikeParking": null,
 		"independentWashbasin": null,
-		"bikeStrict": true
-	},
-	"suumo:100518869391": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
 		"bikeStrict": true
 	},
 	"suumo:100468632641": {
@@ -3535,46 +2495,6 @@
 		"independentWashbasin": true,
 		"bikeStrict": true
 	},
-	"athome:1177479327": {
-		"listedAt": null,
-		"sourceUpdatedAt": null,
-		"parking": false,
-		"bikeParking": null,
-		"independentWashbasin": null,
-		"bikeStrict": true
-	},
-	"athome:1128467433": {
-		"listedAt": null,
-		"sourceUpdatedAt": null,
-		"parking": true,
-		"bikeParking": null,
-		"independentWashbasin": null,
-		"bikeStrict": true
-	},
-	"suumo:100523592169": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100522024086": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
-	"suumo:100517823858": {
-		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
-		"parking": false,
-		"bikeParking": false,
-		"independentWashbasin": true,
-		"bikeStrict": true
-	},
 	"suumo:100505106840": {
 		"listedAt": null,
 		"sourceUpdatedAt": "2026-08-29",
@@ -3583,15 +2503,23 @@
 		"independentWashbasin": false,
 		"bikeStrict": true
 	},
-	"suumo:100522673466": {
+	"suumo:100507820502": {
 		"listedAt": null,
-		"sourceUpdatedAt": "2026-08-29",
+		"sourceUpdatedAt": "2026-08-30",
 		"parking": true,
 		"bikeParking": false,
 		"independentWashbasin": true,
 		"bikeStrict": true
 	},
-	"athome:1123801129": {
+	"suumo:100518122687": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": true,
+		"bikeParking": true,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"athome:1111428133": {
 		"listedAt": null,
 		"sourceUpdatedAt": null,
 		"parking": true,
@@ -3599,7 +2527,215 @@
 		"independentWashbasin": null,
 		"bikeStrict": true
 	},
-	"athome:1107608230": {
+	"suumo:100514310504": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": true,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100519877740": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": true,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100514477840": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": true,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100521179102": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100473124707": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": true,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100520881403": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": true,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"athome:1157157925": {
+		"listedAt": null,
+		"sourceUpdatedAt": null,
+		"parking": true,
+		"bikeParking": null,
+		"independentWashbasin": null,
+		"bikeStrict": true
+	},
+	"suumo:100494334748": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": true,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100521523904": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": true,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100512499436": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100520986903": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100518633509": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100479286405": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": true,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100497098220": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100522007608": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": true,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100521550090": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": true,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100216123139": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100517031402": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": true,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100523059702": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100513115594": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100523164401": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100524234709": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100523963297": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": true,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100524237079": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-31",
+		"parking": true,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100522167463": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100517670519": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"athome:6991167639": {
 		"listedAt": null,
 		"sourceUpdatedAt": null,
 		"parking": false,
@@ -3607,7 +2743,95 @@
 		"independentWashbasin": null,
 		"bikeStrict": true
 	},
-	"suumo:100511675987": {
+	"suumo:100521558081": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": true,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"yahoo:000001167351794d670b42a96c5a8c6150b6a3400f3f": {
+		"listedAt": "2026-08-30",
+		"sourceUpdatedAt": null,
+		"parking": true,
+		"bikeParking": true,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100518627769": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100515578960": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"yahoo:_0000019881089ca06f6995119e88e4260916dcb32c63": {
+		"listedAt": "2026-08-31",
+		"sourceUpdatedAt": null,
+		"parking": true,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100515578959": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100521403430": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": true,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100524138129": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100515265034": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100517933889": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100519594740": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100515302926": {
 		"listedAt": null,
 		"sourceUpdatedAt": "2026-08-29",
 		"parking": false,
@@ -3615,7 +2839,31 @@
 		"independentWashbasin": false,
 		"bikeStrict": true
 	},
-	"athome:1126181833": {
+	"suumo:100518813873": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": true,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100514994673": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100516103275": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"athome:1131086431": {
 		"listedAt": null,
 		"sourceUpdatedAt": null,
 		"parking": true,
@@ -3623,7 +2871,727 @@
 		"independentWashbasin": null,
 		"bikeStrict": true
 	},
-	"athome:1146277330": {
+	"athome:1131090431": {
+		"listedAt": null,
+		"sourceUpdatedAt": null,
+		"parking": true,
+		"bikeParking": null,
+		"independentWashbasin": null,
+		"bikeStrict": true
+	},
+	"suumo:100524036362": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": true,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100514923661": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100514923777": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100519060261": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-31",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100506404487": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"athome:1131092131": {
+		"listedAt": null,
+		"sourceUpdatedAt": null,
+		"parking": true,
+		"bikeParking": null,
+		"independentWashbasin": null,
+		"bikeStrict": true
+	},
+	"suumo:100513726070": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"athome:1120335331": {
+		"listedAt": null,
+		"sourceUpdatedAt": null,
+		"parking": true,
+		"bikeParking": null,
+		"independentWashbasin": null,
+		"bikeStrict": true
+	},
+	"suumo:100512819383": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": true,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100516572626": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100522623295": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100512087667": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100514923665": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100514994494": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"athome:1104256009": {
+		"listedAt": null,
+		"sourceUpdatedAt": null,
+		"parking": false,
+		"bikeParking": null,
+		"independentWashbasin": null,
+		"bikeStrict": true
+	},
+	"suumo:100524227690": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": true,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"athome:1122977533": {
+		"listedAt": null,
+		"sourceUpdatedAt": null,
+		"parking": true,
+		"bikeParking": null,
+		"independentWashbasin": null,
+		"bikeStrict": true
+	},
+	"athome:1108645730": {
+		"listedAt": null,
+		"sourceUpdatedAt": null,
+		"parking": false,
+		"bikeParking": null,
+		"independentWashbasin": null,
+		"bikeStrict": true
+	},
+	"athome:1131373334": {
+		"listedAt": null,
+		"sourceUpdatedAt": null,
+		"parking": true,
+		"bikeParking": null,
+		"independentWashbasin": null,
+		"bikeStrict": true
+	},
+	"yahoo:00000279156816e8ef60c64f3b03482459771424a2cd": {
+		"listedAt": "2026-08-31",
+		"sourceUpdatedAt": null,
+		"parking": true,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"athome:1123485123": {
+		"listedAt": null,
+		"sourceUpdatedAt": null,
+		"parking": false,
+		"bikeParking": null,
+		"independentWashbasin": null,
+		"bikeStrict": true
+	},
+	"athome:1191358629": {
+		"listedAt": null,
+		"sourceUpdatedAt": null,
+		"parking": true,
+		"bikeParking": null,
+		"independentWashbasin": null,
+		"bikeStrict": true
+	},
+	"athome:1102491730": {
+		"listedAt": null,
+		"sourceUpdatedAt": null,
+		"parking": false,
+		"bikeParking": null,
+		"independentWashbasin": null,
+		"bikeStrict": true
+	},
+	"athome:1131093031": {
+		"listedAt": null,
+		"sourceUpdatedAt": null,
+		"parking": true,
+		"bikeParking": null,
+		"independentWashbasin": null,
+		"bikeStrict": true
+	},
+	"athome:1185683829": {
+		"listedAt": null,
+		"sourceUpdatedAt": null,
+		"parking": true,
+		"bikeParking": null,
+		"independentWashbasin": null,
+		"bikeStrict": true
+	},
+	"suumo:100498178013": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100522121148": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100498178032": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100514830931": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100514999537": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"athome:1130787931": {
+		"listedAt": null,
+		"sourceUpdatedAt": null,
+		"parking": true,
+		"bikeParking": null,
+		"independentWashbasin": null,
+		"bikeStrict": true
+	},
+	"suumo:100523960076": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100520992741": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": true,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100507262532": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": true,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100513276642": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": true,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100505447617": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100522121184": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100516103012": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100514830932": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"athome:1177296409": {
+		"listedAt": null,
+		"sourceUpdatedAt": null,
+		"parking": false,
+		"bikeParking": null,
+		"independentWashbasin": null,
+		"bikeStrict": true
+	},
+	"athome:1178177130": {
+		"listedAt": null,
+		"sourceUpdatedAt": null,
+		"parking": false,
+		"bikeParking": null,
+		"independentWashbasin": null,
+		"bikeStrict": true
+	},
+	"suumo:100522121159": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100518564821": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"athome:1131088731": {
+		"listedAt": null,
+		"sourceUpdatedAt": null,
+		"parking": true,
+		"bikeParking": null,
+		"independentWashbasin": null,
+		"bikeStrict": true
+	},
+	"suumo:100517985177": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": true,
+		"bikeParking": true,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100514830876": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100516103054": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100515232553": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100518564814": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100498334127": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100505620809": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": true,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100521575837": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": true,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100522783502": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": true,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"athome:1102493430": {
+		"listedAt": null,
+		"sourceUpdatedAt": null,
+		"parking": false,
+		"bikeParking": null,
+		"independentWashbasin": null,
+		"bikeStrict": true
+	},
+	"suumo:100498894681": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100514681702": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": true,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"athome:1128620231": {
+		"listedAt": null,
+		"sourceUpdatedAt": null,
+		"parking": true,
+		"bikeParking": null,
+		"independentWashbasin": null,
+		"bikeStrict": true
+	},
+	"suumo:100518138102": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100506501984": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100523122097": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100499201035": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": true,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100518846414": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": true,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100338012388": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100393416187": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100393416239": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100492243644": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"yahoo:_000001999370c73bcd235a55d998237d6bd68b4f0d0f": {
+		"listedAt": "2026-08-24",
+		"sourceUpdatedAt": null,
+		"parking": true,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100521501545": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100519713492": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": true,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"athome:1108660430": {
+		"listedAt": null,
+		"sourceUpdatedAt": null,
+		"parking": true,
+		"bikeParking": null,
+		"independentWashbasin": null,
+		"bikeStrict": true
+	},
+	"suumo:100519750186": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100498178011": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100518757022": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": true,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100524029502": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": true,
+		"bikeParking": true,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"athome:1101147031": {
+		"listedAt": null,
+		"sourceUpdatedAt": null,
+		"parking": false,
+		"bikeParking": null,
+		"independentWashbasin": null,
+		"bikeStrict": true
+	},
+	"athome:1177479427": {
+		"listedAt": null,
+		"sourceUpdatedAt": null,
+		"parking": false,
+		"bikeParking": null,
+		"independentWashbasin": null,
+		"bikeStrict": true
+	},
+	"athome:1196584929": {
+		"listedAt": null,
+		"sourceUpdatedAt": null,
+		"parking": true,
+		"bikeParking": null,
+		"independentWashbasin": null,
+		"bikeStrict": true
+	},
+	"suumo:100523594412": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100523219803": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100521704740": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": true,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100524226049": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"suumo:100519040596": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": true,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100517431365": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"suumo:100511346812": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": false,
+		"bikeStrict": true
+	},
+	"athome:1118457127": {
+		"listedAt": null,
+		"sourceUpdatedAt": null,
+		"parking": true,
+		"bikeParking": null,
+		"independentWashbasin": null,
+		"bikeStrict": true
+	},
+	"suumo:100522765113": {
+		"listedAt": null,
+		"sourceUpdatedAt": "2026-08-30",
+		"parking": false,
+		"bikeParking": false,
+		"independentWashbasin": true,
+		"bikeStrict": true
+	},
+	"athome:1123740429": {
+		"listedAt": null,
+		"sourceUpdatedAt": null,
+		"parking": true,
+		"bikeParking": null,
+		"independentWashbasin": null,
+		"bikeStrict": true
+	},
+	"athome:1107454430": {
+		"listedAt": null,
+		"sourceUpdatedAt": null,
+		"parking": false,
+		"bikeParking": null,
+		"independentWashbasin": null,
+		"bikeStrict": true
+	},
+	"athome:1126160533": {
+		"listedAt": null,
+		"sourceUpdatedAt": null,
+		"parking": true,
+		"bikeParking": null,
+		"independentWashbasin": null,
+		"bikeStrict": true
+	},
+	"athome:1144200931": {
 		"listedAt": null,
 		"sourceUpdatedAt": null,
 		"parking": true,
